@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState } from "react";
+import { useState } from "react";
+import MediaPlayOverlay from "@/components/MediaPlayOverlay";
+import ShareIcon from "@/components/ShareIcon";
 import type { FeedItem } from "@/types/feed";
 import { formatCount } from "@/lib/format";
 import { getProfileSlugFromHandle } from "@/lib/profile-slugs";
@@ -31,26 +33,6 @@ function SubscriberMediaLock() {
         </span>
       </span>
     </span>
-  );
-}
-
-function MediaPlayOverlay() {
-  const maskId = useId();
-
-  return (
-    <div className="post-media__play" aria-hidden="true">
-      <span>
-        <svg viewBox="0 0 48 48" aria-hidden="true">
-          <defs>
-            <mask id={maskId}>
-              <rect width="48" height="48" fill="white" />
-              <path d="M19 15.5v17l14-8.5-14-8.5z" fill="black" />
-            </mask>
-          </defs>
-          <circle cx="24" cy="24" r="23" fill="#fff" stroke="#fff" strokeWidth="2" mask={`url(#${maskId})`} />
-        </svg>
-      </span>
-    </div>
   );
 }
 
@@ -242,13 +224,7 @@ export default function FeedPost({ item }: { item: FeedItem }) {
             <span className="post-action__count">{formatCommentCount(item.engagement.comments)}</span>
           </button>
           <button type="button" className="post-action post-action--share" aria-label="Share">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <path d="m8.59 13.51 6.83 3.98" />
-              <path d="m15.41 6.51-6.82 3.98" />
-            </svg>
+            <ShareIcon />
           </button>
         </div>
       </div>

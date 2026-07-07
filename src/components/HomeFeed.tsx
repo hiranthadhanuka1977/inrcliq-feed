@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import FeedScrollButton from "@/components/FeedScrollButton";
 import CreatorsRail from "@/components/CreatorsRail";
+import SnapsRail from "@/components/SnapsRail";
 import CategoryFilters from "@/components/CategoryFilters";
 import FeedLoading from "@/components/FeedLoading";
 import FeedPost from "@/components/FeedPost";
@@ -48,6 +49,9 @@ export default function HomeFeed({ items, categories }: HomeFeedProps) {
                     const nodes = [<FeedPost key={item.id} item={item} />];
                     if (index === 2) {
                       nodes.push(<CreatorsRail key="creators-rail" />);
+                    }
+                    if (index === 8) {
+                      nodes.push(<SnapsRail key="snaps-rail" />);
                     }
                     return nodes;
                   })}

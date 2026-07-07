@@ -371,6 +371,15 @@ a {
   height: 1rem;
 }
 
+.nav-promo__title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--color-text-primary);
+}
+
 .nav-promo__text {
   margin: 0;
   font-size: 0.8125rem;

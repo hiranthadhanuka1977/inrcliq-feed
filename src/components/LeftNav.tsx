@@ -128,6 +128,7 @@ export default function LeftNav() {
               <path d="M7 16l4-5 4 3 5-7" />
             </svg>
           </div>
+          <h3 className="nav-promo__title">Go Premium</h3>
           <p className="nav-promo__text">Turn your followers into paying subscribers today.</p>
           <button type="button" className="btn btn--outline-brand btn--sm btn--block nav-promo__btn">
             Unlock Premium Tools
