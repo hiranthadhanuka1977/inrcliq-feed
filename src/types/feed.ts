@@ -12,6 +12,23 @@ export interface FeedImage {
   alt: string;
 }
 
+export interface FeedAudioTheme {
+  accent_a: string;
+  accent_b: string;
+  base: [string, string, string];
+  border: string;
+}
+
+export interface FeedAudio {
+  title: string;
+  thumbnail: FeedImage;
+  current_time: string;
+  duration: string;
+  progress?: number;
+  audio_url?: string | null;
+  theme?: FeedAudioTheme;
+}
+
 export interface FeedMedia {
   type: "image" | "collage";
   images: FeedImage[];
@@ -34,6 +51,7 @@ export interface FeedItem {
   text: string;
   tags: string[];
   media: FeedMedia | null;
+  audio?: FeedAudio | null;
   engagement: FeedEngagement;
   relationship: FeedRelationship;
   posted_at: string;

@@ -141,6 +141,42 @@
       "posted_ago": "3d"
     },
     {
+      "id": "mia-audio-001",
+      "category": "sports",
+      "author": {
+        "name": "Mia Chen",
+        "handle": "@miachenruns",
+        "avatar_initials": "MC",
+        "avatar_color": "#2563eb",
+        "avatar_url": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "New audio log — taper week nerves, race-morning rituals, and why I stopped chasing every split on easy days.",
+      "tags": ["#Audio", "#Running", "#MarathonPrep"],
+      "media": null,
+      "audio": {
+        "title": "Miles & Mindset · Taper week nerves",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=400&q=80&auto=format&fit=crop",
+          "alt": "Runner on a misty forest trail"
+        },
+        "current_time": "0:00",
+        "duration": "5:00",
+        "progress": 0,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 180, 255",
+          "accent_b": "70, 120, 210",
+          "base": ["#1e2f4a", "#1a2840", "#141f33"],
+          "border": "110, 170, 230"
+        }
+      },
+      "engagement": { "likes": 1640, "comments": 124, "shares": 38 },
+      "relationship": { "following": false },
+      "posted_at": "2026-07-01T07:00:00Z",
+      "posted_ago": "4d"
+    },
+    {
       "id": "mia-003",
       "category": "personal",
       "author": {

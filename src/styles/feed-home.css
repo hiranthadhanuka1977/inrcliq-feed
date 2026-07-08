@@ -1936,7 +1936,7 @@
 
 @media (max-width: 900px) {
   :is(.page-home, .page-audio) .content-layout {
-    padding: var(--space-4) 0;
+    padding: var(--space-4) var(--space-4) 0;
   }
 
   .feed-surface .suggest-block .suggest-list {
@@ -2008,13 +2008,20 @@
 }
 
 /* Home — stories aligned to feed column */
-.page-home .feed-header {
+:is(.page-home, .page-profile) .feed-header {
   display: flex;
   justify-content: center;
   width: 100%;
-  max-width: calc(var(--feed-width) + var(--right-rail-width) + var(--space-6) * 2);
   margin-inline: auto;
   box-sizing: border-box;
+}
+
+.page-home .feed-header {
+  max-width: calc(var(--feed-width) + var(--right-rail-width) + var(--space-6) * 2);
+}
+
+.page-profile .feed-header:has(.audio-mini) {
+  padding: var(--space-2) var(--space-6) var(--space-3);
 }
 
 .page-home .stories-bar {

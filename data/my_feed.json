@@ -1,8 +1,8 @@
 {
   "version": "1.0",
-  "description": "INRCLIQ feed dataset — 310 items",
-  "generated_at": "2026-07-05T13:21:53.479Z",
-  "total_items": 315,
+  "description": "INRCLIQ feed dataset — 365 items (50 audio)",
+  "generated_at": "2026-07-08T04:02:36.264Z",
+  "total_items": 365,
   "categories": [
     "sports",
     "technology",
@@ -90,6 +90,55 @@
       },
       "posted_at": "2026-06-21T06:15:00Z",
       "posted_ago": "2w"
+    },
+    {
+      "id": "feed-audio-001",
+      "category": "discovery",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode 14 is live — a long-form conversation on creativity, discipline, and building in public.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "THE GOOD GUY WEED PAYTCH *audio*",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Black and white portrait of two podcast hosts"
+        },
+        "current_time": "0:00",
+        "duration": "5:00",
+        "progress": 0,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 220, 160",
+          "accent_b": "72, 168, 118",
+          "base": [
+            "#2a4534",
+            "#223a2b",
+            "#1a2e22"
+          ],
+          "border": "120, 200, 150"
+        }
+      },
+      "engagement": {
+        "likes": 2840,
+        "comments": 186,
+        "shares": 92
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-06T08:00:00Z",
+      "posted_ago": "1d"
     },
     {
       "id": "feed-002",
@@ -427,6 +476,55 @@
       "posted_ago": "3w"
     },
     {
+      "id": "feed-audio-050",
+      "category": "personal",
+      "author": {
+        "name": "Side Project Show",
+        "handle": "@sideproject",
+        "avatar_initials": "SP",
+        "avatar_color": "#7c2d12",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "A shorter episode with a sharper point. Give it a spin.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Side Project Show: The case for slower media",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast microphone on stand"
+        },
+        "current_time": "5:43",
+        "duration": "32:00",
+        "progress": 0.179,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "90, 220, 210",
+          "accent_b": "50, 170, 165",
+          "base": [
+            "#1a3f3d",
+            "#163532",
+            "#122a28"
+          ],
+          "border": "80, 200, 190"
+        }
+      },
+      "engagement": {
+        "likes": 3227,
+        "comments": 25,
+        "shares": 98
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-20T07:20:22.699Z",
+      "posted_ago": "4d"
+    },
+    {
       "id": "feed-314",
       "category": "food",
       "author": {
@@ -721,6 +819,55 @@
       "posted_ago": "2w"
     },
     {
+      "id": "feed-audio-049",
+      "category": "movies",
+      "author": {
+        "name": "Night Owls Radio",
+        "handle": "@nightowlsfm",
+        "avatar_initials": "NO",
+        "avatar_color": "#312e81",
+        "avatar_url": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Night Owls Radio: Behind the scenes: episode mix",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop",
+          "alt": "DJ headphones and turntable"
+        },
+        "current_time": "3:10",
+        "duration": "16:00",
+        "progress": 0.198,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 120, 140",
+          "accent_b": "200, 70, 95",
+          "base": [
+            "#4a1f28",
+            "#3d1921",
+            "#30141a"
+          ],
+          "border": "230, 110, 130"
+        }
+      },
+      "engagement": {
+        "likes": 3643,
+        "comments": 260,
+        "shares": 89
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-28T14:00:53.818Z",
+      "posted_ago": "1d"
+    },
+    {
       "id": "feed-015",
       "category": "hotels",
       "author": {
@@ -937,6 +1084,55 @@
       "posted_ago": "2w"
     },
     {
+      "id": "feed-audio-048",
+      "category": "movies",
+      "author": {
+        "name": "Code & Coffee",
+        "handle": "@codeandcoffee",
+        "avatar_initials": "CC",
+        "avatar_color": "#0f766e",
+        "avatar_url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "A shorter episode with a sharper point. Give it a spin.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Code & Coffee: The future of creative work",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast microphone on stand"
+        },
+        "current_time": "2:15",
+        "duration": "22:00",
+        "progress": 0.103,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 180, 110",
+          "accent_b": "220, 130, 70",
+          "base": [
+            "#4a3220",
+            "#3d2919",
+            "#302013"
+          ],
+          "border": "230, 160, 100"
+        }
+      },
+      "engagement": {
+        "likes": 2134,
+        "comments": 218,
+        "shares": 17
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-07-05T15:35:06.464Z",
+      "posted_ago": "3d"
+    },
+    {
       "id": "feed-021",
       "category": "movies",
       "author": {
@@ -1147,6 +1343,55 @@
       },
       "posted_at": "2026-06-22T20:00:00.000Z",
       "posted_ago": "2w"
+    },
+    {
+      "id": "feed-audio-047",
+      "category": "food",
+      "author": {
+        "name": "Morning Commute",
+        "handle": "@morningcommute",
+        "avatar_initials": "MC",
+        "avatar_color": "#0369a1",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Morning Commute: Designing for calm technology",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=400&q=80&auto=format&fit=crop",
+          "alt": "Vinyl record close-up"
+        },
+        "current_time": "3:16",
+        "duration": "16:00",
+        "progress": 0.205,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "190, 140, 255",
+          "accent_b": "130, 90, 210",
+          "base": [
+            "#34244d",
+            "#2b1d40",
+            "#211633"
+          ],
+          "border": "170, 130, 230"
+        }
+      },
+      "engagement": {
+        "likes": 4196,
+        "comments": 194,
+        "shares": 43
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-04T05:57:39.806Z",
+      "posted_ago": "13d"
     },
     {
       "id": "feed-027",
@@ -1510,6 +1755,55 @@
       "posted_ago": "2w"
     },
     {
+      "id": "feed-audio-046",
+      "category": "discovery",
+      "author": {
+        "name": "Code & Coffee",
+        "handle": "@codeandcoffee",
+        "avatar_initials": "CC",
+        "avatar_color": "#0f766e",
+        "avatar_url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "A shorter episode with a sharper point. Give it a spin.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Code & Coffee: Sound design secrets",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast microphone on stand"
+        },
+        "current_time": "2:55",
+        "duration": "20:00",
+        "progress": 0.146,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 180, 255",
+          "accent_b": "70, 120, 210",
+          "base": [
+            "#1e2f4a",
+            "#1a2840",
+            "#141f33"
+          ],
+          "border": "110, 170, 230"
+        }
+      },
+      "engagement": {
+        "likes": 609,
+        "comments": 87,
+        "shares": 42
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-07-05T14:34:11.798Z",
+      "posted_ago": "14d"
+    },
+    {
       "id": "feed-037",
       "category": "hotels",
       "author": {
@@ -1797,6 +2091,55 @@
       "posted_ago": "2w"
     },
     {
+      "id": "feed-audio-045",
+      "category": "food",
+      "author": {
+        "name": "Late Night Lab",
+        "handle": "@latenightlab",
+        "avatar_initials": "LN",
+        "avatar_color": "#4c1d95",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Long-form audio for your commute — now streaming in the feed.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Late Night Lab: The future of creative work",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=400&q=80&auto=format&fit=crop",
+          "alt": "Vinyl record close-up"
+        },
+        "current_time": "2:10",
+        "duration": "22:00",
+        "progress": 0.099,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 220, 160",
+          "accent_b": "72, 168, 118",
+          "base": [
+            "#2a4534",
+            "#223a2b",
+            "#1a2e22"
+          ],
+          "border": "120, 200, 150"
+        }
+      },
+      "engagement": {
+        "likes": 2274,
+        "comments": 129,
+        "shares": 36
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-28T08:04:14.013Z",
+      "posted_ago": "14d"
+    },
+    {
       "id": "feed-045",
       "category": "technology",
       "author": {
@@ -2050,6 +2393,55 @@
       "posted_ago": "2w"
     },
     {
+      "id": "feed-audio-044",
+      "category": "movies",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Long-form audio for your commute — now streaming in the feed.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop",
+          "alt": "Person listening with headphones"
+        },
+        "current_time": "4:48",
+        "duration": "14:00",
+        "progress": 0.344,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "170, 190, 255",
+          "accent_b": "120, 140, 220",
+          "base": [
+            "#282f4d",
+            "#212740",
+            "#1a1f33"
+          ],
+          "border": "150, 175, 240"
+        }
+      },
+      "engagement": {
+        "likes": 2260,
+        "comments": 162,
+        "shares": 68
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-07-03T17:51:27.005Z",
+      "posted_ago": "10d"
+    },
+    {
       "id": "feed-052",
       "category": "travel",
       "author": {
@@ -2270,6 +2662,55 @@
       "posted_ago": "2w"
     },
     {
+      "id": "feed-audio-043",
+      "category": "movies",
+      "author": {
+        "name": "Deep Dive FM",
+        "handle": "@deepdivefm",
+        "avatar_initials": "DD",
+        "avatar_color": "#1d4ed8",
+        "avatar_url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "A shorter episode with a sharper point. Give it a spin.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Deep Dive FM: Sound design secrets",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&q=80&auto=format&fit=crop",
+          "alt": "Studio mixing board"
+        },
+        "current_time": "1:29",
+        "duration": "13:00",
+        "progress": 0.115,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 150, 100",
+          "accent_b": "220, 100, 60",
+          "base": [
+            "#4a2818",
+            "#3d2114",
+            "#301a10"
+          ],
+          "border": "240, 140, 90"
+        }
+      },
+      "engagement": {
+        "likes": 1337,
+        "comments": 177,
+        "shares": 19
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-27T16:57:06.027Z",
+      "posted_ago": "2d"
+    },
+    {
       "id": "feed-058",
       "category": "food",
       "author": {
@@ -2484,6 +2925,55 @@
       },
       "posted_at": "2026-06-24T09:00:00.000Z",
       "posted_ago": "2w"
+    },
+    {
+      "id": "feed-audio-042",
+      "category": "personal",
+      "author": {
+        "name": "Deep Dive FM",
+        "handle": "@deepdivefm",
+        "avatar_initials": "DD",
+        "avatar_color": "#1d4ed8",
+        "avatar_url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Deep Dive FM: What we got wrong last season",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=400&q=80&auto=format&fit=crop",
+          "alt": "Vinyl record close-up"
+        },
+        "current_time": "6:47",
+        "duration": "33:00",
+        "progress": 0.206,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "140, 255, 170",
+          "accent_b": "80, 200, 120",
+          "base": [
+            "#1f4a30",
+            "#193d28",
+            "#143020"
+          ],
+          "border": "120, 230, 160"
+        }
+      },
+      "engagement": {
+        "likes": 4330,
+        "comments": 154,
+        "shares": 30
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-29T02:25:23.030Z",
+      "posted_ago": "3d"
     },
     {
       "id": "feed-064",
@@ -2844,6 +3334,55 @@
       },
       "posted_at": "2026-06-24T19:00:00.000Z",
       "posted_ago": "2w"
+    },
+    {
+      "id": "feed-audio-041",
+      "category": "movies",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop",
+          "alt": "DJ headphones and turntable"
+        },
+        "current_time": "9:02",
+        "duration": "28:00",
+        "progress": 0.323,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "180, 130, 255",
+          "accent_b": "130, 85, 210",
+          "base": [
+            "#30204d",
+            "#281a40",
+            "#201433"
+          ],
+          "border": "170, 120, 240"
+        }
+      },
+      "engagement": {
+        "likes": 1274,
+        "comments": 97,
+        "shares": 83
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-05T07:17:09.694Z",
+      "posted_ago": "4d"
     },
     {
       "id": "feed-074",
@@ -3313,6 +3852,55 @@
       "posted_ago": "1w"
     },
     {
+      "id": "feed-audio-040",
+      "category": "discovery",
+      "author": {
+        "name": "Morning Commute",
+        "handle": "@morningcommute",
+        "avatar_initials": "MC",
+        "avatar_color": "#0369a1",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Morning Commute: What we got wrong last season",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80&auto=format&fit=crop",
+          "alt": "Live music performance"
+        },
+        "current_time": "0:42",
+        "duration": "32:00",
+        "progress": 0.022,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "210, 170, 130",
+          "accent_b": "160, 120, 85",
+          "base": [
+            "#3d3024",
+            "#33281e",
+            "#292018"
+          ],
+          "border": "190, 150, 110"
+        }
+      },
+      "engagement": {
+        "likes": 2769,
+        "comments": 135,
+        "shares": 107
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-21T05:29:20.428Z",
+      "posted_ago": "4d"
+    },
+    {
       "id": "feed-087",
       "category": "movies",
       "author": {
@@ -3523,6 +4111,55 @@
       },
       "posted_at": "2026-06-25T14:00:00.000Z",
       "posted_ago": "1w"
+    },
+    {
+      "id": "feed-audio-039",
+      "category": "travel",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Fresh audio just dropped. Headphones recommended.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "11:08",
+        "duration": "32:00",
+        "progress": 0.348,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "110, 230, 255",
+          "accent_b": "60, 180, 220",
+          "base": [
+            "#1a3a45",
+            "#16303a",
+            "#12262f"
+          ],
+          "border": "100, 210, 240"
+        }
+      },
+      "engagement": {
+        "likes": 4428,
+        "comments": 105,
+        "shares": 53
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-02T18:43:27.369Z",
+      "posted_ago": "10d"
     },
     {
       "id": "feed-093",
@@ -3886,6 +4523,55 @@
       "posted_ago": "1w"
     },
     {
+      "id": "feed-audio-038",
+      "category": "food",
+      "author": {
+        "name": "Night Owls Radio",
+        "handle": "@nightowlsfm",
+        "avatar_initials": "NO",
+        "avatar_color": "#312e81",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "New episode is live — press play for the full conversation.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Night Owls Radio: Behind the scenes: episode mix",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast hosts in a studio"
+        },
+        "current_time": "2:58",
+        "duration": "28:00",
+        "progress": 0.106,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 220, 110",
+          "accent_b": "210, 170, 60",
+          "base": [
+            "#4a3f1a",
+            "#3d3416",
+            "#302912"
+          ],
+          "border": "230, 200, 90"
+        }
+      },
+      "engagement": {
+        "likes": 4103,
+        "comments": 196,
+        "shares": 25
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-28T21:29:47.205Z",
+      "posted_ago": "6d"
+    },
+    {
       "id": "feed-103",
       "category": "hotels",
       "author": {
@@ -4136,6 +4822,55 @@
       },
       "posted_at": "2026-06-26T07:00:00.000Z",
       "posted_ago": "1w"
+    },
+    {
+      "id": "feed-audio-037",
+      "category": "technology",
+      "author": {
+        "name": "Vinyl Stories",
+        "handle": "@vinylstories",
+        "avatar_initials": "VS",
+        "avatar_color": "#9d174d",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Vinyl Stories: A conversation on focus and flow",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop",
+          "alt": "Person listening with headphones"
+        },
+        "current_time": "7:33",
+        "duration": "35:00",
+        "progress": 0.216,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "150, 170, 255",
+          "accent_b": "100, 120, 220",
+          "base": [
+            "#252d4d",
+            "#1f2640",
+            "#191f33"
+          ],
+          "border": "140, 160, 240"
+        }
+      },
+      "engagement": {
+        "likes": 2819,
+        "comments": 48,
+        "shares": 21
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-28T03:22:24.814Z",
+      "posted_ago": "1d"
     },
     {
       "id": "feed-110",
@@ -4534,6 +5269,55 @@
       "posted_ago": "1w"
     },
     {
+      "id": "feed-audio-036",
+      "category": "personal",
+      "author": {
+        "name": "Late Night Lab",
+        "handle": "@latenightlab",
+        "avatar_initials": "LN",
+        "avatar_color": "#4c1d95",
+        "avatar_url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Fresh audio just dropped. Headphones recommended.",
+      "tags": [
+        "#Talk",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Late Night Lab: A conversation on focus and flow",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80&auto=format&fit=crop",
+          "alt": "Microphone in a recording booth"
+        },
+        "current_time": "0:09",
+        "duration": "3:00",
+        "progress": 0.05,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 140, 190",
+          "accent_b": "210, 90, 150",
+          "base": [
+            "#4a2038",
+            "#3d1a2f",
+            "#301526"
+          ],
+          "border": "230, 120, 175"
+        }
+      },
+      "engagement": {
+        "likes": 2829,
+        "comments": 181,
+        "shares": 85
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-07-03T16:12:37.982Z",
+      "posted_ago": "13d"
+    },
+    {
       "id": "feed-121",
       "category": "sports",
       "author": {
@@ -4854,6 +5638,55 @@
       "posted_ago": "1w"
     },
     {
+      "id": "feed-audio-035",
+      "category": "discovery",
+      "author": {
+        "name": "Morning Commute",
+        "handle": "@morningcommute",
+        "avatar_initials": "MC",
+        "avatar_color": "#0369a1",
+        "avatar_url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#Talk",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Morning Commute: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "2:36",
+        "duration": "39:00",
+        "progress": 0.067,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "90, 220, 210",
+          "accent_b": "50, 170, 165",
+          "base": [
+            "#1a3f3d",
+            "#163532",
+            "#122a28"
+          ],
+          "border": "80, 200, 190"
+        }
+      },
+      "engagement": {
+        "likes": 862,
+        "comments": 96,
+        "shares": 64
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-20T14:39:43.747Z",
+      "posted_ago": "6d"
+    },
+    {
       "id": "feed-130",
       "category": "science",
       "author": {
@@ -5031,6 +5864,55 @@
       },
       "posted_at": "2026-06-27T08:00:00.000Z",
       "posted_ago": "1w"
+    },
+    {
+      "id": "feed-audio-034",
+      "category": "science",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=400&q=80&auto=format&fit=crop",
+          "alt": "Vinyl record close-up"
+        },
+        "current_time": "0:54",
+        "duration": "3:00",
+        "progress": 0.301,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 120, 140",
+          "accent_b": "200, 70, 95",
+          "base": [
+            "#4a1f28",
+            "#3d1921",
+            "#30141a"
+          ],
+          "border": "230, 110, 130"
+        }
+      },
+      "engagement": {
+        "likes": 2608,
+        "comments": 36,
+        "shares": 52
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-30T03:51:25.743Z",
+      "posted_ago": "6d"
     },
     {
       "id": "feed-135",
@@ -5212,6 +6094,55 @@
       },
       "posted_at": "2026-06-27T13:00:00.000Z",
       "posted_ago": "1w"
+    },
+    {
+      "id": "feed-audio-033",
+      "category": "science",
+      "author": {
+        "name": "Code & Coffee",
+        "handle": "@codeandcoffee",
+        "avatar_initials": "CC",
+        "avatar_color": "#0f766e",
+        "avatar_url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Code & Coffee: The future of creative work",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80&auto=format&fit=crop",
+          "alt": "Microphone in a recording booth"
+        },
+        "current_time": "8:03",
+        "duration": "31:00",
+        "progress": 0.26,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 180, 110",
+          "accent_b": "220, 130, 70",
+          "base": [
+            "#4a3220",
+            "#3d2919",
+            "#302013"
+          ],
+          "border": "230, 160, 100"
+        }
+      },
+      "engagement": {
+        "likes": 1326,
+        "comments": 58,
+        "shares": 95
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-22T00:54:37.725Z",
+      "posted_ago": "6d"
     },
     {
       "id": "feed-140",
@@ -5536,6 +6467,55 @@
       },
       "posted_at": "2026-06-27T22:00:00.000Z",
       "posted_ago": "1w"
+    },
+    {
+      "id": "feed-audio-032",
+      "category": "science",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "New episode is live — press play for the full conversation.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: Designing for calm technology",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop",
+          "alt": "Person listening with headphones"
+        },
+        "current_time": "0:52",
+        "duration": "6:00",
+        "progress": 0.145,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "190, 140, 255",
+          "accent_b": "130, 90, 210",
+          "base": [
+            "#34244d",
+            "#2b1d40",
+            "#211633"
+          ],
+          "border": "170, 130, 230"
+        }
+      },
+      "engagement": {
+        "likes": 848,
+        "comments": 160,
+        "shares": 95
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-24T21:52:03.024Z",
+      "posted_ago": "4d"
     },
     {
       "id": "feed-149",
@@ -5966,6 +6946,55 @@
       "posted_ago": "1w"
     },
     {
+      "id": "feed-audio-031",
+      "category": "discovery",
+      "author": {
+        "name": "Side Project Show",
+        "handle": "@sideproject",
+        "avatar_initials": "SP",
+        "avatar_color": "#7c2d12",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Fresh audio just dropped. Headphones recommended.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Side Project Show: Guest mix: voices from the community",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast hosts in a studio"
+        },
+        "current_time": "2:08",
+        "duration": "32:00",
+        "progress": 0.067,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 180, 255",
+          "accent_b": "70, 120, 210",
+          "base": [
+            "#1e2f4a",
+            "#1a2840",
+            "#141f33"
+          ],
+          "border": "110, 170, 230"
+        }
+      },
+      "engagement": {
+        "likes": 2926,
+        "comments": 155,
+        "shares": 88
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-26T15:16:03.141Z",
+      "posted_ago": "5d"
+    },
+    {
       "id": "feed-161",
       "category": "cars",
       "author": {
@@ -6254,6 +7283,55 @@
       "posted_ago": "1w"
     },
     {
+      "id": "feed-audio-030",
+      "category": "technology",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: Building in public without burning out",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80&auto=format&fit=crop",
+          "alt": "Live music performance"
+        },
+        "current_time": "0:56",
+        "duration": "36:00",
+        "progress": 0.026,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 220, 160",
+          "accent_b": "72, 168, 118",
+          "base": [
+            "#2a4534",
+            "#223a2b",
+            "#1a2e22"
+          ],
+          "border": "120, 200, 150"
+        }
+      },
+      "engagement": {
+        "likes": 1659,
+        "comments": 106,
+        "shares": 55
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-03T03:29:08.132Z",
+      "posted_ago": "11d"
+    },
+    {
       "id": "feed-169",
       "category": "hotels",
       "author": {
@@ -6431,6 +7509,55 @@
       },
       "posted_at": "2026-06-28T23:00:00.000Z",
       "posted_ago": "1w"
+    },
+    {
+      "id": "feed-audio-029",
+      "category": "discovery",
+      "author": {
+        "name": "Field Notes Audio",
+        "handle": "@fieldnotes",
+        "avatar_initials": "FN",
+        "avatar_color": "#166534",
+        "avatar_url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "This one took a while to edit, but it was worth it. Listen now.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Field Notes Audio: Stories from the road",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80&auto=format&fit=crop",
+          "alt": "Microphone in a recording booth"
+        },
+        "current_time": "4:52",
+        "duration": "17:00",
+        "progress": 0.287,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "170, 190, 255",
+          "accent_b": "120, 140, 220",
+          "base": [
+            "#282f4d",
+            "#212740",
+            "#1a1f33"
+          ],
+          "border": "150, 175, 240"
+        }
+      },
+      "engagement": {
+        "likes": 2919,
+        "comments": 221,
+        "shares": 105
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-01T03:46:10.953Z",
+      "posted_ago": "11d"
     },
     {
       "id": "feed-174",
@@ -6757,6 +7884,55 @@
       "posted_ago": "6d"
     },
     {
+      "id": "feed-audio-028",
+      "category": "food",
+      "author": {
+        "name": "Vinyl Stories",
+        "handle": "@vinylstories",
+        "avatar_initials": "VS",
+        "avatar_color": "#9d174d",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Vinyl Stories: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast microphone on stand"
+        },
+        "current_time": "3:33",
+        "duration": "13:00",
+        "progress": 0.274,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 150, 100",
+          "accent_b": "220, 100, 60",
+          "base": [
+            "#4a2818",
+            "#3d2114",
+            "#301a10"
+          ],
+          "border": "240, 140, 90"
+        }
+      },
+      "engagement": {
+        "likes": 1402,
+        "comments": 161,
+        "shares": 84
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-26T18:46:30.905Z",
+      "posted_ago": "13d"
+    },
+    {
       "id": "feed-183",
       "category": "cars",
       "author": {
@@ -6973,6 +8149,55 @@
       "posted_ago": "6d"
     },
     {
+      "id": "feed-audio-027",
+      "category": "discovery",
+      "author": {
+        "name": "Deep Dive FM",
+        "handle": "@deepdivefm",
+        "avatar_initials": "DD",
+        "avatar_color": "#1d4ed8",
+        "avatar_url": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Deep Dive FM: The art of the cold open",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop",
+          "alt": "Person listening with headphones"
+        },
+        "current_time": "0:25",
+        "duration": "4:00",
+        "progress": 0.107,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "140, 255, 170",
+          "accent_b": "80, 200, 120",
+          "base": [
+            "#1f4a30",
+            "#193d28",
+            "#143020"
+          ],
+          "border": "120, 230, 160"
+        }
+      },
+      "engagement": {
+        "likes": 2044,
+        "comments": 217,
+        "shares": 6
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-26T02:48:17.096Z",
+      "posted_ago": "9d"
+    },
+    {
       "id": "feed-189",
       "category": "personal",
       "author": {
@@ -7183,6 +8408,55 @@
       },
       "posted_at": "2026-06-29T20:00:00.000Z",
       "posted_ago": "6d"
+    },
+    {
+      "id": "feed-audio-026",
+      "category": "discovery",
+      "author": {
+        "name": "Field Notes Audio",
+        "handle": "@fieldnotes",
+        "avatar_initials": "FN",
+        "avatar_color": "#166534",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "New episode is live — press play for the full conversation.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Field Notes Audio: Why small teams ship faster",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop",
+          "alt": "DJ headphones and turntable"
+        },
+        "current_time": "1:03",
+        "duration": "26:00",
+        "progress": 0.041,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "180, 130, 255",
+          "accent_b": "130, 85, 210",
+          "base": [
+            "#30204d",
+            "#281a40",
+            "#201433"
+          ],
+          "border": "170, 120, 240"
+        }
+      },
+      "engagement": {
+        "likes": 3709,
+        "comments": 229,
+        "shares": 88
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-22T00:39:25.785Z",
+      "posted_ago": "4d"
     },
     {
       "id": "feed-195",
@@ -7403,6 +8677,55 @@
       },
       "posted_at": "2026-06-30T02:00:00.000Z",
       "posted_ago": "5d"
+    },
+    {
+      "id": "feed-audio-025",
+      "category": "food",
+      "author": {
+        "name": "Late Night Lab",
+        "handle": "@latenightlab",
+        "avatar_initials": "LN",
+        "avatar_color": "#4c1d95",
+        "avatar_url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Late Night Lab: Late-night thoughts on discipline",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "2:12",
+        "duration": "7:00",
+        "progress": 0.315,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "210, 170, 130",
+          "accent_b": "160, 120, 85",
+          "base": [
+            "#3d3024",
+            "#33281e",
+            "#292018"
+          ],
+          "border": "190, 150, 110"
+        }
+      },
+      "engagement": {
+        "likes": 4308,
+        "comments": 197,
+        "shares": 27
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-18T22:12:34.236Z",
+      "posted_ago": "9d"
     },
     {
       "id": "feed-201",
@@ -7837,6 +9160,55 @@
       "posted_ago": "5d"
     },
     {
+      "id": "feed-audio-024",
+      "category": "sports",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Long-form audio for your commute — now streaming in the feed.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: Why small teams ship faster",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80&auto=format&fit=crop",
+          "alt": "Audio waveform on screen"
+        },
+        "current_time": "5:20",
+        "duration": "34:00",
+        "progress": 0.157,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "110, 230, 255",
+          "accent_b": "60, 180, 220",
+          "base": [
+            "#1a3a45",
+            "#16303a",
+            "#12262f"
+          ],
+          "border": "100, 210, 240"
+        }
+      },
+      "engagement": {
+        "likes": 2559,
+        "comments": 240,
+        "shares": 17
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-18T04:09:00.626Z",
+      "posted_ago": "4d"
+    },
+    {
       "id": "feed-213",
       "category": "hotels",
       "author": {
@@ -8161,6 +9533,55 @@
       "posted_ago": "5d"
     },
     {
+      "id": "feed-audio-023",
+      "category": "food",
+      "author": {
+        "name": "Deep Dive FM",
+        "handle": "@deepdivefm",
+        "avatar_initials": "DD",
+        "avatar_color": "#1d4ed8",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Deep Dive FM: Building in public without burning out",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80&auto=format&fit=crop",
+          "alt": "Live music performance"
+        },
+        "current_time": "7:22",
+        "duration": "30:00",
+        "progress": 0.246,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 220, 110",
+          "accent_b": "210, 170, 60",
+          "base": [
+            "#4a3f1a",
+            "#3d3416",
+            "#302912"
+          ],
+          "border": "230, 200, 90"
+        }
+      },
+      "engagement": {
+        "likes": 2312,
+        "comments": 253,
+        "shares": 26
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-03T16:35:11.880Z",
+      "posted_ago": "14d"
+    },
+    {
       "id": "feed-222",
       "category": "personal",
       "author": {
@@ -8336,6 +9757,55 @@
       },
       "posted_at": "2026-07-01T04:00:00.000Z",
       "posted_ago": "4d"
+    },
+    {
+      "id": "feed-audio-022",
+      "category": "food",
+      "author": {
+        "name": "Late Night Lab",
+        "handle": "@latenightlab",
+        "avatar_initials": "LN",
+        "avatar_color": "#4c1d95",
+        "avatar_url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Late Night Lab: Designing for calm technology",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "10:39",
+        "duration": "32:00",
+        "progress": 0.333,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "150, 170, 255",
+          "accent_b": "100, 120, 220",
+          "base": [
+            "#252d4d",
+            "#1f2640",
+            "#191f33"
+          ],
+          "border": "140, 160, 240"
+        }
+      },
+      "engagement": {
+        "likes": 1688,
+        "comments": 48,
+        "shares": 7
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-05T21:24:12.688Z",
+      "posted_ago": "7d"
     },
     {
       "id": "feed-227",
@@ -8589,6 +10059,55 @@
       "posted_ago": "4d"
     },
     {
+      "id": "feed-audio-021",
+      "category": "movies",
+      "author": {
+        "name": "Late Night Lab",
+        "handle": "@latenightlab",
+        "avatar_initials": "LN",
+        "avatar_color": "#4c1d95",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Long-form audio for your commute — now streaming in the feed.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Late Night Lab: Sound design secrets",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast microphone on stand"
+        },
+        "current_time": "0:15",
+        "duration": "14:00",
+        "progress": 0.018,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 140, 190",
+          "accent_b": "210, 90, 150",
+          "base": [
+            "#4a2038",
+            "#3d1a2f",
+            "#301526"
+          ],
+          "border": "230, 120, 175"
+        }
+      },
+      "engagement": {
+        "likes": 2652,
+        "comments": 148,
+        "shares": 72
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-03T19:11:25.158Z",
+      "posted_ago": "1d"
+    },
+    {
       "id": "feed-234",
       "category": "food",
       "author": {
@@ -8768,6 +10287,55 @@
       },
       "posted_at": "2026-07-01T16:00:00.000Z",
       "posted_ago": "4d"
+    },
+    {
+      "id": "feed-audio-020",
+      "category": "travel",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: Guest mix: voices from the community",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast hosts in a studio"
+        },
+        "current_time": "7:46",
+        "duration": "24:00",
+        "progress": 0.324,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "90, 220, 210",
+          "accent_b": "50, 170, 165",
+          "base": [
+            "#1a3f3d",
+            "#163532",
+            "#122a28"
+          ],
+          "border": "80, 200, 190"
+        }
+      },
+      "engagement": {
+        "likes": 677,
+        "comments": 275,
+        "shares": 41
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-23T18:26:53.525Z",
+      "posted_ago": "3d"
     },
     {
       "id": "feed-239",
@@ -8950,6 +10518,55 @@
       "posted_ago": "4d"
     },
     {
+      "id": "feed-audio-019",
+      "category": "technology",
+      "author": {
+        "name": "Late Night Lab",
+        "handle": "@latenightlab",
+        "avatar_initials": "LN",
+        "avatar_color": "#4c1d95",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Late Night Lab: Stories from the road",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "0:36",
+        "duration": "22:00",
+        "progress": 0.028,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 120, 140",
+          "accent_b": "200, 70, 95",
+          "base": [
+            "#4a1f28",
+            "#3d1921",
+            "#30141a"
+          ],
+          "border": "230, 110, 130"
+        }
+      },
+      "engagement": {
+        "likes": 1626,
+        "comments": 115,
+        "shares": 103
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-30T02:20:20.687Z",
+      "posted_ago": "9d"
+    },
+    {
       "id": "feed-244",
       "category": "personal",
       "author": {
@@ -9127,6 +10744,55 @@
       },
       "posted_at": "2026-07-02T02:00:00.000Z",
       "posted_ago": "3d"
+    },
+    {
+      "id": "feed-audio-018",
+      "category": "personal",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: Late-night thoughts on discipline",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80&auto=format&fit=crop",
+          "alt": "Audio waveform on screen"
+        },
+        "current_time": "12:30",
+        "duration": "41:00",
+        "progress": 0.305,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 180, 110",
+          "accent_b": "220, 130, 70",
+          "base": [
+            "#4a3220",
+            "#3d2919",
+            "#302013"
+          ],
+          "border": "230, 160, 100"
+        }
+      },
+      "engagement": {
+        "likes": 3107,
+        "comments": 56,
+        "shares": 116
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-26T03:52:16.986Z",
+      "posted_ago": "12d"
     },
     {
       "id": "feed-249",
@@ -9308,6 +10974,55 @@
       },
       "posted_at": "2026-07-02T07:00:00.000Z",
       "posted_ago": "3d"
+    },
+    {
+      "id": "feed-audio-017",
+      "category": "food",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Fresh audio just dropped. Headphones recommended.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: Why small teams ship faster",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast hosts in a studio"
+        },
+        "current_time": "11:33",
+        "duration": "34:00",
+        "progress": 0.34,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "190, 140, 255",
+          "accent_b": "130, 90, 210",
+          "base": [
+            "#34244d",
+            "#2b1d40",
+            "#211633"
+          ],
+          "border": "170, 130, 230"
+        }
+      },
+      "engagement": {
+        "likes": 760,
+        "comments": 208,
+        "shares": 74
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-24T05:43:24.112Z",
+      "posted_ago": "11d"
     },
     {
       "id": "feed-254",
@@ -9520,6 +11235,55 @@
       },
       "posted_at": "2026-07-02T13:00:00.000Z",
       "posted_ago": "3d"
+    },
+    {
+      "id": "feed-audio-016",
+      "category": "travel",
+      "author": {
+        "name": "Code & Coffee",
+        "handle": "@codeandcoffee",
+        "avatar_initials": "CC",
+        "avatar_color": "#0f766e",
+        "avatar_url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "A shorter episode with a sharper point. Give it a spin.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Code & Coffee: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast hosts in a studio"
+        },
+        "current_time": "2:50",
+        "duration": "17:00",
+        "progress": 0.167,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 180, 255",
+          "accent_b": "70, 120, 210",
+          "base": [
+            "#1e2f4a",
+            "#1a2840",
+            "#141f33"
+          ],
+          "border": "110, 170, 230"
+        }
+      },
+      "engagement": {
+        "likes": 2298,
+        "comments": 204,
+        "shares": 109
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-07-02T10:28:54.710Z",
+      "posted_ago": "2d"
     },
     {
       "id": "feed-260",
@@ -9775,6 +11539,55 @@
       },
       "posted_at": "2026-07-02T20:00:00.000Z",
       "posted_ago": "3d"
+    },
+    {
+      "id": "feed-audio-015",
+      "category": "travel",
+      "author": {
+        "name": "Vinyl Stories",
+        "handle": "@vinylstories",
+        "avatar_initials": "VS",
+        "avatar_color": "#9d174d",
+        "avatar_url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "This one took a while to edit, but it was worth it. Listen now.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Vinyl Stories: A conversation on focus and flow",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "2:16",
+        "duration": "42:00",
+        "progress": 0.054,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "120, 220, 160",
+          "accent_b": "72, 168, 118",
+          "base": [
+            "#2a4534",
+            "#223a2b",
+            "#1a2e22"
+          ],
+          "border": "120, 200, 150"
+        }
+      },
+      "engagement": {
+        "likes": 2167,
+        "comments": 294,
+        "shares": 37
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-30T23:20:01.921Z",
+      "posted_ago": "9d"
     },
     {
       "id": "feed-267",
@@ -10064,6 +11877,55 @@
       },
       "posted_at": "2026-07-03T04:00:00.000Z",
       "posted_ago": "2d"
+    },
+    {
+      "id": "feed-audio-014",
+      "category": "science",
+      "author": {
+        "name": "Side Project Show",
+        "handle": "@sideproject",
+        "avatar_initials": "SP",
+        "avatar_color": "#7c2d12",
+        "avatar_url": "https://images.unsplash.com/photo-1619983081563-430f63602796?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "This one took a while to edit, but it was worth it. Listen now.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Side Project Show: Late-night thoughts on discipline",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&q=80&auto=format&fit=crop",
+          "alt": "Studio mixing board"
+        },
+        "current_time": "9:08",
+        "duration": "41:00",
+        "progress": 0.223,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "170, 190, 255",
+          "accent_b": "120, 140, 220",
+          "base": [
+            "#282f4d",
+            "#212740",
+            "#1a1f33"
+          ],
+          "border": "150, 175, 240"
+        }
+      },
+      "engagement": {
+        "likes": 2350,
+        "comments": 213,
+        "shares": 40
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-27T15:37:49.594Z",
+      "posted_ago": "5d"
     },
     {
       "id": "feed-275",
@@ -10390,6 +12252,55 @@
       "posted_ago": "2d"
     },
     {
+      "id": "feed-audio-013",
+      "category": "food",
+      "author": {
+        "name": "Field Notes Audio",
+        "handle": "@fieldnotes",
+        "avatar_initials": "FN",
+        "avatar_color": "#166534",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "A shorter episode with a sharper point. Give it a spin.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Field Notes Audio: Building in public without burning out",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80&auto=format&fit=crop",
+          "alt": "Audio waveform on screen"
+        },
+        "current_time": "0:49",
+        "duration": "41:00",
+        "progress": 0.02,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 150, 100",
+          "accent_b": "220, 100, 60",
+          "base": [
+            "#4a2818",
+            "#3d2114",
+            "#301a10"
+          ],
+          "border": "240, 140, 90"
+        }
+      },
+      "engagement": {
+        "likes": 1943,
+        "comments": 268,
+        "shares": 32
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-24T06:47:42.502Z",
+      "posted_ago": "10d"
+    },
+    {
       "id": "feed-284",
       "category": "science",
       "author": {
@@ -10635,6 +12546,55 @@
       },
       "posted_at": "2026-07-03T20:00:00.000Z",
       "posted_ago": "2d"
+    },
+    {
+      "id": "feed-audio-012",
+      "category": "technology",
+      "author": {
+        "name": "Code & Coffee",
+        "handle": "@codeandcoffee",
+        "avatar_initials": "CC",
+        "avatar_color": "#0f766e",
+        "avatar_url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "New episode is live — press play for the full conversation.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Code & Coffee: The future of creative work",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80&auto=format&fit=crop",
+          "alt": "Audio waveform on screen"
+        },
+        "current_time": "1:55",
+        "duration": "32:00",
+        "progress": 0.06,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "140, 255, 170",
+          "accent_b": "80, 200, 120",
+          "base": [
+            "#1f4a30",
+            "#193d28",
+            "#143020"
+          ],
+          "border": "120, 230, 160"
+        }
+      },
+      "engagement": {
+        "likes": 1425,
+        "comments": 92,
+        "shares": 78
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-29T00:12:20.333Z",
+      "posted_ago": "8d"
     },
     {
       "id": "feed-291",
@@ -10961,6 +12921,55 @@
       "posted_ago": "1d"
     },
     {
+      "id": "feed-audio-011",
+      "category": "sports",
+      "author": {
+        "name": "Night Owls Radio",
+        "handle": "@nightowlsfm",
+        "avatar_initials": "NO",
+        "avatar_color": "#312e81",
+        "avatar_url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "This one took a while to edit, but it was worth it. Listen now.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Night Owls Radio: Late-night thoughts on discipline",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80&auto=format&fit=crop",
+          "alt": "Audio waveform on screen"
+        },
+        "current_time": "3:54",
+        "duration": "15:00",
+        "progress": 0.261,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "180, 130, 255",
+          "accent_b": "130, 85, 210",
+          "base": [
+            "#30204d",
+            "#281a40",
+            "#201433"
+          ],
+          "border": "170, 120, 240"
+        }
+      },
+      "engagement": {
+        "likes": 3031,
+        "comments": 86,
+        "shares": 121
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-06T12:19:18.004Z",
+      "posted_ago": "6d"
+    },
+    {
       "id": "feed-300",
       "category": "food",
       "author": {
@@ -11177,6 +13186,55 @@
       "posted_ago": "1d"
     },
     {
+      "id": "feed-audio-010",
+      "category": "personal",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Talk",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: The art of the cold open",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "10:10",
+        "duration": "37:00",
+        "progress": 0.275,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "210, 170, 130",
+          "accent_b": "160, 120, 85",
+          "base": [
+            "#3d3024",
+            "#33281e",
+            "#292018"
+          ],
+          "border": "190, 150, 110"
+        }
+      },
+      "engagement": {
+        "likes": 1658,
+        "comments": 79,
+        "shares": 25
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-22T14:26:47.907Z",
+      "posted_ago": "5d"
+    },
+    {
       "id": "feed-306",
       "category": "science",
       "author": {
@@ -11356,6 +13414,398 @@
       },
       "posted_at": "2026-07-04T16:00:00.000Z",
       "posted_ago": "20h"
+    },
+    {
+      "id": "feed-audio-009",
+      "category": "travel",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Fresh audio just dropped. Headphones recommended.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: Behind the scenes: episode mix",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&q=80&auto=format&fit=crop",
+          "alt": "Podcast hosts in a studio"
+        },
+        "current_time": "0:32",
+        "duration": "14:00",
+        "progress": 0.039,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "110, 230, 255",
+          "accent_b": "60, 180, 220",
+          "base": [
+            "#1a3a45",
+            "#16303a",
+            "#12262f"
+          ],
+          "border": "100, 210, 240"
+        }
+      },
+      "engagement": {
+        "likes": 2389,
+        "comments": 242,
+        "shares": 117
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-07T11:00:06.022Z",
+      "posted_ago": "8d"
+    },
+    {
+      "id": "feed-audio-002",
+      "category": "discovery",
+      "author": {
+        "name": "The Daily Brief",
+        "handle": "@dailybrief",
+        "avatar_initials": "DB",
+        "avatar_color": "#b45309",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "We recorded this one late at night and kept every honest moment.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "The Daily Brief: The future of creative work",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=400&q=80&auto=format&fit=crop",
+          "alt": "Audio waveform on screen"
+        },
+        "current_time": "4:36",
+        "duration": "24:00",
+        "progress": 0.192,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "190, 140, 255",
+          "accent_b": "130, 90, 210",
+          "base": [
+            "#34244d",
+            "#2b1d40",
+            "#211633"
+          ],
+          "border": "170, 130, 230"
+        }
+      },
+      "engagement": {
+        "likes": 1282,
+        "comments": 49,
+        "shares": 12
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-28T07:46:32.419Z",
+      "posted_ago": "8d"
+    },
+    {
+      "id": "feed-audio-003",
+      "category": "discovery",
+      "author": {
+        "name": "Side Project Show",
+        "handle": "@sideproject",
+        "avatar_initials": "SP",
+        "avatar_color": "#7c2d12",
+        "avatar_url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=120&q=80&auto=format&fit=crop",
+        "verified": false
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Side Project Show: Behind the scenes: episode mix",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&q=80&auto=format&fit=crop",
+          "alt": "Live music performance"
+        },
+        "current_time": "9:16",
+        "duration": "31:00",
+        "progress": 0.299,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 180, 110",
+          "accent_b": "220, 130, 70",
+          "base": [
+            "#4a3220",
+            "#3d2919",
+            "#302013"
+          ],
+          "border": "230, 160, 100"
+        }
+      },
+      "engagement": {
+        "likes": 2061,
+        "comments": 53,
+        "shares": 71
+      },
+      "relationship": {
+        "following": true
+      },
+      "posted_at": "2026-06-29T09:35:14.710Z",
+      "posted_ago": "6d"
+    },
+    {
+      "id": "feed-audio-004",
+      "category": "personal",
+      "author": {
+        "name": "Night Owls Radio",
+        "handle": "@nightowlsfm",
+        "avatar_initials": "NO",
+        "avatar_color": "#312e81",
+        "avatar_url": "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Long-form audio for your commute — now streaming in the feed.",
+      "tags": [
+        "#Audio",
+        "#Listen"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Night Owls Radio: The future of creative work",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&q=80&auto=format&fit=crop",
+          "alt": "Studio mixing board"
+        },
+        "current_time": "0:24",
+        "duration": "45:00",
+        "progress": 0.009,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 120, 140",
+          "accent_b": "200, 70, 95",
+          "base": [
+            "#4a1f28",
+            "#3d1921",
+            "#30141a"
+          ],
+          "border": "230, 110, 130"
+        }
+      },
+      "engagement": {
+        "likes": 2042,
+        "comments": 171,
+        "shares": 90
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-18T22:40:54.954Z",
+      "posted_ago": "10d"
+    },
+    {
+      "id": "feed-audio-005",
+      "category": "discovery",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "This one took a while to edit, but it was worth it. Listen now.",
+      "tags": [
+        "#Podcast",
+        "#NewEpisode"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: How we edit four hours into forty minutes",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=400&q=80&auto=format&fit=crop",
+          "alt": "Microphone in a recording booth"
+        },
+        "current_time": "2:56",
+        "duration": "21:00",
+        "progress": 0.14,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "90, 220, 210",
+          "accent_b": "50, 170, 165",
+          "base": [
+            "#1a3f3d",
+            "#163532",
+            "#122a28"
+          ],
+          "border": "80, 200, 190"
+        }
+      },
+      "engagement": {
+        "likes": 2473,
+        "comments": 74,
+        "shares": 39
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-18T16:29:13.341Z",
+      "posted_ago": "13d"
+    },
+    {
+      "id": "feed-audio-006",
+      "category": "sports",
+      "author": {
+        "name": "Field Notes Audio",
+        "handle": "@fieldnotes",
+        "avatar_initials": "FN",
+        "avatar_color": "#166534",
+        "avatar_url": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Episode day! Tap play and let us know what you think.",
+      "tags": [
+        "#LongForm",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Field Notes Audio: Designing for calm technology",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&q=80&auto=format&fit=crop",
+          "alt": "Headphones on a desk"
+        },
+        "current_time": "10:14",
+        "duration": "42:00",
+        "progress": 0.244,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 140, 190",
+          "accent_b": "210, 90, 150",
+          "base": [
+            "#4a2038",
+            "#3d1a2f",
+            "#301526"
+          ],
+          "border": "230, 120, 175"
+        }
+      },
+      "engagement": {
+        "likes": 1625,
+        "comments": 108,
+        "shares": 113
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-06-19T06:29:47.935Z",
+      "posted_ago": "4d"
+    },
+    {
+      "id": "feed-audio-007",
+      "category": "sports",
+      "author": {
+        "name": "Good Guy Podcast",
+        "handle": "@goodguypod",
+        "avatar_initials": "GG",
+        "avatar_color": "#6b5b4f",
+        "avatar_url": "https://images.unsplash.com/photo-1607746882042-944635dfe10e?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "This one took a while to edit, but it was worth it. Listen now.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Good Guy Podcast: Lessons from year three",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&q=80&auto=format&fit=crop",
+          "alt": "Studio mixing board"
+        },
+        "current_time": "0:06",
+        "duration": "21:00",
+        "progress": 0.005,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "150, 170, 255",
+          "accent_b": "100, 120, 220",
+          "base": [
+            "#252d4d",
+            "#1f2640",
+            "#191f33"
+          ],
+          "border": "140, 160, 240"
+        }
+      },
+      "engagement": {
+        "likes": 3690,
+        "comments": 229,
+        "shares": 75
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-01T09:54:18.122Z",
+      "posted_ago": "2d"
+    },
+    {
+      "id": "feed-audio-008",
+      "category": "personal",
+      "author": {
+        "name": "Morning Commute",
+        "handle": "@morningcommute",
+        "avatar_initials": "MC",
+        "avatar_color": "#0369a1",
+        "avatar_url": "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=120&q=80&auto=format&fit=crop",
+        "verified": true
+      },
+      "text": "Audio-only drop — no scroll-by, just listen.",
+      "tags": [
+        "#Podcast",
+        "#Audio"
+      ],
+      "media": null,
+      "audio": {
+        "title": "Morning Commute: A conversation on focus and flow",
+        "thumbnail": {
+          "url": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop",
+          "alt": "DJ headphones and turntable"
+        },
+        "current_time": "8:05",
+        "duration": "31:00",
+        "progress": 0.261,
+        "audio_url": null,
+        "theme": {
+          "accent_a": "255, 220, 110",
+          "accent_b": "210, 170, 60",
+          "base": [
+            "#4a3f1a",
+            "#3d3416",
+            "#302912"
+          ],
+          "border": "230, 200, 90"
+        }
+      },
+      "engagement": {
+        "likes": 4293,
+        "comments": 205,
+        "shares": 8
+      },
+      "relationship": {
+        "following": false
+      },
+      "posted_at": "2026-07-01T08:01:15.862Z",
+      "posted_ago": "2d"
     }
   ]
 }

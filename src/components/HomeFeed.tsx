@@ -1,6 +1,8 @@
 "use client";
 
 import { useRef } from "react";
+import AudioMiniPlayer from "@/components/AudioMiniPlayer";
+import MobileNav from "@/components/MobileNav";
 import FeedScrollButton from "@/components/FeedScrollButton";
 import CreatorsRail from "@/components/CreatorsRail";
 import SnapsRail from "@/components/SnapsRail";
@@ -15,6 +17,9 @@ import type { FeedItem } from "@/types/feed";
 import { useFeedFilter } from "@/hooks/useFeedFilter";
 import { useFeedPagination } from "@/hooks/useFeedPagination";
 import { useStoriesScrollHide } from "@/hooks/useStoriesScrollHide";
+import { AudioPlaybackProvider } from "@/context/AudioPlaybackContext";
+
+const SHOW_CREATORS_RAIL = false;
 
 interface HomeFeedProps {
   items: FeedItem[];
@@ -28,12 +33,14 @@ export default function HomeFeed({ items, categories }: HomeFeedProps) {
   useStoriesScrollHide(headerRef);
 
   return (
-    <div className="app-shell">
-      <LeftNav />
-      <div className="main-content">
-        <div className="feed-header" id="feed-top" ref={headerRef}>
-          <StoriesBar />
-        </div>
+    <AudioPlaybackProvider>
+      <div className="app-shell">
+        <LeftNav />
+        <div className="main-content">
+          <div className="feed-header" id="feed-top" ref={headerRef}>
+            <StoriesBar />
+            <AudioMiniPlayer />
+          </div>
 
         <div className="content-layout">
           <div className="content-row">
@@ -47,7 +54,7 @@ export default function HomeFeed({ items, categories }: HomeFeedProps) {
                 <>
                   {visibleItems.flatMap((item, index) => {
                     const nodes = [<FeedPost key={item.id} item={item} />];
-                    if (index === 2) {
+                    if (SHOW_CREATORS_RAIL && index === 2) {
                       nodes.push(<CreatorsRail key="creators-rail" />);
                     }
                     if (index === 8) {
@@ -65,8 +72,10 @@ export default function HomeFeed({ items, categories }: HomeFeedProps) {
             <RightRail />
           </div>
         </div>
+        </div>
+        <FeedScrollButton variant="home" topTargetId="feed-top" />
       </div>
-      <FeedScrollButton variant="home" topTargetId="feed-top" />
-    </div>
+      <MobileNav />
+    </AudioPlaybackProvider>
   );
 }
