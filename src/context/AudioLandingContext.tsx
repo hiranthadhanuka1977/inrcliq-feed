@@ -35,6 +35,7 @@ interface AudioLandingContextValue {
   showFullscreenPlayer: boolean;
   openFullscreenPlayer: () => void;
   closeFullscreenPlayer: () => void;
+  closeDockPlayer: () => void;
   seekTo: (seconds: number) => void;
   durationLabel: string;
 }
@@ -120,6 +121,13 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
     setShowFullscreenPlayer(false);
   }, []);
 
+  const closeDockPlayer = useCallback(() => {
+    setPlaying(false);
+    setShowDockPlayer(false);
+    setShowFullscreenPlayer(false);
+    setLiked(false);
+  }, []);
+
   const skipPrevious = useCallback(() => {
     const index = TRACK_ORDER.indexOf(activeTrackId);
     const prevId = TRACK_ORDER[index <= 0 ? TRACK_ORDER.length - 1 : index - 1];
@@ -156,6 +164,7 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
       showFullscreenPlayer,
       openFullscreenPlayer,
       closeFullscreenPlayer,
+      closeDockPlayer,
       seekTo,
       durationLabel,
     }),
@@ -177,6 +186,7 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
       showFullscreenPlayer,
       openFullscreenPlayer,
       closeFullscreenPlayer,
+      closeDockPlayer,
       seekTo,
       durationLabel,
     ],

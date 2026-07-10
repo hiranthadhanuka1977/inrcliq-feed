@@ -32,6 +32,7 @@ export default function AudioDockPlayer() {
     liked,
     showDockPlayer,
     openFullscreenPlayer,
+    closeDockPlayer,
   } = useAudioLanding();
 
   if (!showDockPlayer) {
@@ -123,6 +124,17 @@ export default function AudioDockPlayer() {
               </svg>
             </button>
           ) : null}
+          <button
+            type="button"
+            className="audio-dock__btn audio-dock__btn--close"
+            aria-label="Close player"
+            onClick={closeDockPlayer}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>

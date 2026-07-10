@@ -1237,6 +1237,10 @@ body.page-audio:has(.app-shell--audio-dock) .main-content {
   color: #f43f5e;
 }
 
+.audio-dock__btn--close {
+  color: rgba(255, 255, 255, 0.78);
+}
+
 @media (max-width: 1200px) {
   .page-audio {
     --feed-width: min(980px, calc(100vw - var(--nav-width) - var(--right-rail-width) - 48px));
