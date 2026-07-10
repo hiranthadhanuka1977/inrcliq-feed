@@ -2,9 +2,12 @@
 
 .feed-surface--simple .post__body:has(.audio-feed) {
   padding-bottom: 0;
+  overflow-x: clip;
 }
 
 .feed-surface--simple .post__body .audio-feed {
+  --audio-inline-pad: 16px;
+
   --audio-accent-a: 120, 220, 160;
   --audio-accent-b: 72, 168, 118;
   --audio-base-1: #2a4534;
@@ -12,8 +15,10 @@
   --audio-base-3: #1a2e22;
   --audio-border: 120, 200, 150;
 
-  margin: var(--space-2) -16px 0;
-  width: calc(100% + 32px);
+  box-sizing: border-box;
+  margin: var(--space-2) calc(var(--audio-inline-pad) * -1) 0;
+  width: calc(100% + var(--audio-inline-pad) * 2);
+  max-width: calc(100% + var(--audio-inline-pad) * 2);
   padding: 14px 14px 12px;
   border-radius: 0;
   border-top: none;
@@ -195,7 +200,7 @@
 /* Podcast variant — full-bleed glass panel with title + show name */
 
 .feed-surface--simple .post__body .audio-feed--podcast {
-  padding: 14px var(--space-6) 12px;
+  padding: 14px 14px 12px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   background:
@@ -360,29 +365,136 @@
   box-shadow: 0 0 12px rgba(var(--audio-accent-a), 0.35);
 }
 
+@media (max-width: 900px) {
+  .feed-surface--simple .post__body .audio-feed {
+    --audio-inline-pad: var(--space-4);
+  }
+
+  .feed-surface--simple .post__body .audio-feed--podcast {
+    padding: 12px var(--space-4) 10px;
+  }
+}
+
 @media (max-width: 640px) {
-  .audio-feed--podcast .audio-feed__podcast-main {
-    grid-template-columns: 3.75rem minmax(0, 1fr) auto;
+  .audio-feed--podcast .audio-feed__podcast-top {
+    flex-wrap: wrap;
     gap: var(--space-2);
   }
 
+  .audio-feed__podcast-episode {
+    margin-left: auto;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.68rem;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-main {
+    grid-template-columns: 3.35rem minmax(0, 1fr) auto;
+    gap: 0.65rem;
+  }
+
   .audio-feed__art--podcast {
-    width: 3.75rem;
-    height: 3.75rem;
+    width: 3.35rem;
+    height: 3.35rem;
   }
 
   .audio-feed__podcast-title {
-    font-size: 0.88rem;
+    font-size: 0.84rem;
+  }
+
+  .audio-feed__podcast-show {
+    font-size: 0.72rem;
   }
 
   .audio-feed__play--podcast {
-    width: 2.55rem;
-    height: 2.55rem;
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .audio-feed__play--podcast svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls,
+  .audio-feed__controls {
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    gap: 0.35rem 0.4rem;
+  }
+
+  .audio-feed__time {
+    font-size: 0.68rem;
+  }
+
+  .audio-feed__skip {
+    min-width: 1.75rem;
+    height: 1.75rem;
+    padding: 0 0.12rem;
+  }
+
+  .audio-feed__skip-label {
+    font-size: 0.58rem;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__scrubber,
+  .audio-feed__controls .audio-feed__scrubber {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 420px) {
+  .audio-feed--podcast .audio-feed__podcast-main {
+    grid-template-columns: 3rem minmax(0, 1fr);
+    grid-template-areas:
+      "art copy"
+      "play play";
+  }
+
+  .audio-feed__art--podcast {
+    grid-area: art;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .audio-feed__podcast-copy {
+    grid-area: copy;
+  }
+
+  .audio-feed__play--podcast {
+    grid-area: play;
+    justify-self: end;
+    width: 2.35rem;
+    height: 2.35rem;
   }
 
   .audio-feed--podcast .audio-feed__podcast-controls {
-    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
-    grid-template-areas: none;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "back scrubber forward"
+      "time-start . time-end";
+    row-gap: 0.3rem;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__skip:first-of-type {
+    grid-area: back;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__scrubber {
+    grid-area: scrubber;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__skip:last-of-type {
+    grid-area: forward;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__time:first-of-type {
+    grid-area: time-start;
+  }
+
+  .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__time:last-of-type {
+    grid-area: time-end;
+    justify-self: end;
   }
 }
 
