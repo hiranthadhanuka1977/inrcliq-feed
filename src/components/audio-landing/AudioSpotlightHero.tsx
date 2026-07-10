@@ -17,6 +17,37 @@ interface SpotlightLayerProps {
   onPlay: (trackId: string) => void;
 }
 
+function PlayIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M8 5.5v13l11-6.5-11-6.5z" />
+    </svg>
+  );
+}
+
+function SpotlightCta({ interactive, onClick }: { interactive: boolean; onClick?: () => void }) {
+  const content = (
+    <>
+      <PlayIcon />
+      Play Now
+    </>
+  );
+
+  if (interactive) {
+    return (
+      <button type="button" className="btn btn--primary btn--sm audio-spotlight__cta" onClick={onClick}>
+        {content}
+      </button>
+    );
+  }
+
+  return (
+    <span className="btn btn--primary btn--sm audio-spotlight__cta audio-spotlight__cta--ghost" aria-hidden="true">
+      {content}
+    </span>
+  );
+}
+
 function SpotlightLayer({ slide, state, onPlay }: SpotlightLayerProps) {
   return (
     <div className={`audio-spotlight__layer is-${state}`} aria-hidden={state === "leaving"}>
@@ -37,17 +68,9 @@ function SpotlightLayer({ slide, state, onPlay }: SpotlightLayerProps) {
           {slide.friendsListening} friends are listening
         </p>
         {state === "active" ? (
-          <button
-            type="button"
-            className="btn btn--primary audio-spotlight__cta"
-            onClick={() => onPlay(slide.trackId)}
-          >
-            Play Now
-          </button>
+          <SpotlightCta interactive onClick={() => onPlay(slide.trackId)} />
         ) : (
-          <span className="btn btn--primary audio-spotlight__cta audio-spotlight__cta--ghost" aria-hidden="true">
-            Play Now
-          </span>
+          <SpotlightCta interactive={false} />
         )}
       </div>
     </div>

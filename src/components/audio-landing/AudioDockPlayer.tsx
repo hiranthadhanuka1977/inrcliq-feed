@@ -1,6 +1,7 @@
 "use client";
 
 import { useAudioLanding } from "@/context/AudioLandingContext";
+import { SkipBack15Icon, SkipForward15Icon } from "@/components/audio/AudioSkip15Icons";
 
 function PlayPauseIcon({ playing }: { playing: boolean }) {
   if (playing) {
@@ -19,28 +20,6 @@ function PlayPauseIcon({ playing }: { playing: boolean }) {
   );
 }
 
-function SkipBack15Icon() {
-  return (
-    <span className="audio-dock__skip-glyph" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 5V2L7 7l5 5V9c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.96 7.96 0 0 0 20 15c0-4.42-3.58-8-8-8z" />
-      </svg>
-      <span>15</span>
-    </span>
-  );
-}
-
-function SkipForward15Icon() {
-  return (
-    <span className="audio-dock__skip-glyph audio-dock__skip-glyph--fwd" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 5V2l5 5-5 5V9c-3.31 0-6 2.69-6 6 0 1.01.25 1.97.7 2.8L5.24 17.26A7.96 7.96 0 0 1 4 15c0-4.42 3.58-8 8-8z" />
-      </svg>
-      <span>15</span>
-    </span>
-  );
-}
-
 export default function AudioDockPlayer() {
   const {
     activeTrack,
@@ -49,8 +28,6 @@ export default function AudioDockPlayer() {
     currentTimeLabel,
     togglePlay,
     skipBy,
-    skipPrevious,
-    skipNext,
     toggleLike,
     liked,
   } = useAudioLanding();
@@ -96,75 +73,43 @@ export default function AudioDockPlayer() {
         </div>
 
         <div className="audio-dock__controls" data-mode={isLongForm ? "longform" : "music"}>
-          {isLongForm ? (
-            <>
-              <button
-                type="button"
-                className="audio-dock__btn"
-                aria-label="Skip back 15 seconds"
-                onClick={() => skipBy(-15)}
-              >
-                <SkipBack15Icon />
-              </button>
-              <button
-                type="button"
-                className="audio-dock__btn audio-dock__btn--primary"
-                aria-label={playing ? "Pause" : "Play"}
-                onClick={togglePlay}
-              >
-                <PlayPauseIcon playing={playing} />
-              </button>
-              <button
-                type="button"
-                className="audio-dock__btn"
-                aria-label="Skip forward 15 seconds"
-                onClick={() => skipBy(15)}
-              >
-                <SkipForward15Icon />
-              </button>
-              <button type="button" className="audio-dock__btn" aria-label="Sleep timer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M12 22a7 7 0 0 0 7-7h-4a3 3 0 0 1-3-3V8a7 7 0 0 0-7 7v1a7 7 0 0 0 7 7z" />
-                  <path d="M12 2v2" />
-                  <path d="M4.93 4.93l1.41 1.41" />
-                  <path d="M2 12h2" />
-                  <path d="M4.93 19.07l1.41-1.41" />
-                </svg>
-              </button>
-            </>
-          ) : (
-            <>
-              <button type="button" className="audio-dock__btn" aria-label="Previous track" onClick={skipPrevious}>
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M6 6h2v12H6V6zm3.5 6 8.5 6V6l-8.5 6z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className="audio-dock__btn audio-dock__btn--primary"
-                aria-label={playing ? "Pause" : "Play"}
-                onClick={togglePlay}
-              >
-                <PlayPauseIcon playing={playing} />
-              </button>
-              <button type="button" className="audio-dock__btn" aria-label="Next track" onClick={skipNext}>
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                  <path d="M16 18h2V6h-2v12zm-11.5-6 8.5-6v12l-8.5-6z" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                className={`audio-dock__btn audio-dock__btn--like${liked ? " is-liked" : ""}`}
-                aria-label={liked ? "Unlike track" : "Like track"}
-                aria-pressed={liked}
-                onClick={toggleLike}
-              >
-                <svg viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                </svg>
-              </button>
-            </>
-          )}
+          <button
+            type="button"
+            className="audio-dock__btn"
+            aria-label="Skip back 15 seconds"
+            onClick={() => skipBy(-15)}
+          >
+            <SkipBack15Icon />
+          </button>
+          <button
+            type="button"
+            className="audio-dock__btn audio-dock__btn--primary"
+            aria-label={playing ? "Pause" : "Play"}
+            onClick={togglePlay}
+          >
+            <PlayPauseIcon playing={playing} />
+          </button>
+          <button
+            type="button"
+            className="audio-dock__btn"
+            aria-label="Skip forward 15 seconds"
+            onClick={() => skipBy(15)}
+          >
+            <SkipForward15Icon />
+          </button>
+          {!isLongForm ? (
+            <button
+              type="button"
+              className={`audio-dock__btn audio-dock__btn--like${liked ? " is-liked" : ""}`}
+              aria-label={liked ? "Unlike track" : "Like track"}
+              aria-pressed={liked}
+              onClick={toggleLike}
+            >
+              <svg viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+            </button>
+          ) : null}
         </div>
       </div>
     </div>

@@ -5,30 +5,9 @@ import type { FeedAudio } from "@/types/feed";
 import { useAudioPlaybackItem } from "@/context/AudioPlaybackContext";
 import { formatTimecode, getInitialSeconds, parseTimecode } from "@/lib/audio-time";
 import { getAudioThemeStyle } from "@/lib/audio-theme";
+import { SkipBack15Icon, SkipForward15Icon } from "@/components/audio/AudioSkip15Icons";
 
 export type AudioFeedContentType = "podcast" | "audiobook" | "music" | "audio";
-
-function SkipBackIcon() {
-  return (
-    <span className="audio-feed__skip-glyph" aria-hidden="true">
-      <svg className="audio-feed__skip-arrow" viewBox="0 0 12 12" fill="currentColor">
-        <path d="M10 2.25v7.5L3.75 6 10 2.25z" />
-      </svg>
-      <span className="audio-feed__skip-label">15</span>
-    </span>
-  );
-}
-
-function SkipForwardIcon() {
-  return (
-    <span className="audio-feed__skip-glyph" aria-hidden="true">
-      <span className="audio-feed__skip-label">15</span>
-      <svg className="audio-feed__skip-arrow" viewBox="0 0 12 12" fill="currentColor">
-        <path d="M2 2.25v7.5l6.25-3.75L2 2.25z" />
-      </svg>
-    </span>
-  );
-}
 
 function ContentBadgeIcon({ type }: { type: AudioFeedContentType }) {
   if (type === "music") {
@@ -209,7 +188,7 @@ export default function AudioFeedPlayer({
 
       <div className="audio-feed__podcast-controls" role="group" aria-label="Audio playback controls">
         <button type="button" className="audio-feed__skip" aria-label="Skip back 15 seconds" onClick={() => handleSkip(-15)}>
-          <SkipBackIcon />
+          <SkipBack15Icon />
         </button>
         <span className="audio-feed__time">{currentTimeLabel}</span>
         <div
@@ -227,7 +206,7 @@ export default function AudioFeedPlayer({
         </div>
         <span className="audio-feed__time">{audio.duration}</span>
         <button type="button" className="audio-feed__skip" aria-label="Skip forward 15 seconds" onClick={() => handleSkip(15)}>
-          <SkipForwardIcon />
+          <SkipForward15Icon />
         </button>
       </div>
     </div>

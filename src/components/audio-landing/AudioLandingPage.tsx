@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   AUDIO_CONTINUE_ITEMS,
   AUDIO_FOR_YOU_CARDS,
@@ -13,7 +14,7 @@ import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
-import type { AudioContentType, AudioLandingFilter } from "@/types/audio-landing";
+import type { AudioContentType, AudioForYouCard, AudioLandingFilter } from "@/types/audio-landing";
 
 const FILTER_PILLS: { id: AudioLandingFilter; label: string }[] = [
   { id: "all", label: "All" },
@@ -26,6 +27,106 @@ function typeLabel(type: AudioContentType): string {
   if (type === "podcast") return "Podcast";
   if (type === "audiobook") return "Audiobook";
   return "Music";
+}
+
+function AudioForYouCardItem({
+  card,
+  onPlay,
+}: {
+  card: AudioForYouCard;
+  onPlay: () => void;
+}) {
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  return (
+    <article className="audio-for-you-card">
+      <button type="button" className="audio-for-you-card__hit" onClick={onPlay}>
+        <div className="audio-for-you-card__art">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={card.thumbnail} alt="" />
+          <span className="audio-for-you-card__tag">{typeLabel(card.type)}</span>
+        </div>
+        <div className="audio-for-you-card__body">
+          <h4 className="audio-for-you-card__title">{card.title}</h4>
+          <p className="audio-for-you-card__creator">{card.creator}</p>
+        </div>
+      </button>
+      <div className="audio-for-you-card__footer">
+        <div className="audio-for-you-card__social">
+          {card.likes ? (
+            <button
+              type="button"
+              className={`audio-for-you-card__action audio-for-you-card__action--like${liked ? " is-liked" : ""}`}
+              aria-label={liked ? "Unlike" : "Like"}
+              aria-pressed={liked}
+              onClick={() => setLiked((value) => !value)}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill={liked ? "currentColor" : "none"}
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              <span>{formatCount(card.likes)} likes</span>
+            </button>
+          ) : null}
+          {card.comments ? (
+            <span className="audio-for-you-card__stat">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <span>{formatCount(card.comments)} comments</span>
+            </span>
+          ) : null}
+          {card.sharedBy ? (
+            <span className="audio-for-you-card__share">
+              <span
+                className="audio-for-you-card__share-av"
+                style={{ "--story-color": card.sharedBy.color } as React.CSSProperties}
+                aria-hidden="true"
+              >
+                {card.sharedBy.initials}
+              </span>
+              Shared by {card.sharedBy.name}
+            </span>
+          ) : null}
+        </div>
+        <button
+          type="button"
+          className={`audio-for-you-card__action audio-for-you-card__action--save${saved ? " is-saved" : ""}`}
+          aria-label={saved ? "Remove bookmark" : "Bookmark"}
+          aria-pressed={saved}
+          onClick={() => setSaved((value) => !value)}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill={saved ? "currentColor" : "none"}
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+          </svg>
+        </button>
+      </div>
+    </article>
+  );
 }
 
 function PlayPauseIcon({ playing }: { playing: boolean }) {
@@ -174,39 +275,11 @@ function AudioLandingContent() {
                 </div>
                 <div className="audio-for-you__grid">
                   {filteredCards.map((card) => (
-                    <article key={card.id} className="audio-for-you-card">
-                      <button
-                        type="button"
-                        className="audio-for-you-card__hit"
-                        onClick={() => playTrack(card.trackId)}
-                      >
-                        <div className="audio-for-you-card__art">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={card.thumbnail} alt="" />
-                          <span className="audio-for-you-card__tag">{typeLabel(card.type)}</span>
-                        </div>
-                        <div className="audio-for-you-card__body">
-                          <h4 className="audio-for-you-card__title">{card.title}</h4>
-                          <p className="audio-for-you-card__creator">{card.creator}</p>
-                          <div className="audio-for-you-card__social">
-                            {card.likes ? <span>❤️ {formatCount(card.likes)} likes</span> : null}
-                            {card.comments ? <span>💬 {formatCount(card.comments)} comments</span> : null}
-                            {card.sharedBy ? (
-                              <span className="audio-for-you-card__share">
-                                <span
-                                  className="audio-for-you-card__share-av"
-                                  style={{ "--story-color": card.sharedBy.color } as React.CSSProperties}
-                                  aria-hidden="true"
-                                >
-                                  {card.sharedBy.initials}
-                                </span>
-                                Shared by {card.sharedBy.name}
-                              </span>
-                            ) : null}
-                          </div>
-                        </div>
-                      </button>
-                    </article>
+                    <AudioForYouCardItem
+                      key={card.id}
+                      card={card}
+                      onPlay={() => playTrack(card.trackId)}
+                    />
                   ))}
                 </div>
               </section>
