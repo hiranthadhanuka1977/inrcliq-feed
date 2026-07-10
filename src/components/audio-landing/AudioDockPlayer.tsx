@@ -30,7 +30,13 @@ export default function AudioDockPlayer() {
     skipBy,
     toggleLike,
     liked,
+    showDockPlayer,
+    openFullscreenPlayer,
   } = useAudioLanding();
+
+  if (!showDockPlayer) {
+    return null;
+  }
 
   const isLongForm = activeTrack.type === "podcast" || activeTrack.type === "audiobook";
 
@@ -47,30 +53,37 @@ export default function AudioDockPlayer() {
       }
     >
       <div className="audio-dock__inner">
-        <div className="audio-dock__track">
-          <div className="audio-dock__art">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={activeTrack.thumbnail} alt="" />
-          </div>
-          <div className="audio-dock__meta">
-            <strong className="audio-dock__title">{activeTrack.title}</strong>
-            <span className="audio-dock__creator">{activeTrack.creator}</span>
-            <div
-              className="audio-dock__progress"
-              role="progressbar"
-              aria-label="Playback position"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={Math.round(progress * 100)}
-            >
-              <span
-                className={`audio-dock__progress-fill${playing ? " is-playing" : ""}`}
-                style={{ width: `${progress * 100}%` }}
-              />
+        <button
+          type="button"
+          className="audio-dock__track-hit"
+          aria-label="Open now playing"
+          onClick={openFullscreenPlayer}
+        >
+          <div className="audio-dock__track">
+            <div className="audio-dock__art">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={activeTrack.thumbnail} alt="" />
             </div>
-            <span className="audio-dock__time">{currentTimeLabel}</span>
+            <div className="audio-dock__meta">
+              <strong className="audio-dock__title">{activeTrack.title}</strong>
+              <span className="audio-dock__creator">{activeTrack.creator}</span>
+              <div
+                className="audio-dock__progress"
+                role="progressbar"
+                aria-label="Playback position"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={Math.round(progress * 100)}
+              >
+                <span
+                  className={`audio-dock__progress-fill${playing ? " is-playing" : ""}`}
+                  style={{ width: `${progress * 100}%` }}
+                />
+              </div>
+              <span className="audio-dock__time">{currentTimeLabel}</span>
+            </div>
           </div>
-        </div>
+        </button>
 
         <div className="audio-dock__controls" data-mode={isLongForm ? "longform" : "music"}>
           <button

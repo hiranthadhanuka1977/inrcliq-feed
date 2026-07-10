@@ -9,6 +9,7 @@ import {
 import { AudioLandingProvider, useAudioLanding } from "@/context/AudioLandingContext";
 import { formatCount } from "@/lib/format";
 import AudioDockPlayer from "@/components/audio-landing/AudioDockPlayer";
+import AudioFullscreenPlayer from "@/components/audio-landing/AudioFullscreenPlayer";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
 import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
@@ -147,14 +148,15 @@ function PlayPauseIcon({ playing }: { playing: boolean }) {
 }
 
 function AudioLandingContent() {
-  const { activeFilter, setActiveFilter, playTrack, playing, togglePlay, activeTrack } = useAudioLanding();
+  const { activeFilter, setActiveFilter, playTrack, playing, togglePlay, activeTrack, showDockPlayer } =
+    useAudioLanding();
 
   const filteredCards = AUDIO_FOR_YOU_CARDS.filter(
     (card) => activeFilter === "all" || card.type === activeFilter,
   );
 
   return (
-    <div className="app-shell app-shell--audio-dock">
+    <div className={`app-shell${showDockPlayer ? " app-shell--audio-dock" : ""}`}>
       <LeftNav />
       <div className="main-content">
         <div className="content-layout">
@@ -289,6 +291,7 @@ function AudioLandingContent() {
       </div>
 
       <AudioDockPlayer />
+      <AudioFullscreenPlayer />
       <FeedScrollButton variant="home" topTargetId="audio-top" />
       <MobileNav />
     </div>

@@ -31,6 +31,12 @@ interface AudioLandingContextValue {
   skipNext: () => void;
   toggleLike: () => void;
   liked: boolean;
+  showDockPlayer: boolean;
+  showFullscreenPlayer: boolean;
+  openFullscreenPlayer: () => void;
+  closeFullscreenPlayer: () => void;
+  seekTo: (seconds: number) => void;
+  durationLabel: string;
 }
 
 const AudioLandingContext = createContext<AudioLandingContextValue | null>(null);
@@ -39,17 +45,20 @@ const TRACK_ORDER = Object.keys(AUDIO_LANDING_TRACKS);
 
 export function AudioLandingProvider({ children }: { children: ReactNode }) {
   const [activeTrackId, setActiveTrackId] = useState(DEFAULT_AUDIO_TRACK_ID);
-  const [playing, setPlaying] = useState(true);
+  const [playing, setPlaying] = useState(false);
+  const [showDockPlayer, setShowDockPlayer] = useState(false);
   const [currentSeconds, setCurrentSeconds] = useState(
     () => AUDIO_LANDING_TRACKS[DEFAULT_AUDIO_TRACK_ID].progress * AUDIO_LANDING_TRACKS[DEFAULT_AUDIO_TRACK_ID].durationSeconds,
   );
   const [activeFilter, setActiveFilter] = useState<AudioLandingFilter>("all");
   const [liked, setLiked] = useState(false);
+  const [showFullscreenPlayer, setShowFullscreenPlayer] = useState(false);
 
   const activeTrack = AUDIO_LANDING_TRACKS[activeTrackId];
   const durationSeconds = activeTrack.durationSeconds;
   const progress = durationSeconds > 0 ? Math.min(currentSeconds / durationSeconds, 1) : 0;
   const currentTimeLabel = formatTimecode(currentSeconds);
+  const durationLabel = formatTimecode(durationSeconds);
 
   useEffect(() => {
     if (!playing || durationSeconds <= 0) {
@@ -80,6 +89,7 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
 
     setActiveTrackId(trackId);
     setCurrentSeconds(track.progress * track.durationSeconds);
+    setShowDockPlayer(true);
     setPlaying(true);
     setLiked(false);
   }, []);
@@ -94,6 +104,21 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
     },
     [durationSeconds],
   );
+
+  const seekTo = useCallback(
+    (seconds: number) => {
+      setCurrentSeconds(Math.min(Math.max(seconds, 0), durationSeconds));
+    },
+    [durationSeconds],
+  );
+
+  const openFullscreenPlayer = useCallback(() => {
+    setShowFullscreenPlayer(true);
+  }, []);
+
+  const closeFullscreenPlayer = useCallback(() => {
+    setShowFullscreenPlayer(false);
+  }, []);
 
   const skipPrevious = useCallback(() => {
     const index = TRACK_ORDER.indexOf(activeTrackId);
@@ -127,6 +152,12 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
       skipNext,
       toggleLike,
       liked,
+      showDockPlayer,
+      showFullscreenPlayer,
+      openFullscreenPlayer,
+      closeFullscreenPlayer,
+      seekTo,
+      durationLabel,
     }),
     [
       activeTrack,
@@ -142,6 +173,12 @@ export function AudioLandingProvider({ children }: { children: ReactNode }) {
       skipNext,
       toggleLike,
       liked,
+      showDockPlayer,
+      showFullscreenPlayer,
+      openFullscreenPlayer,
+      closeFullscreenPlayer,
+      seekTo,
+      durationLabel,
     ],
   );
 
