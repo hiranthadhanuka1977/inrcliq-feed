@@ -779,9 +779,3 @@ body.page-profile:has(.app-shell--audio-dock) {
     display: none;
   }
 }
-
-@media (max-width: 480px) {
-  .audio-mini__btn--close {
-    display: none;
-  }
-}
