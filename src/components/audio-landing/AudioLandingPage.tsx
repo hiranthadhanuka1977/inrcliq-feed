@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   AUDIO_CONTINUE_ITEMS,
   AUDIO_FOR_YOU_CARDS,
@@ -14,7 +13,6 @@ import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
-import RightRail from "@/components/RightRail";
 import type { AudioContentType, AudioLandingFilter } from "@/types/audio-landing";
 
 const FILTER_PILLS: { id: AudioLandingFilter; label: string }[] = [
@@ -96,14 +94,6 @@ function AudioLandingContent() {
                     aria-label="Search voices, topics, sounds"
                   />
                 </label>
-                <Link
-                  href="#"
-                  className="audio-landing-header__avatar"
-                  style={{ "--story-color": "#0d9488" } as React.CSSProperties}
-                  aria-label="Your profile"
-                >
-                  D
-                </Link>
               </div>
             </div>
           </header>
@@ -221,7 +211,6 @@ function AudioLandingContent() {
                 </div>
               </section>
             </main>
-            <RightRail />
           </div>
         </div>
       </div>
