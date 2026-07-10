@@ -3,7 +3,7 @@ export const MOBILE_NAV_ITEMS = [
   { label: "Snaps", href: "#", icon: "snaps" },
   { label: "Photos", href: "#", icon: "photos" },
   { label: "Videos", href: "#", icon: "videos" },
-  { label: "Audio", href: "#", icon: "audio" },
+  { label: "Audio", href: "/audio", icon: "audio" },
   { label: "More", href: "#", icon: "more" },
 ] as const;
 

@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import type { FeedAudio } from "@/types/feed";
 import { useAudioPlaybackItem } from "@/context/AudioPlaybackContext";
 import { formatTimecode, getInitialSeconds, parseTimecode } from "@/lib/audio-time";
 import { getAudioThemeStyle } from "@/lib/audio-theme";
+
+export type AudioFeedContentType = "podcast" | "audiobook" | "music" | "audio";
 
 function SkipBackIcon() {
   return (
@@ -28,66 +30,101 @@ function SkipForwardIcon() {
   );
 }
 
-function Waveform({ progress, clipId }: { progress: number; clipId: string }) {
-  const bars = useMemo(
-    () => [
-      18, 24, 20, 32, 28, 44, 36, 52, 40, 58, 46, 64, 42, 72, 48, 68, 38, 76, 50, 82, 44, 70, 52, 78, 36, 62, 48, 74, 40, 66, 54, 80, 34, 58, 46, 72, 42, 68, 50, 76,
-      38, 60, 48, 84, 44, 74, 56, 88, 46, 70, 52, 78, 40, 64, 48, 82, 42, 68, 54, 86, 38, 62, 50, 74, 44, 66, 48, 80, 36, 58, 46, 72, 40, 64, 52, 76, 44, 68,
-      32, 54, 42, 70, 38, 60, 48, 74, 40, 62, 46, 68, 34, 56, 42, 64, 30, 48, 38, 58, 32, 44, 28, 36, 22, 18,
-    ],
-    [],
-  );
+function ContentBadgeIcon({ type }: { type: AudioFeedContentType }) {
+  if (type === "music") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M9 18V5l12-2v13" />
+        <circle cx="6" cy="18" r="3" />
+        <circle cx="18" cy="16" r="3" />
+      </svg>
+    );
+  }
 
-  const barWidth = 2;
-  const gap = 2;
-  const chartHeight = 44;
-  const chartWidth = bars.length * (barWidth + gap) - gap;
-  const playedWidth = Math.min(Math.max(progress, 0), 1) * chartWidth;
+  if (type === "audiobook") {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      </svg>
+    );
+  }
 
   return (
-    <div className="audio-feed__waveform" aria-hidden="true">
-      <svg
-        className="audio-feed__waveform-svg"
-        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
-        preserveAspectRatio="none"
-      >
-        <defs>
-          <clipPath id={clipId}>
-            <rect x="0" y="0" width={playedWidth} height={chartHeight} />
-          </clipPath>
-        </defs>
-        <g className="audio-feed__waveform-layer audio-feed__waveform-layer--rest">
-          {bars.map((height, index) => {
-            const amplitude = Math.max(2, Math.round((height / 100) * (chartHeight / 2 - 2)));
-            const barHeight = amplitude * 2;
-            const x = index * (barWidth + gap);
-            const y = chartHeight / 2 - amplitude;
-
-            return <rect key={`rest-${index}`} x={x} y={y} width={barWidth} height={barHeight} rx={1} />;
-          })}
-        </g>
-        <g className="audio-feed__waveform-layer audio-feed__waveform-layer--played" clipPath={`url(#${clipId})`}>
-          {bars.map((height, index) => {
-            const amplitude = Math.max(2, Math.round((height / 100) * (chartHeight / 2 - 2)));
-            const barHeight = amplitude * 2;
-            const x = index * (barWidth + gap);
-            const y = chartHeight / 2 - amplitude;
-
-            return <rect key={`played-${index}`} x={x} y={y} width={barWidth} height={barHeight} rx={1} />;
-          })}
-        </g>
-      </svg>
-    </div>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+      <line x1="12" y1="19" x2="12" y2="22" />
+    </svg>
   );
+}
+
+function contentLabel(type: AudioFeedContentType): string {
+  if (type === "podcast") return "Podcast";
+  if (type === "audiobook") return "Audiobook";
+  if (type === "music") return "Music";
+  return "Audio";
+}
+
+function durationKind(type: AudioFeedContentType): string {
+  if (type === "podcast") return "episode";
+  if (type === "audiobook") return "audiobook";
+  if (type === "music") return "track";
+  return "audio";
+}
+
+export function resolveAudioContentType(tags: string[]): AudioFeedContentType {
+  const normalized = tags.map((tag) => tag.toLowerCase());
+
+  if (normalized.some((tag) => tag.includes("podcast"))) return "podcast";
+  if (normalized.some((tag) => tag.includes("audiobook"))) return "audiobook";
+  if (normalized.some((tag) => tag.includes("music"))) return "music";
+  return "audio";
 }
 
 interface AudioFeedPlayerProps {
   itemId: string;
   audio: FeedAudio;
+  showName?: string;
+  contentType?: AudioFeedContentType;
 }
 
-export default function AudioFeedPlayer({ itemId, audio }: AudioFeedPlayerProps) {
-  const waveformClipId = `patreon-wave-${useId().replace(/:/g, "")}`;
+function PlayPauseButton({
+  playing,
+  onClick,
+  className,
+}: {
+  playing: boolean;
+  onClick: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      className={className}
+      aria-label={playing ? "Pause audio" : "Play audio"}
+      onClick={onClick}
+    >
+      {playing ? (
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <rect x="7" y="6" width="3.5" height="12" rx="0.75" />
+          <rect x="13.5" y="6" width="3.5" height="12" rx="0.75" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M8 5.5v13l11-6.5-11-6.5z" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+export default function AudioFeedPlayer({
+  itemId,
+  audio,
+  showName,
+  contentType = "audio",
+}: AudioFeedPlayerProps) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -133,30 +170,50 @@ export default function AudioFeedPlayer({ itemId, audio }: AudioFeedPlayerProps)
     skipBy(deltaSeconds);
   };
 
+  const handlePlayToggle = () => activateAndToggle(itemId, audio);
+
   return (
     <div
       ref={rootRef}
-      className="audio-feed"
+      className="audio-feed audio-feed--podcast"
       aria-label={audio.title}
       style={getAudioThemeStyle(audio.theme)}
     >
-      <div className="audio-feed__hero">
-        <div className="audio-feed__art">
+      <div className="audio-feed__podcast-top">
+        <span className="audio-feed__podcast-badge">
+          <ContentBadgeIcon type={contentType} />
+          {contentLabel(contentType)}
+        </span>
+        <span className="audio-feed__podcast-episode">
+          {audio.duration} {durationKind(contentType)}
+        </span>
+      </div>
+
+      <div className="audio-feed__podcast-main">
+        <div className="audio-feed__art audio-feed__art--podcast">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={audio.thumbnail.url} alt={audio.thumbnail.alt} />
         </div>
-        <div className="audio-feed__waveform-wrap">
-          <Waveform progress={progress} clipId={waveformClipId} />
+
+        <div className="audio-feed__podcast-copy">
+          <h4 className="audio-feed__podcast-title">{audio.title}</h4>
+          {showName ? <p className="audio-feed__podcast-show">{showName}</p> : null}
         </div>
+
+        <PlayPauseButton
+          playing={playing}
+          onClick={handlePlayToggle}
+          className="audio-feed__play audio-feed__play--podcast"
+        />
       </div>
 
-      <div className="audio-feed__controls" role="group" aria-label="Audio playback controls">
+      <div className="audio-feed__podcast-controls" role="group" aria-label="Audio playback controls">
         <button type="button" className="audio-feed__skip" aria-label="Skip back 15 seconds" onClick={() => handleSkip(-15)}>
           <SkipBackIcon />
         </button>
         <span className="audio-feed__time">{currentTimeLabel}</span>
         <div
-          className="audio-feed__scrubber"
+          className="audio-feed__scrubber audio-feed__scrubber--podcast"
           role="slider"
           aria-label="Playback position"
           aria-valuemin={0}
@@ -171,23 +228,6 @@ export default function AudioFeedPlayer({ itemId, audio }: AudioFeedPlayerProps)
         <span className="audio-feed__time">{audio.duration}</span>
         <button type="button" className="audio-feed__skip" aria-label="Skip forward 15 seconds" onClick={() => handleSkip(15)}>
           <SkipForwardIcon />
-        </button>
-        <button
-          type="button"
-          className="audio-feed__play"
-          aria-label={playing ? "Pause audio" : "Play audio"}
-          onClick={() => activateAndToggle(itemId, audio)}
-        >
-          {playing ? (
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <rect x="7" y="6" width="3.5" height="12" rx="0.75" />
-              <rect x="13.5" y="6" width="3.5" height="12" rx="0.75" />
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M8 5.5v13l11-6.5-11-6.5z" />
-            </svg>
-          )}
         </button>
       </div>
     </div>

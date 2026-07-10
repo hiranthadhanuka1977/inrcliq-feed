@@ -55,9 +55,14 @@ export default function CategoryFilters({ categories, activeCategory, onChange, 
         </button>
       </div>
 
-      <div className="feed-filters__pills-wrap" id="home-feed-filter-pills">
-        <div className="feed-filters__track feed-filters__track--audio" role="tablist">
-          {tabs.map((tab) => {
+      <div
+        className="feed-filters__pills-wrap"
+        id="home-feed-filter-pills"
+        aria-hidden={!expanded}
+      >
+        <div className="feed-filters__pills-inner">
+          <div className="feed-filters__track feed-filters__track--audio" role="tablist">
+            {tabs.map((tab, index) => {
             const value = tab === "All" ? null : tab.toLowerCase() === "discovery" ? "discovery" : tab.toLowerCase();
             const selected = activeCategory === value || (tab === "All" && activeCategory === null);
 
@@ -66,6 +71,7 @@ export default function CategoryFilters({ categories, activeCategory, onChange, 
                 key={tab}
                 className={`feed-filter-item${selected ? " is-active" : ""}`}
                 data-filter={value ?? "All"}
+                style={{ "--pill-index": index } as React.CSSProperties}
               >
                 <button
                   type="button"
@@ -79,6 +85,7 @@ export default function CategoryFilters({ categories, activeCategory, onChange, 
               </span>
             );
           })}
+          </div>
         </div>
       </div>
     </section>

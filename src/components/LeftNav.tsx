@@ -1,25 +1,41 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { NavIcon, type NavIconName } from "@/lib/nav-icons";
 
 const navItems: {
   label: string;
   href: string;
   icon: NavIconName;
-  active?: boolean;
   badge?: string;
 }[] = [
-  { label: "Home", href: "/", active: true, icon: "home" },
+  { label: "Home", href: "/", icon: "home" },
+  { label: "Messages", href: "#", icon: "messages", badge: "3" },
   { label: "Snaps", href: "#", icon: "snaps" },
   { label: "Photos", href: "#", icon: "photos" },
   { label: "Videos", href: "#", icon: "videos" },
-  { label: "Audio", href: "#", icon: "audio" },
+  { label: "Audio", href: "/audio", icon: "audio" },
   { label: "Explore", href: "#", icon: "explore" },
-  { label: "Messages", href: "#", icon: "messages", badge: "3" },
   { label: "Purchases", href: "#", icon: "purchases" },
   { label: "More", href: "#", icon: "more" },
 ];
 
+function isActive(pathname: string, href: string): boolean {
+  if (href === "/") {
+    return pathname === "/";
+  }
+
+  if (href === "#") {
+    return false;
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function LeftNav() {
+  const pathname = usePathname();
+
   return (
     <aside className="left-nav">
       <div className="left-nav__body">
@@ -37,23 +53,33 @@ export default function LeftNav() {
           </a>
         </div>
         <nav>
-          {navItems.map((item) => (
-            <Link
-              key={item.label}
-              className={`nav-item${item.active ? " active" : ""}`}
-              href={item.href}
-            >
-              <span className="nav-item__label">
-                <span className={`nav-icon${item.icon === "home" ? " nav-icon--home" : ""}`} aria-hidden="true">
-                  <NavIcon name={item.icon} />
-                </span>
-                <span className="nav-item__text">
-                  {item.label}
-                  {item.badge ? <span className="badge">{item.badge}</span> : null}
-                </span>
-              </span>
-            </Link>
-          ))}
+          {navItems.map((item, index) => {
+            const showTopDivider = item.label === "Snaps";
+            const showBottomDivider = item.label === "Audio";
+            const active = isActive(pathname, item.href);
+
+            return (
+              <div key={item.label}>
+                {showTopDivider ? <hr className="nav-separator" /> : null}
+                <Link
+                  className={`nav-item${active ? " active" : ""}`}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                >
+                  <span className="nav-item__label">
+                    <span className={`nav-icon${item.icon === "home" ? " nav-icon--home" : ""}`} aria-hidden="true">
+                      <NavIcon name={item.icon} />
+                    </span>
+                    <span className="nav-item__text">
+                      {item.label}
+                      {item.badge ? <span className="badge">{item.badge}</span> : null}
+                    </span>
+                  </span>
+                </Link>
+                {showBottomDivider && index < navItems.length - 1 ? <hr className="nav-separator" /> : null}
+              </div>
+            );
+          })}
         </nav>
       </div>
 

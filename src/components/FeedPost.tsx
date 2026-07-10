@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import AudioFeedPlayer from "@/components/AudioFeedPlayer";
+import AudioFeedPlayer, { resolveAudioContentType } from "@/components/AudioFeedPlayer";
 import MediaPlayOverlay from "@/components/MediaPlayOverlay";
 import ShareIcon from "@/components/ShareIcon";
 import type { FeedItem } from "@/types/feed";
@@ -207,7 +207,14 @@ export default function FeedPost({ item }: { item: FeedItem }) {
           </div>
         ) : null}
         <p>{item.text}</p>
-        {item.audio ? <AudioFeedPlayer itemId={item.id} audio={item.audio} /> : null}
+        {item.audio ? (
+          <AudioFeedPlayer
+            itemId={item.id}
+            audio={item.audio}
+            showName={item.author.name}
+            contentType={resolveAudioContentType(item.tags)}
+          />
+        ) : null}
         {item.media ? <PostMedia media={item.media} membersOnly={item.members_only} /> : null}
       </div>
 

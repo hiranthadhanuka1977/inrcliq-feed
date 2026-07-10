@@ -1,0 +1,10 @@
+import AudioLandingPage from "@/components/audio-landing/AudioLandingPage";
+
+export const metadata = {
+  title: "INRCLIQ · Audio",
+  description: "Discover music, podcasts, and audiobooks on INRCLIQ",
+};
+
+export default function AudioPage() {
+  return <AudioLandingPage />;
+}

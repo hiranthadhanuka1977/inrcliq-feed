@@ -1,0 +1,210 @@
+import type {
+  AudioForYouCard,
+  AudioHeroSlide,
+  AudioLandingTrack,
+  AudioMoodCategory,
+} from "@/types/audio-landing";
+
+export const AUDIO_LANDING_TRACKS: Record<string, AudioLandingTrack> = {
+  "track-fortnight": {
+    id: "track-fortnight",
+    type: "music",
+    title: "Fortnight",
+    creator: "Taylor Swift ft. Post Malone",
+    thumbnail:
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 228,
+    progress: 0.18,
+    accent: ["#7c3aed", "#db2777"],
+  },
+  "track-hard-fork": {
+    id: "track-hard-fork",
+    type: "podcast",
+    title: "AI, Music & The Creator Economy",
+    creator: "Hard Fork · The Verge",
+    thumbnail:
+      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 3420,
+    progress: 0.41,
+    progressLabel: "Ep 204 · 38m left",
+    accent: ["#0f766e", "#1d4ed8"],
+  },
+  "track-atomic-habits": {
+    id: "track-atomic-habits",
+    type: "audiobook",
+    title: "Atomic Habits",
+    creator: "James Clear · Narrated by the author",
+    thumbnail:
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 19800,
+    progress: 0.45,
+    progressLabel: "Ch. 12 · 42m left",
+    accent: ["#4338ca", "#059669"],
+  },
+  "track-birds": {
+    id: "track-birds",
+    type: "music",
+    title: "Birds of a Feather",
+    creator: "Billie Eilish",
+    thumbnail:
+      "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 222,
+    progress: 0.62,
+    accent: ["#0369a1", "#7c3aed"],
+  },
+  "track-midnights": {
+    id: "track-midnights",
+    type: "music",
+    title: "Midnights (3am Edition)",
+    creator: "Taylor Swift",
+    thumbnail:
+      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 312,
+    progress: 0,
+    accent: ["#1e1b4b", "#6366f1"],
+  },
+  "track-rewired": {
+    id: "track-rewired",
+    type: "podcast",
+    title: "REWIRED: Future of Work",
+    creator: "INRCLIQ Originals",
+    thumbnail:
+      "https://images.unsplash.com/photo-1589903308904-1010c2294adc?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 2700,
+    progress: 0.12,
+    progressLabel: "15m remaining",
+    accent: ["#b45309", "#dc2626"],
+  },
+  "track-project-hail": {
+    id: "track-project-hail",
+    type: "audiobook",
+    title: "Project Hail Mary",
+    creator: "Andy Weir · Ray Porter",
+    thumbnail:
+      "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 57600,
+    progress: 0.28,
+    progressLabel: "Ch. 8 · 1h 12m left",
+    accent: ["#1e3a8a", "#0d9488"],
+  },
+};
+
+export const AUDIO_HERO_SLIDES: AudioHeroSlide[] = [
+  {
+    id: "hero-fortnight",
+    trackId: "track-fortnight",
+    type: "music",
+    title: "Fortnight",
+    creator: "Taylor Swift ft. Post Malone",
+    thumbnail:
+      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80&auto=format&fit=crop",
+    badge: "Trending No. 1",
+    friendsListening: 5,
+    accent: ["#7c3aed", "#db2777"],
+  },
+  {
+    id: "hero-hard-fork",
+    trackId: "track-hard-fork",
+    type: "podcast",
+    title: "AI, Music & The Creator Economy",
+    creator: "Hard Fork · The Verge",
+    thumbnail:
+      "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&q=80&auto=format&fit=crop",
+    badge: "Top podcast today",
+    friendsListening: 3,
+    accent: ["#0f766e", "#1d4ed8"],
+  },
+  {
+    id: "hero-atomic",
+    trackId: "track-atomic-habits",
+    type: "audiobook",
+    title: "Atomic Habits",
+    creator: "James Clear",
+    thumbnail:
+      "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=800&q=80&auto=format&fit=crop",
+    badge: "Audiobook spotlight",
+    friendsListening: 2,
+    accent: ["#4338ca", "#059669"],
+  },
+];
+
+export const AUDIO_MOOD_CATEGORIES: AudioMoodCategory[] = [
+  { id: "deep-focus", label: "Deep Focus", emoji: "🧠", gradient: "linear-gradient(135deg, #4c1d95 0%, #1d4ed8 100%)" },
+  { id: "trending", label: "Trending Now", emoji: "🔥", gradient: "linear-gradient(135deg, #ea580c 0%, #dc2626 100%)" },
+  { id: "chill", label: "Chill Down", emoji: "🧘", gradient: "linear-gradient(135deg, #312e81 0%, #059669 100%)" },
+  { id: "workout", label: "Workout", emoji: "💪", gradient: "linear-gradient(135deg, #b91c1c 0%, #f97316 100%)" },
+  { id: "commute", label: "Commute", emoji: "🚗", gradient: "linear-gradient(135deg, #b45309 0%, #ca8a04 100%)" },
+  { id: "late-night", label: "Late Night", emoji: "🌙", gradient: "linear-gradient(135deg, #0f172a 0%, #4338ca 100%)" },
+  { id: "storytime", label: "Storytime", emoji: "📖", gradient: "linear-gradient(135deg, #581c87 0%, #be185d 100%)" },
+  { id: "live", label: "Live Sets", emoji: "🎤", gradient: "linear-gradient(135deg, #047857 0%, #2563eb 100%)" },
+];
+
+export const AUDIO_CONTINUE_ITEMS = [
+  AUDIO_LANDING_TRACKS["track-hard-fork"],
+  AUDIO_LANDING_TRACKS["track-atomic-habits"],
+];
+
+export const AUDIO_FOR_YOU_CARDS: AudioForYouCard[] = [
+  {
+    id: "fy-birds",
+    trackId: "track-birds",
+    type: "music",
+    title: "Birds of a Feather",
+    creator: "Billie Eilish",
+    thumbnail: AUDIO_LANDING_TRACKS["track-birds"].thumbnail,
+    likes: 4500,
+    comments: 1200,
+  },
+  {
+    id: "fy-hard-fork",
+    trackId: "track-hard-fork",
+    type: "podcast",
+    title: "AI, Music & The Creator Economy",
+    creator: "Hard Fork",
+    thumbnail: AUDIO_LANDING_TRACKS["track-hard-fork"].thumbnail,
+    comments: 890,
+    sharedBy: { initials: "ED", color: "#166534", name: "Ed Sheeran" },
+  },
+  {
+    id: "fy-midnights",
+    trackId: "track-midnights",
+    type: "music",
+    title: "Midnights (3am Edition)",
+    creator: "Taylor Swift",
+    thumbnail: AUDIO_LANDING_TRACKS["track-midnights"].thumbnail,
+    likes: 8200,
+    sharedBy: { initials: "MC", color: "#0d9488", name: "Mia Chen" },
+  },
+  {
+    id: "fy-atomic",
+    trackId: "track-atomic-habits",
+    type: "audiobook",
+    title: "Atomic Habits",
+    creator: "James Clear",
+    thumbnail: AUDIO_LANDING_TRACKS["track-atomic-habits"].thumbnail,
+    likes: 2100,
+    comments: 340,
+  },
+  {
+    id: "fy-rewired",
+    trackId: "track-rewired",
+    type: "podcast",
+    title: "REWIRED: Future of Work",
+    creator: "INRCLIQ Originals",
+    thumbnail: AUDIO_LANDING_TRACKS["track-rewired"].thumbnail,
+    likes: 640,
+    comments: 210,
+  },
+  {
+    id: "fy-hail-mary",
+    trackId: "track-project-hail",
+    type: "audiobook",
+    title: "Project Hail Mary",
+    creator: "Andy Weir",
+    thumbnail: AUDIO_LANDING_TRACKS["track-project-hail"].thumbnail,
+    sharedBy: { initials: "JL", color: "#8b5cf6", name: "Jennifer Lopez" },
+    comments: 156,
+  },
+];
+
+export const DEFAULT_AUDIO_TRACK_ID = "track-fortnight";
