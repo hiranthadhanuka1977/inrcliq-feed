@@ -6,6 +6,7 @@ import type { AudioHeroSlide } from "@/types/audio-landing";
 
 const ROTATION_MS = 8000;
 const TRANSITION_MS = 900;
+const SWIPE_THRESHOLD_PX = 48;
 
 interface AudioSpotlightHeroProps {
   onPlay: (trackId: string) => void;
@@ -84,6 +85,7 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
   const [cycleKey, setCycleKey] = useState(0);
   const activeIndexRef = useRef(activeIndex);
   const transitionTimerRef = useRef<number | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   activeIndexRef.current = activeIndex;
 
@@ -106,6 +108,57 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
       setLeavingIndex(null);
       transitionTimerRef.current = null;
     }, TRANSITION_MS);
+  }, []);
+
+  const goToNext = useCallback(() => {
+    const next = (activeIndexRef.current + 1) % AUDIO_HERO_SLIDES.length;
+    goToSlide(next);
+  }, [goToSlide]);
+
+  const goToPrevious = useCallback(() => {
+    const current = activeIndexRef.current;
+    const prev = current <= 0 ? AUDIO_HERO_SLIDES.length - 1 : current - 1;
+    goToSlide(prev);
+  }, [goToSlide]);
+
+  const handleTouchStart = useCallback((event: React.TouchEvent<HTMLElement>) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    setPaused(true);
+  }, []);
+
+  const handleTouchEnd = useCallback(
+    (event: React.TouchEvent<HTMLElement>) => {
+      const start = touchStartRef.current;
+      touchStartRef.current = null;
+
+      const touch = event.changedTouches[0];
+      if (!start || !touch) {
+        setPaused(false);
+        return;
+      }
+
+      const deltaX = touch.clientX - start.x;
+      const deltaY = touch.clientY - start.y;
+
+      if (Math.abs(deltaX) >= SWIPE_THRESHOLD_PX && Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX < 0) {
+          goToNext();
+        } else {
+          goToPrevious();
+        }
+      }
+
+      setPaused(false);
+    },
+    [goToNext, goToPrevious],
+  );
+
+  const handleTouchCancel = useCallback(() => {
+    touchStartRef.current = null;
+    setPaused(false);
   }, []);
 
   useEffect(() => {
@@ -143,6 +196,9 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
     >
       <article
         className="audio-spotlight__card"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
         style={
           {
             "--spotlight-a": activeSlide.accent[0],

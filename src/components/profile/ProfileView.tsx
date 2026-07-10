@@ -1,4 +1,7 @@
+"use client";
+
 import AudioMiniPlayer from "@/components/AudioMiniPlayer";
+import FeedAudioFullscreenPlayer from "@/components/FeedAudioFullscreenPlayer";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
 import FeedPost from "@/components/FeedPost";
@@ -7,19 +10,18 @@ import LeftNav from "@/components/LeftNav";
 import ProfileCollection from "@/components/profile/ProfileCollection";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfilePopularPosts from "@/components/profile/ProfilePopularPosts";
-import { AudioPlaybackProvider } from "@/context/AudioPlaybackContext";
+import { AudioPlaybackProvider, useAudioPlayback } from "@/context/AudioPlaybackContext";
 import type { ProfileData } from "@/types/profile";
 
-export default function ProfileView({ profile }: { profile: ProfileData }) {
+function ProfileViewContent({ profile }: { profile: ProfileData }) {
+  const { showMiniPlayer } = useAudioPlayback();
+
   return (
-    <AudioPlaybackProvider>
+    <>
       <PageBodyClass pageClass="page-profile" />
-      <div className="app-shell page-profile">
+      <div className={`app-shell page-profile${showMiniPlayer ? " app-shell--audio-dock" : ""}`}>
         <LeftNav />
         <main className="main-content profile-page">
-          <div className="feed-header">
-            <AudioMiniPlayer />
-          </div>
           <ProfileHeader profile={profile} />
 
           <div className="profile-page__inner">
@@ -38,9 +40,19 @@ export default function ProfileView({ profile }: { profile: ProfileData }) {
             </section>
           </div>
         </main>
+        <AudioMiniPlayer />
+        <FeedAudioFullscreenPlayer />
         <FeedScrollButton variant="profile" topTargetId="profile-top" feedTargetId="profile-feed" />
       </div>
       <MobileNav />
+    </>
+  );
+}
+
+export default function ProfileView({ profile }: { profile: ProfileData }) {
+  return (
+    <AudioPlaybackProvider>
+      <ProfileViewContent profile={profile} />
     </AudioPlaybackProvider>
   );
 }

@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import type { FeedAudio } from "@/types/feed";
-import { useAudioPlaybackItem } from "@/context/AudioPlaybackContext";
+import { useAudioPlaybackItem, type AudioFeedContentType } from "@/context/AudioPlaybackContext";
 import { formatTimecode, getInitialSeconds, parseTimecode } from "@/lib/audio-time";
 import { getAudioThemeStyle } from "@/lib/audio-theme";
 import { SkipBack15Icon, SkipForward15Icon } from "@/components/audio/AudioSkip15Icons";
 
-export type AudioFeedContentType = "podcast" | "audiobook" | "music" | "audio";
+export type { AudioFeedContentType };
 
 function ContentBadgeIcon({ type }: { type: AudioFeedContentType }) {
   if (type === "music") {
@@ -144,12 +144,12 @@ export default function AudioFeedPlayer({
 
   const handleSkip = (deltaSeconds: number) => {
     if (!isActive) {
-      ensureActive(itemId, audio);
+      ensureActive(itemId, audio, { showName, contentType });
     }
     skipBy(deltaSeconds);
   };
 
-  const handlePlayToggle = () => activateAndToggle(itemId, audio);
+  const handlePlayToggle = () => activateAndToggle(itemId, audio, { showName, contentType });
 
   return (
     <div

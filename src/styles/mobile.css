@@ -13,10 +13,6 @@
     padding: var(--space-4) var(--space-4) 0;
   }
 
-  .page-profile .feed-header:has(.audio-mini) {
-    padding-inline: var(--space-4);
-  }
-
   .feed-surface--simple .more,
   .feed-surface--simple .post--simple .more {
     opacity: 1;
@@ -61,11 +57,6 @@
 }
 
 @media (max-width: 640px) {
-  .audio-mini {
-    width: min(360px, calc(100vw - 1.5rem));
-    max-width: min(360px, calc(100vw - 1.5rem));
-  }
-
   .audio-feed__controls {
     gap: 0.35rem;
   }

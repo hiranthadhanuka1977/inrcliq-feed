@@ -200,6 +200,7 @@
   min-height: var(--audio-spotlight-height);
   padding-block: var(--space-8);
   padding-inline: var(--space-6);
+  touch-action: pan-y;
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-sizing: border-box;
