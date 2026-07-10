@@ -187,14 +187,15 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  --audio-spotlight-height: 20.5rem;
+  --audio-spotlight-height: 22.5rem;
 }
 
 .page-audio .audio-spotlight__card {
   position: relative;
   height: var(--audio-spotlight-height);
   min-height: var(--audio-spotlight-height);
-  padding: var(--space-4) var(--space-6);
+  padding-block: var(--space-8);
+  padding-inline: var(--space-6);
   border-radius: var(--radius-xl);
   overflow: hidden;
   box-sizing: border-box;
@@ -558,7 +559,8 @@
   .page-audio .audio-spotlight__card {
     height: auto;
     min-height: 0;
-    padding: var(--space-4);
+    padding-block: calc(var(--space-8) + var(--space-4));
+    padding-inline: var(--space-4);
     display: block;
   }
 
@@ -576,7 +578,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: var(--space-3);
+    gap: calc(var(--space-8) + var(--space-3));
     text-align: center;
     grid-template-columns: unset;
     padding: 0;
