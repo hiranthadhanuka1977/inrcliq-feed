@@ -396,6 +396,7 @@
     align-items: center;
     margin-top: 0.5rem;
     padding-top: 0.5rem;
+    border-top: none;
   }
 
   .audio-feed--podcast .audio-feed__podcast-controls .audio-feed__scrubber {
