@@ -1,8 +1,11 @@
 import type {
+  AudioChallenge,
   AudioForYouCard,
   AudioHeroSlide,
   AudioLandingTrack,
+  AudioLiveDrop,
   AudioMoodCategory,
+  AudioTopCreator,
 } from "@/types/audio-landing";
 
 export const AUDIO_LANDING_TRACKS: Record<string, AudioLandingTrack> = {
@@ -204,6 +207,139 @@ export const AUDIO_FOR_YOU_CARDS: AudioForYouCard[] = [
     thumbnail: AUDIO_LANDING_TRACKS["track-project-hail"].thumbnail,
     sharedBy: { initials: "JL", color: "#8b5cf6", name: "Jennifer Lopez" },
     comments: 156,
+  },
+];
+
+export const AUDIO_TOP_CREATORS: AudioTopCreator[] = [
+  {
+    id: "tc-billie",
+    name: "Billie Eilish",
+    handle: "@billieeilish",
+    category: "Music",
+    listeners: "12.4M monthly",
+    verified: true,
+    image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=240&q=80&auto=format&fit=crop",
+    initials: "BE",
+    color: "#0369a1",
+  },
+  {
+    id: "tc-hard-fork",
+    name: "Hard Fork",
+    handle: "@hardfork",
+    category: "Podcast",
+    listeners: "2.1M monthly",
+    verified: true,
+    image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=240&q=80&auto=format&fit=crop",
+    initials: "HF",
+    color: "#0f766e",
+  },
+  {
+    id: "tc-james",
+    name: "James Clear",
+    handle: "@jamesclear",
+    category: "Audiobook",
+    listeners: "890K monthly",
+    verified: true,
+    image: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=240&q=80&auto=format&fit=crop",
+    initials: "JC",
+    color: "#4338ca",
+  },
+  {
+    id: "tc-taylor",
+    name: "Taylor Swift",
+    handle: "@taylorswift",
+    category: "Music",
+    listeners: "28.6M monthly",
+    verified: true,
+    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=240&q=80&auto=format&fit=crop",
+    initials: "TS",
+    color: "#1e3a5f",
+  },
+  {
+    id: "tc-inrcliq",
+    name: "INRCLIQ Originals",
+    handle: "@inrcliq",
+    category: "Podcast",
+    listeners: "640K monthly",
+    initials: "IO",
+    color: "#b45309",
+  },
+  {
+    id: "tc-andy",
+    name: "Andy Weir",
+    handle: "@andyweirwriter",
+    category: "Audiobook",
+    listeners: "510K monthly",
+    verified: true,
+    image: "https://images.unsplash.com/photo-1456513080880-7d93d20cc2ed?w=240&q=80&auto=format&fit=crop",
+    initials: "AW",
+    color: "#9f1239",
+  },
+];
+
+export const AUDIO_CHALLENGES: AudioChallenge[] = [
+  {
+    id: "ch-60s",
+    hashtag: "#60SecondPitch",
+    title: "Pitch your next idea",
+    description: "Record a 60-second creator pitch and tag a friend to remix it.",
+    submissionsToday: 2400,
+    accent: ["#0f766e", "#1d4ed8"],
+    thumbnail: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=480&q=80&auto=format&fit=crop",
+  },
+  {
+    id: "ch-acoustic",
+    hashtag: "#AcousticCover",
+    title: "Strip it back",
+    description: "Share an acoustic take of a song that shaped your week.",
+    submissionsToday: 1860,
+    accent: ["#b45309", "#9a3412"],
+    thumbnail: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=480&q=80&auto=format&fit=crop",
+  },
+  {
+    id: "ch-chapter",
+    hashtag: "#ChapterRead",
+    title: "Read one chapter live",
+    description: "Narrate a favorite chapter and invite listeners to discuss.",
+    submissionsToday: 920,
+    accent: ["#4338ca", "#0f766e"],
+    thumbnail: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=480&q=80&auto=format&fit=crop",
+  },
+  {
+    id: "ch-hot-take",
+    hashtag: "#HotTakeAudio",
+    title: "One take, no edits",
+    description: "Drop a raw hot take on culture, tech, or music in under 90 seconds.",
+    submissionsToday: 3140,
+    accent: ["#be185d", "#9f1239"],
+    thumbnail: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=480&q=80&auto=format&fit=crop",
+  },
+];
+
+export const AUDIO_LIVE_DROPS: AudioLiveDrop[] = [
+  {
+    id: "ld-midnights",
+    title: "Midnights Listening Party",
+    host: "Taylor Swift",
+    kind: "Album party",
+    startsInMinutes: 14,
+    thumbnail: AUDIO_LANDING_TRACKS["track-midnights"].thumbnail,
+  },
+  {
+    id: "ld-hard-fork",
+    title: "Hard Fork Live Q&A",
+    host: "The Verge",
+    kind: "Podcast Q&A",
+    startsInMinutes: 47,
+    thumbnail: AUDIO_LANDING_TRACKS["track-hard-fork"].thumbnail,
+  },
+  {
+    id: "ld-habits",
+    title: "Atomic Habits Book Club Room",
+    host: "James Clear",
+    kind: "Audiobook room",
+    startsInMinutes: 92,
+    thumbnail: AUDIO_LANDING_TRACKS["track-atomic-habits"].thumbnail,
   },
 ];
 

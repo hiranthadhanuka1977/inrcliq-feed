@@ -48,3 +48,34 @@ export interface AudioForYouCard {
     name: string;
   };
 }
+
+export interface AudioTopCreator {
+  id: string;
+  name: string;
+  handle: string;
+  category: string;
+  listeners: string;
+  verified?: boolean;
+  image?: string;
+  initials: string;
+  color: string;
+}
+
+export interface AudioChallenge {
+  id: string;
+  hashtag: string;
+  title: string;
+  description: string;
+  submissionsToday: number;
+  accent: [string, string];
+  thumbnail: string;
+}
+
+export interface AudioLiveDrop {
+  id: string;
+  title: string;
+  host: string;
+  kind: string;
+  startsInMinutes: number;
+  thumbnail: string;
+}

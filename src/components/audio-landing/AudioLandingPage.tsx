@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  AUDIO_CHALLENGES,
   AUDIO_CONTINUE_ITEMS,
   AUDIO_FOR_YOU_CARDS,
+  AUDIO_LIVE_DROPS,
   AUDIO_MOOD_CATEGORIES,
+  AUDIO_TOP_CREATORS,
 } from "@/data/audio-landing";
 import { AudioLandingProvider, useAudioLanding } from "@/context/AudioLandingContext";
 import { formatCount } from "@/lib/format";
@@ -15,7 +18,12 @@ import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
-import type { AudioContentType, AudioForYouCard, AudioLandingFilter } from "@/types/audio-landing";
+import type {
+  AudioContentType,
+  AudioForYouCard,
+  AudioLandingFilter,
+  AudioLiveDrop,
+} from "@/types/audio-landing";
 
 const FILTER_PILLS: { id: AudioLandingFilter; label: string }[] = [
   { id: "all", label: "All" },
@@ -126,6 +134,114 @@ function AudioForYouCardItem({
           </svg>
         </button>
       </div>
+    </article>
+  );
+}
+
+function formatCountdown(totalSeconds: number): string {
+  const clamped = Math.max(0, totalSeconds);
+  const hours = Math.floor(clamped / 3600);
+  const minutes = Math.floor((clamped % 3600) / 60);
+  const seconds = clamped % 60;
+
+  if (hours > 0) {
+    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
+function TopCreatorCard({
+  creator,
+}: {
+  creator: (typeof AUDIO_TOP_CREATORS)[number];
+}) {
+  const [following, setFollowing] = useState(false);
+
+  return (
+    <article className="audio-top-creator-card">
+      <div className="audio-top-creator-card__art">
+        {creator.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={creator.image} alt="" />
+        ) : (
+          <span
+            className="audio-top-creator-card__placeholder"
+            style={{ "--story-color": creator.color } as React.CSSProperties}
+            aria-hidden="true"
+          >
+            {creator.initials}
+          </span>
+        )}
+      </div>
+      <div className="audio-top-creator-card__body">
+        <strong className="audio-top-creator-card__name">
+          {creator.name}
+          {creator.verified ? (
+            <span className="audio-top-creator-card__verified" aria-label="Verified">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2l2.9 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 7.1-1.01L12 2z" />
+              </svg>
+            </span>
+          ) : null}
+        </strong>
+        <span className="audio-top-creator-card__handle">{creator.handle}</span>
+        <span className="audio-top-creator-card__meta">
+          {creator.category} · {creator.listeners}
+        </span>
+        <button
+          type="button"
+          className={`audio-top-creator-card__follow${following ? " is-following" : ""}`}
+          aria-pressed={following}
+          onClick={() => setFollowing((value) => !value)}
+        >
+          {following ? "Following" : "Follow"}
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function LiveDropCard({ drop }: { drop: AudioLiveDrop }) {
+  const [remainingSeconds, setRemainingSeconds] = useState(drop.startsInMinutes * 60);
+  const [reminded, setReminded] = useState(false);
+
+  useEffect(() => {
+    const startsAt = Date.now() + drop.startsInMinutes * 60_000;
+
+    const tick = () => {
+      setRemainingSeconds(Math.max(0, Math.floor((startsAt - Date.now()) / 1000)));
+    };
+
+    tick();
+    const timer = window.setInterval(tick, 1000);
+    return () => window.clearInterval(timer);
+  }, [drop.startsInMinutes]);
+
+  const isLive = remainingSeconds <= 0;
+
+  return (
+    <article className="audio-live-drop-card">
+      <div className="audio-live-drop-card__art">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={drop.thumbnail} alt="" />
+      </div>
+      <div className="audio-live-drop-card__body">
+        <span className="audio-live-drop-card__kind">{drop.kind}</span>
+        <strong className="audio-live-drop-card__title">{drop.title}</strong>
+        <span className="audio-live-drop-card__host">Hosted by {drop.host}</span>
+        <span className={`audio-live-drop-card__countdown${isLive ? " is-live" : ""}`}>
+          {isLive ? "Live now" : `Starts in ${formatCountdown(remainingSeconds)}`}
+        </span>
+      </div>
+      <button
+        type="button"
+        className={`audio-live-drop-card__remind${reminded ? " is-set" : ""}`}
+        aria-pressed={reminded}
+        onClick={() => setReminded((value) => !value)}
+      >
+        {reminded ? "Reminder set" : "Remind Me 🔔"}
+      </button>
     </article>
   );
 }
@@ -282,6 +398,67 @@ function AudioLandingContent() {
                       card={card}
                       onPlay={() => playTrack(card.trackId)}
                     />
+                  ))}
+                </div>
+              </section>
+
+              <section className="audio-top-creators" aria-label="Top creators">
+                <div className="rail-title">
+                  <h3>Top Creators</h3>
+                  <span className="audio-section__subtitle">Artists, hosts, and narrators rising this week</span>
+                </div>
+                <div className="audio-top-creators__row">
+                  {AUDIO_TOP_CREATORS.map((creator) => (
+                    <TopCreatorCard key={creator.id} creator={creator} />
+                  ))}
+                </div>
+              </section>
+
+              <section className="audio-challenges" aria-label="Trending audio challenges">
+                <div className="rail-title">
+                  <h3>Trending Audio Challenges</h3>
+                  <span className="audio-section__subtitle">Community UGC events happening now</span>
+                </div>
+                <div className="audio-challenges__grid">
+                  {AUDIO_CHALLENGES.map((challenge) => (
+                    <article
+                      key={challenge.id}
+                      className="audio-challenge-card"
+                      style={
+                        {
+                          "--challenge-a": challenge.accent[0],
+                          "--challenge-b": challenge.accent[1],
+                        } as React.CSSProperties
+                      }
+                    >
+                      <div className="audio-challenge-card__art">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={challenge.thumbnail} alt="" />
+                      </div>
+                      <div className="audio-challenge-card__body">
+                        <span className="audio-challenge-card__hashtag">{challenge.hashtag}</span>
+                        <strong className="audio-challenge-card__title">{challenge.title}</strong>
+                        <p className="audio-challenge-card__copy">{challenge.description}</p>
+                        <span className="audio-challenge-card__metric">
+                          {formatCount(challenge.submissionsToday)} submissions today
+                        </span>
+                        <button type="button" className="audio-challenge-card__cta">
+                          Join Challenge 🎙️
+                        </button>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              <section className="audio-live-drops" aria-label="Upcoming live drops">
+                <div className="rail-title">
+                  <h3>Upcoming Live Drops</h3>
+                  <span className="audio-section__subtitle">Album parties, podcast Q&As, and listening rooms</span>
+                </div>
+                <div className="audio-live-drops__list">
+                  {AUDIO_LIVE_DROPS.map((drop) => (
+                    <LiveDropCard key={drop.id} drop={drop} />
                   ))}
                 </div>
               </section>
