@@ -13,6 +13,7 @@ import { formatCount } from "@/lib/format";
 import AudioDockPlayer from "@/components/audio-landing/AudioDockPlayer";
 import AudioFullscreenPlayer from "@/components/audio-landing/AudioFullscreenPlayer";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
+import AudioTopChart from "@/components/audio-landing/AudioTopChart";
 import AudioTopCreators from "@/components/audio/AudioTopCreators";
 import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
@@ -401,6 +402,12 @@ function AudioLandingContent() {
                   ))}
                 </div>
               </section>
+
+              <AudioTopChart
+                playing={playing}
+                activeTrackId={activeTrack.id}
+                onPlay={playTrack}
+              />
             </main>
           </div>
         </div>

@@ -1375,6 +1375,281 @@
   color: #111;
 }
 
+/* Top music chart */
+
+.page-audio .audio-top-chart__panel {
+  margin-top: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.page-audio .audio-top-chart__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.page-audio .audio-top-chart__segment {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.page-audio .audio-top-chart__segment-btn {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.62);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.page-audio .audio-top-chart__segment-btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.page-audio .audio-top-chart__segment-btn.is-active {
+  background: #fff;
+  color: #121212;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+.page-audio .audio-top-chart__tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.page-audio .audio-top-chart__tab {
+  position: relative;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.5rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.page-audio .audio-top-chart__tab:hover {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.page-audio .audio-top-chart__tab.is-active {
+  color: #fff;
+  font-weight: 700;
+}
+
+.page-audio .audio-top-chart__tab.is-active::after {
+  content: "";
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: #fff;
+}
+
+.page-audio .audio-top-chart__vibes {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.page-audio .audio-top-chart__vibe {
+  min-height: 1.85rem;
+  padding: 0.3rem 0.8rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.page-audio .audio-top-chart__vibe:hover {
+  color: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.page-audio .audio-top-chart__vibe.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.page-audio .audio-top-chart__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: audio-chart-in 0.28s ease;
+}
+
+@keyframes audio-chart-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-audio .audio-top-chart__item {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.15rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.page-audio .audio-top-chart__item:last-child {
+  border-bottom: none;
+}
+
+.page-audio .audio-top-chart__rank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.page-audio .audio-top-chart__rank--up {
+  color: #4ade80;
+}
+
+.page-audio .audio-top-chart__rank--down {
+  color: #fb7185;
+}
+
+.page-audio .audio-top-chart__hit {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: 0.7rem 0.85rem 0.7rem 0.25rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.page-audio .audio-top-chart__hit:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.page-audio .audio-top-chart__art {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.page-audio .audio-top-chart__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.page-audio .audio-top-chart__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.page-audio .audio-top-chart__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-audio .audio-top-chart__artist {
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.page-audio .audio-top-chart__plays {
+  font-size: 0.74rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.62);
+  white-space: nowrap;
+}
+
+.page-audio .audio-top-chart__play {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.page-audio .audio-top-chart__play.is-playing {
+  background: #fff;
+  color: #111;
+}
+
+.page-audio .audio-top-chart__play svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
 /* Bottom dock player */
 
 .page-audio.app-shell--audio-dock,
@@ -1667,6 +1942,45 @@ body.page-audio:has(.app-shell--audio-dock) .main-content {
     grid-area: remind;
     width: 100%;
     justify-self: stretch;
+  }
+
+  .page-audio .audio-top-chart__controls {
+    gap: var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .page-audio .audio-top-chart__segment-btn,
+  .page-audio .audio-top-chart__tab {
+    font-size: 0.78rem;
+  }
+
+  .page-audio .audio-top-chart__vibes {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    margin: 0 -0.15rem;
+    padding: 0 0.15rem;
+  }
+
+  .page-audio .audio-top-chart__vibes::-webkit-scrollbar {
+    display: none;
+  }
+
+  .page-audio .audio-top-chart__hit {
+    grid-template-columns: 2.75rem minmax(0, 1fr) auto;
+    gap: var(--space-2);
+    padding-right: 0.65rem;
+  }
+
+  .page-audio .audio-top-chart__art {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .page-audio .audio-top-chart__plays {
+    display: none;
   }
 
   .audio-dock__inner {

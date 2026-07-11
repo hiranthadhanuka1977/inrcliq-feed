@@ -79,3 +79,38 @@ export interface AudioLiveDrop {
   startsInMinutes: number;
   thumbnail: string;
 }
+
+export type AudioChartSocial = "global" | "friends" | "colombo";
+export type AudioChartTimeframe = "now" | "weekly" | "alltime";
+export type AudioChartVibe = "all" | "workout" | "focus" | "latenight" | "viral";
+
+export interface AudioChartTrack {
+  id: string;
+  rank: number;
+  title: string;
+  artist: string;
+  plays: number;
+  trend: "up" | "down" | "same";
+  trackId: string;
+  thumbnail: string;
+}
+
+/** Source row used to derive ranked charts per social / timeframe / vibe. */
+export interface AudioChartCatalogEntry {
+  id: string;
+  title: string;
+  artist: string;
+  trackId: string;
+  thumbnail: string;
+  vibes: Exclude<AudioChartVibe, "all">[];
+  metrics: {
+    now: number;
+    weekly: number;
+    alltime: number;
+  };
+  trend: {
+    now: "up" | "down" | "same";
+    weekly: "up" | "down" | "same";
+    alltime: "up" | "down" | "same";
+  };
+}
