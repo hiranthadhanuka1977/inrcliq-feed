@@ -12,8 +12,9 @@ import {
   PODCAST_TOPICS,
 } from "@/data/audio-landing";
 import { formatCount } from "@/lib/format";
+import AudioCreatorCard from "@/components/audio/AudioCreatorCard";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
-import type { PodcastHost, PodcastLiveRoom } from "@/types/audio-landing";
+import type { PodcastLiveRoom } from "@/types/audio-landing";
 
 function PlayPauseIcon({ playing }: { playing: boolean }) {
   if (playing) {
@@ -85,53 +86,6 @@ function PodcastLiveCard({ room }: { room: PodcastLiveRoom }) {
       >
         {reminded ? "Reminder set" : "Remind Me 🔔"}
       </button>
-    </article>
-  );
-}
-
-function PodcastHostCard({ host }: { host: PodcastHost }) {
-  const [following, setFollowing] = useState(false);
-
-  return (
-    <article className="audio-top-creator-card">
-      <div className="audio-top-creator-card__art">
-        {host.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={host.image} alt="" />
-        ) : (
-          <span
-            className="audio-top-creator-card__placeholder"
-            style={{ "--story-color": host.color } as React.CSSProperties}
-            aria-hidden="true"
-          >
-            {host.initials}
-          </span>
-        )}
-      </div>
-      <div className="audio-top-creator-card__body">
-        <strong className="audio-top-creator-card__name">
-          {host.name}
-          {host.verified ? (
-            <span className="audio-top-creator-card__verified" aria-label="Verified">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 2l2.9 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 7.1-1.01L12 2z" />
-              </svg>
-            </span>
-          ) : null}
-        </strong>
-        <span className="audio-top-creator-card__handle">{host.handle}</span>
-        <span className="audio-top-creator-card__meta">
-          {host.show} · {host.listeners}
-        </span>
-        <button
-          type="button"
-          className={`audio-top-creator-card__follow${following ? " is-following" : ""}`}
-          aria-pressed={following}
-          onClick={() => setFollowing((value) => !value)}
-        >
-          {following ? "Following" : "Follow"}
-        </button>
-      </div>
     </article>
   );
 }
@@ -273,7 +227,17 @@ export default function PodcastsDashboard({
         </div>
         <div className="audio-top-creators__row">
           {PODCAST_TOP_HOSTS.map((host) => (
-            <PodcastHostCard key={host.id} host={host} />
+            <AudioCreatorCard
+              key={host.id}
+              name={host.name}
+              handle={host.handle}
+              detail={host.show}
+              listeners={host.listeners}
+              verified={host.verified}
+              image={host.image}
+              initials={host.initials}
+              color={host.color}
+            />
           ))}
         </div>
       </section>

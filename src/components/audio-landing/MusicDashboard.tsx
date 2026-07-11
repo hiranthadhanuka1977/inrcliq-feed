@@ -12,8 +12,9 @@ import {
   MUSIC_TOP_CHART,
 } from "@/data/audio-landing";
 import { formatCount } from "@/lib/format";
+import AudioCreatorCard from "@/components/audio/AudioCreatorCard";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
-import type { AudioLiveEvent, AudioPersonCard } from "@/types/audio-landing";
+import type { AudioLiveEvent } from "@/types/audio-landing";
 
 function PlayPauseIcon({ playing }: { playing: boolean }) {
   if (playing) {
@@ -81,53 +82,6 @@ function LiveEventCard({ event }: { event: AudioLiveEvent }) {
       >
         {reminded ? "Reminder set" : "Remind Me 🔔"}
       </button>
-    </article>
-  );
-}
-
-function ArtistCard({ artist }: { artist: AudioPersonCard }) {
-  const [following, setFollowing] = useState(false);
-
-  return (
-    <article className="audio-top-creator-card">
-      <div className="audio-top-creator-card__art">
-        {artist.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={artist.image} alt="" />
-        ) : (
-          <span
-            className="audio-top-creator-card__placeholder"
-            style={{ "--story-color": artist.color } as React.CSSProperties}
-            aria-hidden="true"
-          >
-            {artist.initials}
-          </span>
-        )}
-      </div>
-      <div className="audio-top-creator-card__body">
-        <strong className="audio-top-creator-card__name">
-          {artist.name}
-          {artist.verified ? (
-            <span className="audio-top-creator-card__verified" aria-label="Verified">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M12 2l2.9 6.26L22 9.27l-5 4.87L18.18 22 12 18.56 5.82 22 7 14.14l-5-4.87 7.1-1.01L12 2z" />
-              </svg>
-            </span>
-          ) : null}
-        </strong>
-        <span className="audio-top-creator-card__handle">{artist.handle}</span>
-        <span className="audio-top-creator-card__meta">
-          {artist.detail} · {artist.listeners}
-        </span>
-        <button
-          type="button"
-          className={`audio-top-creator-card__follow${following ? " is-following" : ""}`}
-          aria-pressed={following}
-          onClick={() => setFollowing((value) => !value)}
-        >
-          {following ? "Following" : "Follow"}
-        </button>
-      </div>
     </article>
   );
 }
@@ -265,7 +219,17 @@ export default function MusicDashboard({
         </div>
         <div className="audio-top-creators__row">
           {MUSIC_ARTISTS.map((artist) => (
-            <ArtistCard key={artist.id} artist={artist} />
+            <AudioCreatorCard
+              key={artist.id}
+              name={artist.name}
+              handle={artist.handle}
+              detail={artist.detail}
+              listeners={artist.listeners}
+              verified={artist.verified}
+              image={artist.image}
+              initials={artist.initials}
+              color={artist.color}
+            />
           ))}
         </div>
       </section>
