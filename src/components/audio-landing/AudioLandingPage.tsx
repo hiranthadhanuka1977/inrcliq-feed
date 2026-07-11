@@ -14,6 +14,9 @@ import AudioDockPlayer from "@/components/audio-landing/AudioDockPlayer";
 import AudioFullscreenPlayer from "@/components/audio-landing/AudioFullscreenPlayer";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
 import AudioTopChart from "@/components/audio-landing/AudioTopChart";
+import AudiobooksDashboard from "@/components/audio-landing/AudiobooksDashboard";
+import MusicDashboard from "@/components/audio-landing/MusicDashboard";
+import PodcastsDashboard from "@/components/audio-landing/PodcastsDashboard";
 import AudioTopCreators from "@/components/audio/AudioTopCreators";
 import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
@@ -32,6 +35,19 @@ const FILTER_PILLS: { id: AudioLandingFilter; label: string }[] = [
   { id: "audiobook", label: "📚 Audiobooks" },
   { id: "music", label: "🎵 Music" },
 ];
+
+function searchCopy(filter: AudioLandingFilter): { placeholder: string; label: string } {
+  if (filter === "podcast") {
+    return { placeholder: "Search shows, episodes, hosts...", label: "Search shows, episodes, hosts" };
+  }
+  if (filter === "audiobook") {
+    return { placeholder: "Search books, authors, narrators...", label: "Search books, authors, narrators" };
+  }
+  if (filter === "music") {
+    return { placeholder: "Search songs, albums, artists...", label: "Search songs, albums, artists" };
+  }
+  return { placeholder: "Search voices, topics, sounds...", label: "Search voices, topics, sounds" };
+}
 
 function typeLabel(type: AudioContentType): string {
   if (type === "podcast") return "Podcast";
@@ -214,12 +230,22 @@ function PlayPauseIcon({ playing }: { playing: boolean }) {
 }
 
 function AudioLandingContent() {
-  const { activeFilter, setActiveFilter, playTrack, playing, togglePlay, activeTrack, showDockPlayer } =
+  const { activeFilter, setActiveFilter, playTrack, playing, activeTrack, showDockPlayer } =
     useAudioLanding();
 
   const filteredCards = AUDIO_FOR_YOU_CARDS.filter(
     (card) => activeFilter === "all" || card.type === activeFilter,
   );
+  const search = searchCopy(activeFilter);
+
+  const categoryDashboard =
+    activeFilter === "podcast" ? (
+      <PodcastsDashboard playing={playing} activeTrackId={activeTrack.id} onPlay={playTrack} />
+    ) : activeFilter === "music" ? (
+      <MusicDashboard playing={playing} activeTrackId={activeTrack.id} onPlay={playTrack} />
+    ) : activeFilter === "audiobook" ? (
+      <AudiobooksDashboard playing={playing} activeTrackId={activeTrack.id} onPlay={playTrack} />
+    ) : null;
 
   return (
     <div className={`app-shell${showDockPlayer ? " app-shell--audio-dock" : ""}`}>
@@ -259,8 +285,8 @@ function AudioLandingContent() {
                   <input
                     type="search"
                     className="audio-landing-search__input"
-                    placeholder="Search voices, topics, sounds..."
-                    aria-label="Search voices, topics, sounds"
+                    placeholder={search.placeholder}
+                    aria-label={search.label}
                   />
                 </label>
               </div>
@@ -269,6 +295,8 @@ function AudioLandingContent() {
 
           <div className="content-row">
             <main className="feed-main feed-surface feed-surface--audio audio-landing-page">
+              {categoryDashboard ?? (
+                <>
               <AudioSpotlightHero onPlay={playTrack} />
 
               <section className="audio-mood-section" aria-label="Mood and genre categories">
@@ -408,6 +436,8 @@ function AudioLandingContent() {
                 activeTrackId={activeTrack.id}
                 onPlay={playTrack}
               />
+                </>
+              )}
             </main>
           </div>
         </div>

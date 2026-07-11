@@ -10,6 +10,7 @@ const SWIPE_THRESHOLD_PX = 48;
 
 interface AudioSpotlightHeroProps {
   onPlay: (trackId: string) => void;
+  slides?: AudioHeroSlide[];
 }
 
 interface SpotlightLayerProps {
@@ -78,7 +79,7 @@ function SpotlightLayer({ slide, state, onPlay }: SpotlightLayerProps) {
   );
 }
 
-export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) {
+export default function AudioSpotlightHero({ onPlay, slides = AUDIO_HERO_SLIDES }: AudioSpotlightHeroProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [leavingIndex, setLeavingIndex] = useState<number | null>(null);
   const [paused, setPaused] = useState(false);
@@ -89,8 +90,8 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
 
   activeIndexRef.current = activeIndex;
 
-  const activeSlide = AUDIO_HERO_SLIDES[activeIndex];
-  const leavingSlide = leavingIndex !== null ? AUDIO_HERO_SLIDES[leavingIndex] : null;
+  const activeSlide = slides[activeIndex] ?? slides[0];
+  const leavingSlide = leavingIndex !== null ? slides[leavingIndex] : null;
 
   const goToSlide = useCallback((nextIndex: number) => {
     const current = activeIndexRef.current;
@@ -111,15 +112,15 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
   }, []);
 
   const goToNext = useCallback(() => {
-    const next = (activeIndexRef.current + 1) % AUDIO_HERO_SLIDES.length;
+    const next = (activeIndexRef.current + 1) % slides.length;
     goToSlide(next);
-  }, [goToSlide]);
+  }, [goToSlide, slides.length]);
 
   const goToPrevious = useCallback(() => {
     const current = activeIndexRef.current;
-    const prev = current <= 0 ? AUDIO_HERO_SLIDES.length - 1 : current - 1;
+    const prev = current <= 0 ? slides.length - 1 : current - 1;
     goToSlide(prev);
-  }, [goToSlide]);
+  }, [goToSlide, slides.length]);
 
   const handleTouchStart = useCallback((event: React.TouchEvent<HTMLElement>) => {
     const touch = event.touches[0];
@@ -170,15 +171,25 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
   }, []);
 
   useEffect(() => {
+    setActiveIndex(0);
+    setLeavingIndex(null);
+    setCycleKey((key) => key + 1);
+  }, [slides]);
+
+  useEffect(() => {
     if (paused) return undefined;
 
     const timer = window.setInterval(() => {
-      const next = (activeIndexRef.current + 1) % AUDIO_HERO_SLIDES.length;
+      const next = (activeIndexRef.current + 1) % slides.length;
       goToSlide(next);
     }, ROTATION_MS);
 
     return () => window.clearInterval(timer);
-  }, [paused, goToSlide, cycleKey]);
+  }, [paused, goToSlide, cycleKey, slides.length]);
+
+  if (!activeSlide) {
+    return null;
+  }
 
   return (
     <section
@@ -217,7 +228,7 @@ export default function AudioSpotlightHero({ onPlay }: AudioSpotlightHeroProps) 
       </article>
 
       <div className="audio-spotlight__dots" role="tablist" aria-label="Spotlight slides">
-        {AUDIO_HERO_SLIDES.map((slide, index) => {
+        {slides.map((slide, index) => {
           const isActive = index === activeIndex;
           return (
             <button

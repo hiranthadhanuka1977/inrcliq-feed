@@ -114,3 +114,122 @@ export interface AudioChartCatalogEntry {
     alltime: "up" | "down" | "same";
   };
 }
+
+export interface PodcastTopic {
+  id: string;
+  label: string;
+  emoji: string;
+  gradient: string;
+}
+
+export interface PodcastShow {
+  id: string;
+  title: string;
+  host: string;
+  category: string;
+  episodes: number;
+  listeners: string;
+  trackId: string;
+  thumbnail: string;
+}
+
+export interface PodcastEpisodeCard {
+  id: string;
+  show: string;
+  title: string;
+  episodeLabel: string;
+  durationLabel: string;
+  publishedLabel: string;
+  trackId: string;
+  thumbnail: string;
+}
+
+export interface PodcastHost {
+  id: string;
+  name: string;
+  handle: string;
+  show: string;
+  listeners: string;
+  verified?: boolean;
+  image?: string;
+  initials: string;
+  color: string;
+}
+
+export interface PodcastLiveRoom {
+  id: string;
+  title: string;
+  host: string;
+  kind: string;
+  startsInMinutes: number;
+  thumbnail: string;
+}
+
+export interface PodcastChartEntry {
+  id: string;
+  rank: number;
+  title: string;
+  show: string;
+  plays: number;
+  trend: "up" | "down" | "same";
+  trackId: string;
+  thumbnail: string;
+}
+
+/** Shared browse tiles used by music / audiobook dashboards. */
+export interface AudioBrowseTopic {
+  id: string;
+  label: string;
+  emoji: string;
+  gradient: string;
+}
+
+export interface AudioListCard {
+  id: string;
+  eyebrow: string;
+  title: string;
+  meta: string;
+  trackId: string;
+  thumbnail: string;
+}
+
+export interface AudioCollectionCard {
+  id: string;
+  title: string;
+  subtitle: string;
+  meta: string;
+  trackId: string;
+  thumbnail: string;
+}
+
+export interface AudioPersonCard {
+  id: string;
+  name: string;
+  handle: string;
+  detail: string;
+  listeners: string;
+  verified?: boolean;
+  image?: string;
+  initials: string;
+  color: string;
+}
+
+export interface AudioLiveEvent {
+  id: string;
+  title: string;
+  host: string;
+  kind: string;
+  startsInMinutes: number;
+  thumbnail: string;
+}
+
+export interface AudioRankedItem {
+  id: string;
+  rank: number;
+  title: string;
+  subtitle: string;
+  plays: number;
+  trend: "up" | "down" | "same";
+  trackId: string;
+  thumbnail: string;
+}
