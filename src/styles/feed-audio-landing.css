@@ -2,6 +2,8 @@
 
 .page-audio {
   --feed-width: min(980px, calc(100vw - var(--nav-width) - var(--right-rail-width) - var(--space-6) * 3));
+  --space-10: 2.5rem;
+  --audio-section-gap: 3.25rem;
 }
 
 .page-audio .content-layout {
@@ -150,7 +152,7 @@
 .page-audio .audio-landing-page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--audio-section-gap);
   width: 100%;
   max-width: var(--feed-width);
   margin-inline: auto;
@@ -1067,7 +1069,7 @@
 .page-audio .podcasts-dashboard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-8);
+  gap: var(--audio-section-gap);
   width: 100%;
 }
 
