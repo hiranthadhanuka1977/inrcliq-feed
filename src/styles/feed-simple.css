@@ -767,6 +767,39 @@
 
 /* Creators to follow — Spotify-style artist row */
 
+.feed-surface--simple > .audio-top-creators {
+  margin: 0;
+  padding: calc(var(--feed-divider-gap) + var(--space-4)) 0;
+  border: none;
+  width: 100%;
+}
+
+.feed-surface--simple > .post--simple + .audio-top-creators {
+  margin-top: 0;
+}
+
+.feed-surface--simple > .audio-top-creators + .post--simple {
+  margin-top: calc(var(--feed-divider-gap) + var(--space-4));
+  padding-top: 0;
+  border-top: none;
+}
+
+.feed-surface--simple > .audio-top-creators + .post--simple::before {
+  content: none;
+  display: none;
+}
+
+.page-home .audio-top-creators .rail-title {
+  margin-bottom: var(--space-3);
+}
+
+.page-home .audio-top-creators .rail-title h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
 .feed-surface--simple > .creator-rail {
   margin: 0;
   padding: calc(var(--feed-divider-gap) + var(--space-4)) 0;

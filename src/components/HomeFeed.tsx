@@ -5,6 +5,7 @@ import AudioMiniPlayer from "@/components/AudioMiniPlayer";
 import FeedAudioFullscreenPlayer from "@/components/FeedAudioFullscreenPlayer";
 import MobileNav from "@/components/MobileNav";
 import FeedScrollButton from "@/components/FeedScrollButton";
+import AudioTopCreators from "@/components/audio/AudioTopCreators";
 import CreatorsRail from "@/components/CreatorsRail";
 import SnapsRail from "@/components/SnapsRail";
 import CategoryFilters from "@/components/CategoryFilters";
@@ -55,6 +56,9 @@ function HomeFeedContent({ items, categories }: HomeFeedProps) {
                   <>
                     {visibleItems.flatMap((item, index) => {
                       const nodes = [<FeedPost key={item.id} item={item} />];
+                      if (index === 0) {
+                        nodes.push(<AudioTopCreators key="audio-top-creators" />);
+                      }
                       if (SHOW_CREATORS_RAIL && index === 2) {
                         nodes.push(<CreatorsRail key="creators-rail" />);
                       }

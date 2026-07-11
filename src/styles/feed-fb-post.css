@@ -42,7 +42,8 @@
 }
 
 .feed-surface--simple > .creator-rail + .post--simple,
-.feed-surface--simple > .snaps-rail + .post--simple {
+.feed-surface--simple > .snaps-rail + .post--simple,
+.feed-surface--simple > .audio-top-creators + .post--simple {
   margin-top: var(--space-4);
   padding-top: 0;
   border-top: none;

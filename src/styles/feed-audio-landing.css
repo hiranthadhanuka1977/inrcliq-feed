@@ -1052,7 +1052,7 @@
   justify-content: center;
 }
 
-.page-audio .audio-section__subtitle {
+.audio-section__subtitle {
   font-size: 0.78rem;
   font-weight: 500;
   color: var(--color-text-secondary);
@@ -1060,7 +1060,7 @@
 
 /* Top creators */
 
-.page-audio .audio-top-creators__row {
+.audio-top-creators__row {
   display: flex;
   gap: var(--space-3);
   overflow-x: auto;
@@ -1069,11 +1069,11 @@
   padding-bottom: 0.15rem;
 }
 
-.page-audio .audio-top-creators__row::-webkit-scrollbar {
+.audio-top-creators__row::-webkit-scrollbar {
   display: none;
 }
 
-.page-audio .audio-top-creator-card {
+.audio-top-creator-card {
   flex: 0 0 min(11.5rem, 46vw);
   display: flex;
   flex-direction: column;
@@ -1086,7 +1086,7 @@
   text-align: center;
 }
 
-.page-audio .audio-top-creator-card__art {
+.audio-top-creator-card__art {
   width: 5.5rem;
   height: 5.5rem;
   border-radius: 50%;
@@ -1096,14 +1096,14 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
 }
 
-.page-audio .audio-top-creator-card__art img {
+.audio-top-creator-card__art img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.page-audio .audio-top-creator-card__placeholder {
+.audio-top-creator-card__placeholder {
   width: 100%;
   height: 100%;
   display: inline-flex;
@@ -1115,7 +1115,7 @@
   font-weight: 800;
 }
 
-.page-audio .audio-top-creator-card__body {
+.audio-top-creator-card__body {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1124,7 +1124,7 @@
   min-width: 0;
 }
 
-.page-audio .audio-top-creator-card__name {
+.audio-top-creator-card__name {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1134,29 +1134,29 @@
   letter-spacing: -0.015em;
 }
 
-.page-audio .audio-top-creator-card__verified {
+.audio-top-creator-card__verified {
   display: inline-flex;
   color: #6b9fff;
 }
 
-.page-audio .audio-top-creator-card__verified svg {
+.audio-top-creator-card__verified svg {
   width: 0.85rem;
   height: 0.85rem;
 }
 
-.page-audio .audio-top-creator-card__handle {
+.audio-top-creator-card__handle {
   font-size: 0.74rem;
   font-weight: 600;
   color: var(--color-text-secondary);
 }
 
-.page-audio .audio-top-creator-card__meta {
+.audio-top-creator-card__meta {
   font-size: 0.72rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.68);
 }
 
-.page-audio .audio-top-creator-card__follow {
+.audio-top-creator-card__follow {
   margin-top: 0.45rem;
   min-height: 2rem;
   padding: 0.4rem 0.95rem;
@@ -1171,12 +1171,12 @@
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.page-audio .audio-top-creator-card__follow:hover {
+.audio-top-creator-card__follow:hover {
   background: rgba(255, 255, 255, 0.14);
   border-color: rgba(255, 255, 255, 0.28);
 }
 
-.page-audio .audio-top-creator-card__follow.is-following {
+.audio-top-creator-card__follow.is-following {
   background: #fff;
   border-color: #fff;
   color: #111;
