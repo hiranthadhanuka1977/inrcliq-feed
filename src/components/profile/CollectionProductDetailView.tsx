@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
@@ -63,6 +63,7 @@ export default function CollectionProductDetailView({
   const [colorId, setColorId] = useState(detail?.defaultColorId ?? "");
   const [sizeId, setSizeId] = useState(detail?.defaultSizeId ?? "");
   const [liked, setLiked] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   const selectedColor = useMemo(
     () => detail?.colors.find((color) => color.id === colorId),
@@ -72,15 +73,39 @@ export default function CollectionProductDetailView({
     () => detail?.sizes.find((size) => size.id === sizeId),
     [detail?.sizes, sizeId],
   );
+  const isPreorder = (product.ctaLabel ?? "").toLowerCase() === "pre-order";
+  const bagLabel = product.ctaLabel ?? (product.kind === "digital" ? "Get digital" : "Add to bag");
 
   const gallery = detail?.gallery?.length
     ? detail.gallery
     : [{ src: product.image, alt: product.image_alt || product.name }];
 
+  const activeGalleryImage = useMemo(
+    () => gallery.find((image) => image.src === activeImage) ?? gallery[0],
+    [activeImage, gallery],
+  );
+
   const descriptionParagraphs = (detail?.longDescription ?? product.description)
     .split(/\n\n+/)
     .map((part) => part.trim())
     .filter(Boolean);
+
+  useEffect(() => {
+    if (!galleryOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setGalleryOpen(false);
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [galleryOpen]);
 
   function addToCart() {
     setCartCount((count) => count + 1);
@@ -89,6 +114,14 @@ export default function CollectionProductDetailView({
   function selectColor(nextId: string, image: string) {
     setColorId(nextId);
     setActiveImage(image);
+  }
+
+  function openGallery() {
+    setGalleryOpen(true);
+  }
+
+  function closeGallery() {
+    setGalleryOpen(false);
   }
 
   return (
@@ -113,6 +146,7 @@ export default function CollectionProductDetailView({
                 <div
                   className="story-avatar product-detail-topbar__avatar"
                   style={{ "--story-color": profile.avatar_color } as React.CSSProperties}
+                  aria-hidden="true"
                 >
                   {profile.avatar_url ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -121,10 +155,7 @@ export default function CollectionProductDetailView({
                     profile.avatar_initials
                   )}
                 </div>
-                <div className="product-detail-topbar__copy">
-                  <p className="product-detail-topbar__name">{product.name}</p>
-                  <p className="product-detail-topbar__meta">{profile.name}</p>
-                </div>
+                <p className="product-detail-topbar__name">{profile.name}</p>
               </div>
 
               <CartButton count={cartCount} />
@@ -135,15 +166,29 @@ export default function CollectionProductDetailView({
             <div className="product-detail">
               <div className="product-detail__main">
                 <section className="product-detail__gallery" aria-label="Product images">
-                  <div className="product-detail__stage">
+                  <button
+                    type="button"
+                    className="product-detail__stage"
+                    aria-label="Expand image view"
+                    onClick={openGallery}
+                  >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={activeImage} alt={product.image_alt || product.name} width={800} height={800} />
+                    <img src={activeImage} alt="" width={800} height={800} />
                     {product.offer ? (
                       <span className="collection-product__media-badge product-detail__badge">
                         {product.offer.badge}
                       </span>
                     ) : null}
-                  </div>
+                    <span className="product-detail__expand" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 3 21 3 21 9" />
+                        <polyline points="9 21 3 21 3 15" />
+                        <line x1="21" y1="3" x2="14" y2="10" />
+                        <line x1="3" y1="21" x2="10" y2="14" />
+                      </svg>
+                      <span>Expand view</span>
+                    </span>
+                  </button>
                   {gallery.length > 1 ? (
                     <div className="product-detail__thumbs" role="list">
                       {gallery.map((image) => {
@@ -213,75 +258,81 @@ export default function CollectionProductDetailView({
                     </span>
                   </div>
 
-                  {detail?.colors?.length ? (
-                    <div className="product-detail__option">
-                      <p className="product-detail__option-label">
-                        Color: <strong>{selectedColor?.label ?? "—"}</strong>
-                      </p>
-                      <div className="product-detail__colors" role="list">
-                        {detail.colors.map((color) => {
-                          const selected = color.id === colorId;
-                          return (
-                            <button
-                              key={color.id}
-                              type="button"
-                              role="listitem"
-                              className={`product-detail__color${selected ? " is-active" : ""}`}
-                              aria-label={color.label}
-                              aria-pressed={selected}
-                              onClick={() => selectColor(color.id, color.image)}
-                            >
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={color.image} alt="" width={56} height={56} />
-                            </button>
-                          );
-                        })}
+                  <div className="product-detail__purchase">
+                    {detail?.colors?.length ? (
+                      <div className="product-detail__option">
+                        <p className="product-detail__option-label">
+                          Color: <strong>{selectedColor?.label ?? "—"}</strong>
+                        </p>
+                        <div className="product-detail__colors" role="list">
+                          {detail.colors.map((color) => {
+                            const selected = color.id === colorId;
+                            return (
+                              <button
+                                key={color.id}
+                                type="button"
+                                role="listitem"
+                                className={`product-detail__color${selected ? " is-active" : ""}`}
+                                aria-label={color.label}
+                                aria-pressed={selected}
+                                onClick={() => selectColor(color.id, color.image)}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={color.image} alt="" width={56} height={56} />
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  {detail?.sizes?.length ? (
-                    <div className="product-detail__option">
-                      <p className="product-detail__option-label">
-                        Size:{" "}
-                        <strong>
-                          {selectedSize
-                            ? `${selectedSize.label} (${selectedSize.hint})`
-                            : "—"}
-                        </strong>
-                      </p>
-                      <div className="product-detail__sizes" role="list">
-                        {detail.sizes.map((size) => {
-                          const selected = size.id === sizeId;
-                          return (
-                            <button
-                              key={size.id}
-                              type="button"
-                              role="listitem"
-                              className={`product-detail__size${selected ? " is-active" : ""}`}
-                              aria-pressed={selected}
-                              onClick={() => setSizeId(size.id)}
-                            >
-                              <span>{size.label}</span>
-                              <span className="product-detail__size-hint">{size.hint}</span>
-                            </button>
-                          );
-                        })}
+                    {detail?.sizes?.length ? (
+                      <div className="product-detail__option">
+                        <p className="product-detail__option-label">
+                          Size:{" "}
+                          <strong>
+                            {selectedSize
+                              ? `${selectedSize.label} (${selectedSize.hint})`
+                              : "—"}
+                          </strong>
+                        </p>
+                        <div className="product-detail__sizes" role="list">
+                          {detail.sizes.map((size) => {
+                            const selected = size.id === sizeId;
+                            return (
+                              <button
+                                key={size.id}
+                                type="button"
+                                role="listitem"
+                                className={`product-detail__size${selected ? " is-active" : ""}`}
+                                aria-pressed={selected}
+                                onClick={() => setSizeId(size.id)}
+                              >
+                                <span>{size.label}</span>
+                                <span className="product-detail__size-hint">{size.hint}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
+                    ) : null}
 
-                  <div className="product-detail__cta-row">
-                    <button type="button" className="btn btn--primary product-detail__cta" onClick={addToCart}>
-                      Buy now
-                    </button>
-                    <button
-                      type="button"
-                      className="btn btn--secondary product-detail__cta"
-                      onClick={addToCart}
+                    <div
+                      className={`product-detail__cta-row${isPreorder ? " product-detail__cta-row--single" : ""}`}
                     >
-                      {product.ctaLabel ?? (product.kind === "digital" ? "Get digital" : "Add to bag")}
-                    </button>
+                      {!isPreorder ? (
+                        <button type="button" className="btn btn--primary product-detail__cta" onClick={addToCart}>
+                          Buy now
+                        </button>
+                      ) : null}
+                      <button
+                        type="button"
+                        className={`btn product-detail__cta${isPreorder ? " btn--primary" : " btn--secondary"}`}
+                        onClick={addToCart}
+                      >
+                        {bagLabel}
+                      </button>
+                    </div>
                   </div>
                 </section>
               </div>
@@ -397,6 +448,72 @@ export default function CollectionProductDetailView({
         </main>
       </div>
       <MobileNav />
+
+      {galleryOpen ? (
+        <div
+          className="product-gallery-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${product.name} image gallery`}
+        >
+          <button
+            type="button"
+            className="product-gallery-lightbox__backdrop"
+            aria-label="Close image gallery"
+            onClick={closeGallery}
+          />
+          <div className="product-gallery-lightbox__panel">
+            <header className="product-gallery-lightbox__header">
+              <p className="product-gallery-lightbox__title">{product.name}</p>
+              <button
+                type="button"
+                className="product-gallery-lightbox__close"
+                aria-label="Close image gallery"
+                onClick={closeGallery}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </header>
+
+            <div className="product-gallery-lightbox__body">
+              <div className="product-gallery-lightbox__stage">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={activeGalleryImage.src}
+                  alt={activeGalleryImage.alt || product.name}
+                  width={1200}
+                  height={1200}
+                />
+              </div>
+
+              {gallery.length > 1 ? (
+                <div className="product-gallery-lightbox__thumbs" role="list" aria-label="Select image">
+                  {gallery.map((image) => {
+                    const selected = activeImage === image.src;
+                    return (
+                      <button
+                        key={image.src}
+                        type="button"
+                        role="listitem"
+                        className={`product-gallery-lightbox__thumb${selected ? " is-active" : ""}`}
+                        aria-label={image.alt}
+                        aria-pressed={selected}
+                        onClick={() => setActiveImage(image.src)}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={image.src} alt="" width={120} height={120} />
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

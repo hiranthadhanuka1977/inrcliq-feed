@@ -405,7 +405,7 @@
 
 .collection-product__cta {
   width: auto;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
 

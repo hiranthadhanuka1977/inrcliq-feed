@@ -119,7 +119,7 @@
   min-width: var(--button-height-sm);
   min-height: var(--button-height-sm);
   padding: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
 }
 
 .btn--ghost-cover {
@@ -258,13 +258,16 @@
   flex-wrap: wrap;
 }
 
+.profile-header__actions .btn {
+  border-radius: var(--radius-sm);
+}
+
 .profile-header__subscribe {
   width: auto;
   min-width: 13rem;
   height: var(--button-height-sm);
   min-height: var(--button-height-sm);
   padding-inline: calc(var(--space-4) * 2);
-  border-radius: 999px;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 
@@ -274,7 +277,6 @@
   height: var(--button-height-sm);
   min-height: var(--button-height-sm);
   padding-inline: calc(var(--space-4) * 1.25);
-  border-radius: 999px;
 }
 
 .profile-subscribed-pill {
@@ -283,7 +285,7 @@
   align-items: center;
   flex-shrink: 0;
   height: var(--button-height-sm);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: var(--color-warning);
   color: #141720;
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
@@ -309,11 +311,11 @@
 }
 
 .profile-subscribed-pill__bell {
-  border-radius: 999px 0 0 999px;
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
 }
 
 .profile-subscribed-pill__menu-trigger {
-  border-radius: 0 999px 999px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 .profile-subscribed-pill__bell svg,

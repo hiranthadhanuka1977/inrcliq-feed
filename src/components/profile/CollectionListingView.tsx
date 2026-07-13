@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
@@ -424,6 +425,7 @@ export default function CollectionListingView({
             </div>
           </div>
         </main>
+        <FeedScrollButton variant="home" topTargetId="collection-top" />
       </div>
       <MobileNav />
     </>
