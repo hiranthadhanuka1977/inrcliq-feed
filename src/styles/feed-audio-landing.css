@@ -898,6 +898,65 @@
   margin-top: var(--space-4);
 }
 
+.page-audio .audio-for-you__pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.page-audio .audio-for-you__pager-pages {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.page-audio .audio-for-you__pager-btn,
+.page-audio .audio-for-you__pager-page {
+  min-height: 2.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.78);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.page-audio .audio-for-you__pager-btn {
+  padding: 0.4rem 0.95rem;
+}
+
+.page-audio .audio-for-you__pager-page {
+  min-width: 2.15rem;
+  padding: 0.35rem 0.55rem;
+}
+
+.page-audio .audio-for-you__pager-btn:hover:not(:disabled),
+.page-audio .audio-for-you__pager-page:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.page-audio .audio-for-you__pager-page.is-active {
+  background: #fff;
+  border-color: #fff;
+  color: #121212;
+  font-weight: 700;
+}
+
+.page-audio .audio-for-you__pager-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
 .page-audio .audio-for-you-card {
   border-radius: var(--radius-lg);
   background: rgba(255, 255, 255, 0.04);

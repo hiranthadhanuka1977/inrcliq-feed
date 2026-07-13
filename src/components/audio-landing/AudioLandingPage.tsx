@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AUDIO_CHALLENGES,
   AUDIO_CONTINUE_ITEMS,
   AUDIO_FOR_YOU_CARDS,
+  AUDIO_FOR_YOU_PAGE_SIZE,
   AUDIO_LIVE_DROPS,
   AUDIO_MOOD_CATEGORIES,
 } from "@/data/audio-landing";
@@ -232,11 +233,24 @@ function PlayPauseIcon({ playing }: { playing: boolean }) {
 function AudioLandingContent() {
   const { activeFilter, setActiveFilter, playTrack, playing, activeTrack, showDockPlayer } =
     useAudioLanding();
+  const [forYouPage, setForYouPage] = useState(0);
 
-  const filteredCards = AUDIO_FOR_YOU_CARDS.filter(
-    (card) => activeFilter === "all" || card.type === activeFilter,
+  const filteredCards = useMemo(
+    () => AUDIO_FOR_YOU_CARDS.filter((card) => activeFilter === "all" || card.type === activeFilter),
+    [activeFilter],
   );
   const search = searchCopy(activeFilter);
+
+  const forYouPageCount = Math.max(1, Math.ceil(filteredCards.length / AUDIO_FOR_YOU_PAGE_SIZE));
+  const safeForYouPage = Math.min(forYouPage, forYouPageCount - 1);
+  const pagedForYouCards = filteredCards.slice(
+    safeForYouPage * AUDIO_FOR_YOU_PAGE_SIZE,
+    safeForYouPage * AUDIO_FOR_YOU_PAGE_SIZE + AUDIO_FOR_YOU_PAGE_SIZE,
+  );
+
+  useEffect(() => {
+    setForYouPage(0);
+  }, [activeFilter]);
 
   const categoryDashboard =
     activeFilter === "podcast" ? (
@@ -370,7 +384,7 @@ function AudioLandingContent() {
                   <span className="audio-for-you__subtitle">Music, podcasts & audiobooks blended</span>
                 </div>
                 <div className="audio-for-you__grid">
-                  {filteredCards.map((card) => (
+                  {pagedForYouCards.map((card) => (
                     <AudioForYouCardItem
                       key={card.id}
                       card={card}
@@ -378,6 +392,45 @@ function AudioLandingContent() {
                     />
                   ))}
                 </div>
+                {forYouPageCount > 1 ? (
+                  <nav className="audio-for-you__pager" aria-label="For you pagination">
+                    <button
+                      type="button"
+                      className="audio-for-you__pager-btn"
+                      disabled={safeForYouPage <= 0}
+                      onClick={() => setForYouPage((page) => Math.max(0, page - 1))}
+                      aria-label="Previous page"
+                    >
+                      Previous
+                    </button>
+                    <div className="audio-for-you__pager-pages" role="group" aria-label="Pages">
+                      {Array.from({ length: forYouPageCount }, (_, index) => {
+                        const selected = index === safeForYouPage;
+                        return (
+                          <button
+                            key={index}
+                            type="button"
+                            className={`audio-for-you__pager-page${selected ? " is-active" : ""}`}
+                            aria-label={`Page ${index + 1}`}
+                            aria-current={selected ? "page" : undefined}
+                            onClick={() => setForYouPage(index)}
+                          >
+                            {index + 1}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <button
+                      type="button"
+                      className="audio-for-you__pager-btn"
+                      disabled={safeForYouPage >= forYouPageCount - 1}
+                      onClick={() => setForYouPage((page) => Math.min(forYouPageCount - 1, page + 1))}
+                      aria-label="Next page"
+                    >
+                      Next
+                    </button>
+                  </nav>
+                ) : null}
               </section>
 
               <AudioTopCreators />

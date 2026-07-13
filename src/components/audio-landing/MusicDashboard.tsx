@@ -9,11 +9,10 @@ import {
   MUSIC_HERO_SLIDES,
   MUSIC_LIVE_EVENTS,
   MUSIC_NEW_RELEASES,
-  MUSIC_TOP_CHART,
 } from "@/data/audio-landing";
-import { formatCount } from "@/lib/format";
 import AudioCreatorCard from "@/components/audio/AudioCreatorCard";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
+import AudioTopChart from "@/components/audio-landing/AudioTopChart";
 import type { AudioLiveEvent } from "@/types/audio-landing";
 
 function PlayPauseIcon({ playing }: { playing: boolean }) {
@@ -246,48 +245,7 @@ export default function MusicDashboard({
         </div>
       </section>
 
-      <section className="audio-top-chart podcast-chart" aria-label="Top music chart">
-        <div className="rail-title">
-          <h3>Top Music</h3>
-          <span className="audio-section__subtitle">Most played tracks this week</span>
-        </div>
-        <div className="audio-top-chart__panel">
-          <ol className="audio-top-chart__list">
-            {MUSIC_TOP_CHART.map((entry) => {
-              const isPlaying = playing && activeTrackId === entry.trackId;
-              return (
-                <li key={entry.id} className="audio-top-chart__item">
-                  <span
-                    className={`audio-top-chart__rank audio-top-chart__rank--${entry.trend}`}
-                    aria-label={`Rank ${entry.rank}, trending ${entry.trend}`}
-                  >
-                    {entry.rank}
-                  </span>
-                  <button
-                    type="button"
-                    className="audio-top-chart__hit"
-                    onClick={() => onPlay(entry.trackId)}
-                    aria-label={`Play ${entry.title} by ${entry.subtitle}`}
-                  >
-                    <span className="audio-top-chart__art">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={entry.thumbnail} alt="" />
-                    </span>
-                    <span className="audio-top-chart__meta">
-                      <strong className="audio-top-chart__title">{entry.title}</strong>
-                      <span className="audio-top-chart__artist">{entry.subtitle}</span>
-                    </span>
-                    <span className="audio-top-chart__plays">{formatCount(entry.plays)} plays</span>
-                    <span className={`audio-top-chart__play${isPlaying ? " is-playing" : ""}`} aria-hidden="true">
-                      <PlayPauseIcon playing={isPlaying} />
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
-      </section>
+      <AudioTopChart playing={playing} activeTrackId={activeTrackId} onPlay={onPlay} />
     </div>
   );
 }
