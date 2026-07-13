@@ -2,6 +2,8 @@
   padding: 0;
   align-items: stretch;
   max-width: none;
+  /* Override body.page-home feed width so profile + collection share one column */
+  --feed-width: 980px;
 }
 
 .profile-page__inner {
@@ -9,6 +11,43 @@
   max-width: 1100px;
   margin: 0 auto;
   padding: var(--space-6) var(--space-6) var(--space-6);
+  align-self: center;
+  box-sizing: border-box;
+}
+
+/* Collection listing — same column as profile header panel + sections */
+.page-collection .profile-header__panel,
+.page-collection .profile-page__inner {
+  width: 100%;
+  max-width: var(--feed-width);
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  box-sizing: border-box;
+}
+
+.page-collection .profile-page__inner {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.page-collection .collection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+
+@media (max-width: 720px) {
+  .page-collection .profile-page__inner {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .page-collection .collection-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Unified profile header */
@@ -496,15 +535,18 @@
   flex-shrink: 0;
 }
 
-.profile-collection__view-all {
-  color: var(--color-brand-primary);
-  font-size: 0.88rem;
-  font-weight: 700;
+.profile-collection__shop {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: auto;
+  min-height: var(--button-height-sm);
+  border-radius: 999px;
   text-decoration: none;
 }
 
-.profile-collection__view-all:hover {
-  color: var(--color-brand-primary-hover);
+.profile-collection__shop svg {
+  flex-shrink: 0;
 }
 
 .profile-collection__list {

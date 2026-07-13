@@ -25,7 +25,9 @@ function ProfileViewContent({ profile }: { profile: ProfileData }) {
           <ProfileHeader profile={profile} />
 
           <div className="profile-page__inner">
-            {profile.collection.length > 0 ? <ProfileCollection items={profile.collection} /> : null}
+            {profile.collection.length > 0 ? (
+              <ProfileCollection slug={profile.slug} items={profile.collection} />
+            ) : null}
             <ProfilePopularPosts posts={profile.popular_posts} />
 
             <section className="profile-feed" id="profile-feed" aria-labelledby="profile-feed-heading">

@@ -1,0 +1,228 @@
+{
+  "slug": "mia-chen",
+  "title": "Mia Chen Collection",
+  "subtitle": "Race-day gear, recovery essentials, and digital training packs from the road.",
+  "products": [
+    {
+      "id": "mc-tee",
+      "kind": "physical",
+      "name": "Mumbai Marathon Tee",
+      "price": "LKR 2,376.54",
+      "compareAtPrice": "LKR 2,860.12",
+      "description": "Soft cotton blend race tee with reflective Mumbai skyline print.",
+      "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=640&h=640&fit=crop",
+      "image_alt": "Mumbai Marathon Tee",
+      "rating": 4,
+      "soldLabel": "50+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 483.58",
+        "discountLabel": "-17%"
+      }
+    },
+    {
+      "id": "mc-cap",
+      "kind": "physical",
+      "name": "Night Run Reflective Cap",
+      "price": "LKR 1,890.00",
+      "compareAtPrice": "LKR 2,450.00",
+      "description": "Lightweight running cap with 360° reflective trim for early starts.",
+      "image": "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=640&h=640&fit=crop",
+      "image_alt": "Night Run Reflective Cap",
+      "rating": 4,
+      "soldLabel": "120+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-roller",
+      "kind": "physical",
+      "name": "Recovery Foam Roller",
+      "price": "LKR 3,250.00",
+      "description": "Firm grid roller sized for calves, quads, and post-ultra sessions.",
+      "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=640&h=640&fit=crop",
+      "image_alt": "Recovery Foam Roller",
+      "rating": 5,
+      "soldLabel": "80+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-vest",
+      "kind": "physical",
+      "name": "Hydration Vest Pro",
+      "price": "LKR 8,990.00",
+      "compareAtPrice": "LKR 11,500.00",
+      "description": "2L soft-flask vest with bounce-free fit for long Mumbai heat runs.",
+      "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=640&h=640&fit=crop",
+      "image_alt": "Hydration Vest Pro",
+      "rating": 4,
+      "soldLabel": "35+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 2,510.00",
+        "discountLabel": "-22%"
+      }
+    },
+    {
+      "id": "mc-shoes",
+      "kind": "physical",
+      "name": "Ultra-Light Running Shoes",
+      "price": "LKR 18,750.00",
+      "description": "Responsive daily trainer built for tempo work and easy miles.",
+      "image": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=640&h=640&fit=crop",
+      "image_alt": "Ultra-Light Running Shoes",
+      "rating": 5,
+      "soldLabel": "200+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-strap",
+      "kind": "physical",
+      "name": "Race-Day GPS Watch Strap",
+      "price": "LKR 4,250.00",
+      "description": "Breathable nylon quick-release strap that stays put in humidity.",
+      "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=640&h=640&fit=crop",
+      "image_alt": "Race-Day GPS Watch Strap",
+      "rating": 4,
+      "soldLabel": "60+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-windbreaker",
+      "kind": "physical",
+      "name": "Dawn Softshell Windbreaker",
+      "price": "LKR 7,480.00",
+      "compareAtPrice": "LKR 9,900.00",
+      "description": "Packable shell for cool coastal mornings and monsoon wind.",
+      "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=640&h=640&fit=crop",
+      "image_alt": "Dawn Softshell Windbreaker",
+      "rating": 4,
+      "soldLabel": "40+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 2,420.00",
+        "discountLabel": "-24%"
+      }
+    },
+    {
+      "id": "mc-socks",
+      "kind": "physical",
+      "name": "Compression Socks 3-Pack",
+      "price": "LKR 2,150.00",
+      "description": "Arch-support socks for long runs and travel recovery days.",
+      "image": "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=640&h=640&fit=crop",
+      "image_alt": "Compression Socks 3-Pack",
+      "rating": 4,
+      "soldLabel": "90+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-plan",
+      "kind": "digital",
+      "name": "12-Week Ultra Training Plan",
+      "price": "LKR 1,590.00",
+      "compareAtPrice": "LKR 2,250.00",
+      "description": "PDF + calendar plan from base miles to race taper, with weekly notes.",
+      "image": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&h=640&fit=crop",
+      "image_alt": "12-Week Ultra Training Plan",
+      "rating": 5,
+      "soldLabel": "300+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 660.00",
+        "discountLabel": "-29%"
+      }
+    },
+    {
+      "id": "mc-fuel",
+      "kind": "digital",
+      "name": "Race Day Fueling Guide",
+      "price": "LKR 890.00",
+      "description": "Downloadable gel/timing cheat sheet for half, marathon, and ultra.",
+      "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=640&h=640&fit=crop",
+      "image_alt": "Race Day Fueling Guide",
+      "rating": 4,
+      "soldLabel": "150+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-gpx",
+      "kind": "digital",
+      "name": "Mumbai Marathon Route Pack",
+      "price": "LKR 1,250.00",
+      "description": "GPX files for the full course plus three shorter rehearsal loops.",
+      "image": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=640&h=640&fit=crop",
+      "image_alt": "Mumbai Marathon Route Pack",
+      "rating": 4,
+      "soldLabel": "75+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-mobility",
+      "kind": "digital",
+      "name": "Morning Mobility Series",
+      "price": "LKR 2,490.00",
+      "description": "On-demand video set: hips, ankles, and pre-run activation routines.",
+      "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640&h=640&fit=crop",
+      "image_alt": "Morning Mobility Series",
+      "rating": 5,
+      "soldLabel": "110+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-strength",
+      "kind": "digital",
+      "name": "Strength for Runners Program",
+      "price": "LKR 3,190.00",
+      "compareAtPrice": "LKR 4,500.00",
+      "description": "8-week gym-or-home strength plan with progress trackers.",
+      "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=640&fit=crop",
+      "image_alt": "Strength for Runners Program",
+      "rating": 4,
+      "soldLabel": "95+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 1,310.00",
+        "discountLabel": "-29%"
+      }
+    },
+    {
+      "id": "mc-journal",
+      "kind": "digital",
+      "name": "Race Week Checklist Journal",
+      "price": "LKR 690.00",
+      "description": "Printable race-week planner covering sleep, kit, and nutrition.",
+      "image": "https://images.unsplash.com/photo-1517842645767-c639042777db?w=640&h=640&fit=crop",
+      "image_alt": "Race Week Checklist Journal",
+      "rating": 4,
+      "soldLabel": "50+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    }
+  ]
+}
