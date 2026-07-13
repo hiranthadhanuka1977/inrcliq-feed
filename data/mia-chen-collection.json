@@ -15,9 +15,112 @@
       "rating": 4,
       "soldLabel": "50+ sold",
       "offer": {
-        "badge": "Sale",
-        "detail": "Save LKR 483.58",
+        "badge": "Limited Edition",
+        "detail": "Pre-order open",
         "discountLabel": "-17%"
+      },
+      "ctaLabel": "Pre-order",
+      "detail": {
+        "headline": "Mumbai Marathon Tee — Limited Edition race-day tee with reflective skyline print. Soft cotton blend, unisex relaxed fit.",
+        "gallery": [
+          {
+            "src": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop",
+            "alt": "Mumbai Marathon Tee front view"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=800&fit=crop",
+            "alt": "Mumbai Marathon Tee folded flat"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&h=800&fit=crop",
+            "alt": "Mumbai Marathon Tee graphic close-up"
+          },
+          {
+            "src": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=800&h=800&fit=crop",
+            "alt": "Mumbai Marathon Tee on hanger"
+          }
+        ],
+        "colors": [
+          {
+            "id": "white",
+            "label": "White",
+            "swatch": "#f4f4f2",
+            "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=800&fit=crop"
+          },
+          {
+            "id": "black",
+            "label": "Black",
+            "swatch": "#1c1c1c",
+            "image": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&h=800&fit=crop"
+          },
+          {
+            "id": "olive",
+            "label": "Olive",
+            "swatch": "#5f6b4e",
+            "image": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=800&h=800&fit=crop"
+          },
+          {
+            "id": "maroon",
+            "label": "Maroon",
+            "swatch": "#6b2e3a",
+            "image": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=800&h=800&fit=crop"
+          }
+        ],
+        "sizes": [
+          { "id": "s", "label": "S", "hint": "45-54kg" },
+          { "id": "m", "label": "M", "hint": "54-63kg" },
+          { "id": "l", "label": "L", "hint": "63-70kg" },
+          { "id": "xl", "label": "XL", "hint": "70-78kg" },
+          { "id": "xxl", "label": "XXL", "hint": "78-86kg" },
+          { "id": "xxxl", "label": "XXXL", "hint": "88-93kg" }
+        ],
+        "defaultColorId": "white",
+        "defaultSizeId": "m",
+        "longDescription": "This item is on pre-order and will ship mid to late October. All other items purchased with this order will be held until that time.\n\nExclusive Mumbai Marathon limited drop. Unisex soft cotton tee with a reflective city skyline print on the chest, tonal back mark, and a relaxed race-day fit built for travel days and finish-line photos.",
+        "reviewAverage": 4.7,
+        "reviewCount": 18,
+        "reviewAttributes": [
+          { "label": "Fit", "score": 4.8 },
+          { "label": "Quality", "score": 4.7 },
+          { "label": "Value for Money", "score": 4.6 }
+        ],
+        "reviews": [
+          {
+            "id": "r1",
+            "name": "Ananya Perera",
+            "avatar_initials": "AP",
+            "rating": 5,
+            "ago": "2 days ago",
+            "variant": "Color: White · Size: M",
+            "text": "Pre-ordered for Mumbai and the fabric feels premium. Print is sharp and the cut is true to size."
+          },
+          {
+            "id": "r2",
+            "name": "Rohan Silva",
+            "avatar_initials": "RS",
+            "rating": 4,
+            "ago": "5 days ago",
+            "variant": "Color: Black · Size: L",
+            "text": "Slightly oversized in a good way. Ordering my usual size worked fine for race weekend."
+          },
+          {
+            "id": "r3",
+            "name": "Meera Jay",
+            "avatar_initials": "MJ",
+            "rating": 5,
+            "ago": "1 week ago",
+            "variant": "Color: Olive · Size: S",
+            "text": "Love the limited-edition badge and reflective detail. Excited for the October ship window."
+          }
+        ],
+        "reviewsTotal": 18,
+        "delivery": {
+          "location": "Western, Colombo 1-15",
+          "standardFee": "LKR 500.00",
+          "cod": true,
+          "returns": "14 days easy return",
+          "warranty": "Warranty not available"
+        }
       }
     },
     {
@@ -222,6 +325,474 @@
       "offer": {
         "badge": "Best Seller",
         "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-gaiters",
+      "kind": "physical",
+      "name": "Trail Ankle Gaiters",
+      "price": "LKR 1,650.00",
+      "compareAtPrice": "LKR 2,100.00",
+      "description": "Lightweight gaiters that keep dust and grit out on monsoon trails.",
+      "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=640&fit=crop",
+      "image_alt": "Trail Ankle Gaiters",
+      "rating": 4,
+      "soldLabel": "45+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 450.00",
+        "discountLabel": "-21%"
+      }
+    },
+    {
+      "id": "mc-belt",
+      "kind": "physical",
+      "name": "Race Day Fuel Belt",
+      "price": "LKR 3,890.00",
+      "description": "Bounce-free belt for gels, soft flasks, and a phone sleeve.",
+      "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=640&h=640&fit=crop",
+      "image_alt": "Race Day Fuel Belt",
+      "rating": 5,
+      "soldLabel": "70+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-headlamp",
+      "kind": "physical",
+      "name": "Dawn Patrol Headlamp",
+      "price": "LKR 5,450.00",
+      "description": "USB-C rechargeable headlamp built for 4 AM Marine Drive loops.",
+      "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=640&h=640&fit=crop",
+      "image_alt": "Dawn Patrol Headlamp",
+      "rating": 4,
+      "soldLabel": "55+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-buff",
+      "kind": "physical",
+      "name": "Cooling Neck Buff",
+      "price": "LKR 980.00",
+      "compareAtPrice": "LKR 1,350.00",
+      "description": "Moisture-wicking buff for humidity, dust, and post-run sun.",
+      "image": "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=640&h=640&fit=crop",
+      "image_alt": "Cooling Neck Buff",
+      "rating": 4,
+      "soldLabel": "130+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 370.00",
+        "discountLabel": "-27%"
+      }
+    },
+    {
+      "id": "mc-shorts",
+      "kind": "physical",
+      "name": "Split Shorts Pro",
+      "price": "LKR 4,290.00",
+      "description": "Featherweight split shorts with a secure rear zip pocket.",
+      "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=640&fit=crop",
+      "image_alt": "Split Shorts Pro",
+      "rating": 5,
+      "soldLabel": "160+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-bottle",
+      "kind": "physical",
+      "name": "Soft Flask 500ml",
+      "price": "LKR 2,750.00",
+      "description": "Compressible soft flask that packs flat when empty.",
+      "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=640&h=640&fit=crop",
+      "image_alt": "Soft Flask 500ml",
+      "rating": 4,
+      "soldLabel": "95+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-massage",
+      "kind": "physical",
+      "name": "Percussion Mini Massager",
+      "price": "LKR 12,900.00",
+      "compareAtPrice": "LKR 15,900.00",
+      "description": "Travel-size percussion tool for calves and hip flexors.",
+      "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640&h=640&fit=crop",
+      "image_alt": "Percussion Mini Massager",
+      "rating": 4,
+      "soldLabel": "40+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 3,000.00",
+        "discountLabel": "-19%"
+      }
+    },
+    {
+      "id": "mc-sunglasses",
+      "kind": "physical",
+      "name": "Polarized Run Shades",
+      "price": "LKR 6,800.00",
+      "description": "Wraparound shades with anti-fog vents for bright coastal runs.",
+      "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=640&h=640&fit=crop",
+      "image_alt": "Polarized Run Shades",
+      "rating": 4,
+      "soldLabel": "65+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-insoles",
+      "kind": "physical",
+      "name": "Supportive Training Insoles",
+      "price": "LKR 3,450.00",
+      "description": "Arch-support insoles for high-mileage weeks and race taper.",
+      "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=640&h=640&fit=crop",
+      "image_alt": "Supportive Training Insoles",
+      "rating": 5,
+      "soldLabel": "85+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-towel",
+      "kind": "physical",
+      "name": "Quick-Dry Micro Towel",
+      "price": "LKR 1,290.00",
+      "description": "Packable towel for showers, ice baths, and race-day kits.",
+      "image": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=640&h=640&fit=crop",
+      "image_alt": "Quick-Dry Micro Towel",
+      "rating": 4,
+      "soldLabel": "50+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-gloves",
+      "kind": "physical",
+      "name": "Touchscreen Run Gloves",
+      "price": "LKR 2,050.00",
+      "compareAtPrice": "LKR 2,650.00",
+      "description": "Light gloves for cool dawn starts without ditching your watch.",
+      "image": "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=640&h=640&fit=crop",
+      "image_alt": "Touchscreen Run Gloves",
+      "rating": 4,
+      "soldLabel": "30+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 600.00",
+        "discountLabel": "-23%"
+      }
+    },
+    {
+      "id": "mc-band",
+      "kind": "physical",
+      "name": "HRM Chest Strap",
+      "price": "LKR 7,990.00",
+      "description": "Reliable heart-rate strap for threshold sessions and long runs.",
+      "image": "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=640&h=640&fit=crop",
+      "image_alt": "HRM Chest Strap",
+      "rating": 5,
+      "soldLabel": "100+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-mat",
+      "kind": "physical",
+      "name": "Compact Travel Yoga Mat",
+      "price": "LKR 4,750.00",
+      "description": "Foldable mat for hotel-room mobility and strength circuits.",
+      "image": "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=640&h=640&fit=crop",
+      "image_alt": "Compact Travel Yoga Mat",
+      "rating": 4,
+      "soldLabel": "48+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-mug",
+      "kind": "physical",
+      "name": "Post-Run Insulated Mug",
+      "price": "LKR 2,350.00",
+      "description": "Keeps recovery shakes cold and chai hot after long Sundays.",
+      "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=640&h=640&fit=crop",
+      "image_alt": "Post-Run Insulated Mug",
+      "rating": 4,
+      "soldLabel": "75+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-tape",
+      "kind": "physical",
+      "name": "Kinesiology Tape Pack",
+      "price": "LKR 1,150.00",
+      "compareAtPrice": "LKR 1,480.00",
+      "description": "Breathable tape for calves, knees, and race-week niggles.",
+      "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=640&h=640&fit=crop",
+      "image_alt": "Kinesiology Tape Pack",
+      "rating": 4,
+      "soldLabel": "110+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 330.00",
+        "discountLabel": "-22%"
+      }
+    },
+    {
+      "id": "mc-pace-plan",
+      "kind": "digital",
+      "name": "Half Marathon Pace Calculator Pack",
+      "price": "LKR 750.00",
+      "description": "Spreadsheet + PDF paces for goal times from 1:30 to 2:30.",
+      "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=640&fit=crop",
+      "image_alt": "Half Marathon Pace Calculator Pack",
+      "rating": 5,
+      "soldLabel": "220+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-nutrition",
+      "kind": "digital",
+      "name": "Ultra Nutrition Spreadsheet",
+      "price": "LKR 1,890.00",
+      "compareAtPrice": "LKR 2,400.00",
+      "description": "Aid-station calorie planner for 50K and 100K efforts.",
+      "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=640&h=640&fit=crop",
+      "image_alt": "Ultra Nutrition Spreadsheet",
+      "rating": 4,
+      "soldLabel": "90+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 510.00",
+        "discountLabel": "-21%"
+      }
+    },
+    {
+      "id": "mc-form",
+      "kind": "digital",
+      "name": "Running Form Video Audit",
+      "price": "LKR 4,990.00",
+      "description": "Send a form clip and get annotated feedback within 48 hours.",
+      "image": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=640&h=640&fit=crop",
+      "image_alt": "Running Form Video Audit",
+      "rating": 5,
+      "soldLabel": "35+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-podcast-pack",
+      "kind": "digital",
+      "name": "Miles & Mindset Bonus Episodes",
+      "price": "LKR 990.00",
+      "description": "Exclusive audio set on taper nerves, injury comebacks, and pacing.",
+      "image": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=640&h=640&fit=crop",
+      "image_alt": "Miles & Mindset Bonus Episodes",
+      "rating": 4,
+      "soldLabel": "140+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-strength2",
+      "kind": "digital",
+      "name": "Plyometrics for Runners Mini-Course",
+      "price": "LKR 2,790.00",
+      "description": "Four-week jump and power progressions for road and trail.",
+      "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=640&fit=crop",
+      "image_alt": "Plyometrics for Runners Mini-Course",
+      "rating": 4,
+      "soldLabel": "60+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-sleep",
+      "kind": "digital",
+      "name": "Race Week Sleep Protocol PDF",
+      "price": "LKR 590.00",
+      "compareAtPrice": "LKR 890.00",
+      "description": "Night-by-night sleep plan for the seven days before race day.",
+      "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=640&h=640&fit=crop",
+      "image_alt": "Race Week Sleep Protocol PDF",
+      "rating": 4,
+      "soldLabel": "180+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 300.00",
+        "discountLabel": "-34%"
+      }
+    },
+    {
+      "id": "mc-gpx2",
+      "kind": "digital",
+      "name": "Western Ghats Long-Run Bundle",
+      "price": "LKR 1,450.00",
+      "description": "Five GPX routes from 18K to 32K with elevation notes.",
+      "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=640&h=640&fit=crop",
+      "image_alt": "Western Ghats Long-Run Bundle",
+      "rating": 5,
+      "soldLabel": "70+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-journal2",
+      "kind": "digital",
+      "name": "Training Log Notion Template",
+      "price": "LKR 1,190.00",
+      "description": "Weekly mileage, mood, and recovery tracker in Notion.",
+      "image": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=640&h=640&fit=crop",
+      "image_alt": "Training Log Notion Template",
+      "rating": 4,
+      "soldLabel": "210+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-breath",
+      "kind": "digital",
+      "name": "Breathwork for Race Anxiety Audio",
+      "price": "LKR 850.00",
+      "description": "Guided breathing sessions for start-line nerves and taper weeks.",
+      "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=640&h=640&fit=crop",
+      "image_alt": "Breathwork for Race Anxiety Audio",
+      "rating": 5,
+      "soldLabel": "95+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-core",
+      "kind": "digital",
+      "name": "15-Minute Core Circuit Pack",
+      "price": "LKR 1,350.00",
+      "compareAtPrice": "LKR 1,750.00",
+      "description": "No-equipment core sessions designed for runners after easy miles.",
+      "image": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=640&h=640&fit=crop",
+      "image_alt": "15-Minute Core Circuit Pack",
+      "rating": 4,
+      "soldLabel": "125+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 400.00",
+        "discountLabel": "-23%"
+      }
+    },
+    {
+      "id": "mc-kit",
+      "kind": "digital",
+      "name": "Monsoon Race Kit Checklist",
+      "price": "LKR 490.00",
+      "description": "Printable wet-weather kit list for Mumbai and coastal races.",
+      "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=640&fit=crop",
+      "image_alt": "Monsoon Race Kit Checklist",
+      "rating": 4,
+      "soldLabel": "160+ sold",
+      "offer": {
+        "badge": "Best Seller",
+        "detail": "In Stock"
+      }
+    },
+    {
+      "id": "mc-rehab",
+      "kind": "digital",
+      "name": "IT Band Rehab Guide",
+      "price": "LKR 1,690.00",
+      "description": "Progressive mobility and strength plan for stubborn IT band pain.",
+      "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=640&h=640&fit=crop",
+      "image_alt": "IT Band Rehab Guide",
+      "rating": 5,
+      "soldLabel": "88+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
+      }
+    },
+    {
+      "id": "mc-photo",
+      "kind": "digital",
+      "name": "Race Day Photo Preset Pack",
+      "price": "LKR 1,050.00",
+      "description": "Lightroom presets tuned for sunrise race photos and finish-line shots.",
+      "image": "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=640&h=640&fit=crop",
+      "image_alt": "Race Day Photo Preset Pack",
+      "rating": 4,
+      "soldLabel": "55+ sold",
+      "offer": {
+        "badge": "Affiliate Link",
+        "detail": "Sold via affiliate partner"
+      }
+    },
+    {
+      "id": "mc-tempo",
+      "kind": "digital",
+      "name": "Tempo Block Builder Spreadsheet",
+      "price": "LKR 1,290.00",
+      "compareAtPrice": "LKR 1,690.00",
+      "description": "Build 4–8 week tempo progressions from current threshold.",
+      "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&h=640&fit=crop",
+      "image_alt": "Tempo Block Builder Spreadsheet",
+      "rating": 4,
+      "soldLabel": "72+ sold",
+      "offer": {
+        "badge": "Sale",
+        "detail": "Save LKR 400.00",
+        "discountLabel": "-24%"
+      }
+    },
+    {
+      "id": "mc-crew",
+      "kind": "digital",
+      "name": "Crew Captain Briefing Deck",
+      "price": "LKR 2,250.00",
+      "description": "Slide deck and scripts for ultra crew roles and aid-station timing.",
+      "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=640&h=640&fit=crop",
+      "image_alt": "Crew Captain Briefing Deck",
+      "rating": 5,
+      "soldLabel": "28+ sold",
+      "offer": {
+        "badge": "Limited Edition",
+        "detail": "Low Stock"
       }
     }
   ]

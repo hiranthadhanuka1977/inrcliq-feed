@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
@@ -15,6 +15,25 @@ const FILTERS: { id: FilterId; label: string }[] = [
   { id: "physical", label: "Physical" },
   { id: "digital", label: "Digital" },
 ];
+
+const COLLECTION_PAGE_SIZE = 8;
+const COLLECTION_LOAD_DELAY_MS = 420;
+
+function CollectionProductSkeleton() {
+  return (
+    <article className="collection-product collection-product--skeleton" aria-hidden="true">
+      <div className="collection-product__media">
+        <div className="collection-skeleton collection-skeleton--media" />
+      </div>
+      <div className="collection-product__body">
+        <div className="collection-skeleton collection-skeleton--title" />
+        <div className="collection-skeleton collection-skeleton--line" />
+        <div className="collection-skeleton collection-skeleton--line collection-skeleton--short" />
+        <div className="collection-skeleton collection-skeleton--price" />
+      </div>
+    </article>
+  );
+}
 
 function kindLabel(kind: CollectionProductKind): string {
   return kind === "digital" ? "Digital" : "Physical";
@@ -73,30 +92,48 @@ function StarRating({ rating }: { rating: number }) {
 
 function CollectionProductCard({
   product,
+  profileSlug,
   onAdd,
 }: {
   product: CollectionProduct;
+  profileSlug: string;
   onAdd: (productId: string) => void;
 }) {
   const isSale = Boolean(product.offer?.discountLabel);
+  const [imageSrc, setImageSrc] = useState(product.image);
+  const detailHref = `/profile/${profileSlug}/collection/${product.id}`;
+
+  useEffect(() => {
+    setImageSrc(product.image);
+  }, [product.image]);
 
   return (
     <article className="collection-product">
       <div className="collection-product__media">
-        <button
-          type="button"
+        <Link
+          href={detailHref}
           className="collection-product__media-hit"
           aria-label={`View details for ${product.name}`}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={product.image} alt="" width={640} height={640} />
+          <img
+            src={imageSrc}
+            alt={product.image_alt || product.name}
+            width={640}
+            height={640}
+            onError={() => {
+              setImageSrc(
+                "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='640' viewBox='0 0 640 640'%3E%3Crect fill='%23e8e8e8' width='640' height='640'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%23999999' font-family='system-ui,sans-serif' font-size='28'%3ENo image%3C/text%3E%3C/svg%3E",
+              );
+            }}
+          />
           <span className="collection-product__view" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
               <circle cx="12" cy="12" r="3" />
             </svg>
           </span>
-        </button>
+        </Link>
         <span className={`collection-product__kind collection-product__kind--${product.kind}`}>
           {kindLabel(product.kind)}
         </span>
@@ -145,7 +182,7 @@ function CollectionProductCard({
             className="btn btn--secondary btn--sm collection-product__cta"
             onClick={() => onAdd(product.id)}
           >
-            {product.kind === "digital" ? "Get digital" : "Add to bag"}
+            {product.ctaLabel ?? (product.kind === "digital" ? "Get digital" : "Add to bag")}
           </button>
         </div>
       </div>
@@ -162,12 +199,63 @@ export default function CollectionListingView({
 }) {
   const [filter, setFilter] = useState<FilterId>("all");
   const [cartCount, setCartCount] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(COLLECTION_PAGE_SIZE);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const loadingLockRef = useRef(false);
+  const loadTimeoutRef = useRef(0);
   const handle = profile.handle.startsWith("@") ? profile.handle : `@${profile.handle}`;
 
   const filtered = useMemo(() => {
     if (filter === "all") return collection.products;
     return collection.products.filter((product) => product.kind === filter);
   }, [collection.products, filter]);
+
+  const visibleProducts = filtered.slice(0, visibleCount);
+  const hasMore = visibleCount < filtered.length;
+  const skeletonCount = Math.min(COLLECTION_PAGE_SIZE, filtered.length - visibleCount);
+
+  useEffect(() => {
+    setVisibleCount(COLLECTION_PAGE_SIZE);
+    setIsLoadingMore(false);
+    loadingLockRef.current = false;
+    if (loadTimeoutRef.current) {
+      window.clearTimeout(loadTimeoutRef.current);
+      loadTimeoutRef.current = 0;
+    }
+  }, [filter]);
+
+  useEffect(() => {
+    const node = loadMoreRef.current;
+    if (!node || !hasMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        if (loadingLockRef.current) return;
+
+        loadingLockRef.current = true;
+        setIsLoadingMore(true);
+
+        loadTimeoutRef.current = window.setTimeout(() => {
+          setVisibleCount((count) => Math.min(count + COLLECTION_PAGE_SIZE, filtered.length));
+          setIsLoadingMore(false);
+          loadingLockRef.current = false;
+          loadTimeoutRef.current = 0;
+        }, COLLECTION_LOAD_DELAY_MS);
+      },
+      { rootMargin: "160px 0px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [filtered.length, hasMore, visibleCount]);
+
+  useEffect(() => {
+    return () => {
+      if (loadTimeoutRef.current) window.clearTimeout(loadTimeoutRef.current);
+    };
+  }, []);
 
   const physicalCount = collection.products.filter((p) => p.kind === "physical").length;
   const digitalCount = collection.products.filter((p) => p.kind === "digital").length;
@@ -298,15 +386,41 @@ export default function CollectionListingView({
                   })}
                 </div>
                 <p className="collection-page__count">
-                  Showing {filtered.length} {filtered.length === 1 ? "item" : "items"}
+                  Showing {visibleProducts.length} of {filtered.length}{" "}
+                  {filtered.length === 1 ? "item" : "items"}
                 </p>
               </div>
 
               <div className="collection-grid">
-                {filtered.map((product) => (
-                  <CollectionProductCard key={product.id} product={product} onAdd={addToCart} />
+                {visibleProducts.map((product) => (
+                  <CollectionProductCard
+                    key={product.id}
+                    product={product}
+                    profileSlug={profile.slug}
+                    onAdd={addToCart}
+                  />
                 ))}
+                {isLoadingMore
+                  ? Array.from({ length: skeletonCount }, (_, index) => (
+                      <CollectionProductSkeleton key={`skeleton-${index}`} />
+                    ))
+                  : null}
               </div>
+
+              {isLoadingMore ? (
+                <div className="collection-page__loader" role="status" aria-live="polite">
+                  <span className="collection-page__loader-spinner" aria-hidden="true" />
+                  <span>Loading more products…</span>
+                </div>
+              ) : null}
+
+              {hasMore ? (
+                <div ref={loadMoreRef} className="collection-page__sentinel" aria-hidden="true" />
+              ) : null}
+
+              {!hasMore && !isLoadingMore ? (
+                <p className="collection-page__end">You’ve reached the end of the collection</p>
+              ) : null}
             </div>
           </div>
         </main>
