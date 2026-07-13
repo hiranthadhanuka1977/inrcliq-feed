@@ -8,6 +8,7 @@ export interface ProfileStats {
 }
 
 export interface ProfileCollectionItem {
+  id?: string;
   name: string;
   price: string;
   image: string;

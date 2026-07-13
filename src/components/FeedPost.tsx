@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import AudioFeedPlayer, { resolveAudioContentType } from "@/components/AudioFeedPlayer";
+import FollowButton from "@/components/FollowButton";
 import MediaPlayOverlay from "@/components/MediaPlayOverlay";
 import ShareIcon from "@/components/ShareIcon";
 import type { FeedItem } from "@/types/feed";
@@ -98,6 +99,8 @@ export default function FeedPost({ item }: { item: FeedItem }) {
   const { author } = item;
   const [hidden, setHidden] = useState(false);
   const [following, setFollowing] = useState(item.relationship.following);
+  const [liked, setLiked] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
 
   if (hidden) return null;
 
@@ -149,17 +152,12 @@ export default function FeedPost({ item }: { item: FeedItem }) {
                   Verified
                 </span>
               ) : null}
-              {following ? (
-                <span className="post-head__following">Following</span>
-              ) : (
-                <button
-                  type="button"
-                  className="post-head__follow"
-                  onClick={() => setFollowing(true)}
-                >
-                  Follow
-                </button>
-              )}
+              <FollowButton
+                following={following}
+                onFollowingChange={setFollowing}
+                className="post-head__follow"
+                name={author.name}
+              />
             </div>
             <div className="post-head__meta-line">
               <span className="post-head__handle">{handle}</span>
@@ -220,11 +218,25 @@ export default function FeedPost({ item }: { item: FeedItem }) {
 
       <div className="post-footer">
         <div className="post-actions post-actions--engage" role="group" aria-label="Post actions">
-          <button type="button" className="post-action post-action--like" aria-label="Like">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <button
+            type="button"
+            className={`post-action post-action--like${liked ? " is-liked" : ""}`}
+            aria-label={liked ? "Unlike" : "Like"}
+            aria-pressed={liked}
+            onClick={() => setLiked((value) => !value)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill={liked ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
-            <span className="post-action__count">{formatCount(item.engagement.likes)}</span>
+            <span className="post-action__count">{formatCount(item.engagement.likes + (liked ? 1 : 0))}</span>
           </button>
           <button type="button" className="post-action post-action--comment" aria-label="Comment">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -234,6 +246,25 @@ export default function FeedPost({ item }: { item: FeedItem }) {
           </button>
           <button type="button" className="post-action post-action--share" aria-label="Share">
             <ShareIcon />
+          </button>
+          <button
+            type="button"
+            className={`post-action post-action--save${bookmarked ? " is-saved" : ""}`}
+            aria-label={bookmarked ? "Remove bookmark" : "Bookmark"}
+            aria-pressed={bookmarked}
+            onClick={() => setBookmarked((value) => !value)}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill={bookmarked ? "currentColor" : "none"}
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+            </svg>
           </button>
         </div>
       </div>

@@ -1695,12 +1695,13 @@ a {
   border-color: transparent;
   color: var(--color-text-secondary);
   font-weight: 600;
-  cursor: default;
+  cursor: pointer;
 }
 
 .suggest-item__btn.is-following:hover {
-  background: transparent;
-  border-color: transparent;
+  background: var(--color-neutral-100);
+  border-color: var(--color-neutral-300);
+  color: var(--color-text-primary);
 }
 
 /* Legacy suggest cards — kept for other pages if referenced */

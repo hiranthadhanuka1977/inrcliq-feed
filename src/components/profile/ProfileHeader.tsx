@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
+import FollowButton from "@/components/FollowButton";
 import ShareIcon from "@/components/ShareIcon";
 import type { ProfileData } from "@/types/profile";
 
@@ -291,15 +292,12 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
                 </button>
               )
             ) : null}
-            {following ? (
-              <button type="button" className="btn btn--outline-brand btn--sm is-active profile-header__follow">
-                Following
-              </button>
-            ) : (
-              <button type="button" className="btn btn--secondary btn--sm profile-header__follow" onClick={() => setFollowing(true)}>
-                Follow
-              </button>
-            )}
+            <FollowButton
+              following={following}
+              onFollowingChange={setFollowing}
+              className={`btn btn--sm profile-header__follow${following ? " btn--outline-brand is-active" : " btn--secondary"}`}
+              name={profile.name}
+            />
             {profile.collection.length > 0 ? (
               <Link
                 href={`/profile/${profile.slug}/collection`}

@@ -208,6 +208,53 @@
   display: block;
 }
 
+.collection-product__like {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-sm);
+  background: rgba(12, 14, 20, 0.62);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.collection-product__like:hover,
+.collection-product__like:focus-visible {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #fff;
+  color: #141720;
+  transform: scale(1.05);
+}
+
+.collection-product__like.is-active {
+  color: #c0392b;
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #fff;
+}
+
+.collection-product__like.is-active:hover,
+.collection-product__like.is-active:focus-visible {
+  color: #c0392b;
+}
+
+.collection-product__like svg {
+  display: block;
+}
+
 .collection-product__kind {
   position: absolute;
   top: 0.7rem;

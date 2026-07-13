@@ -1,3 +1,6 @@
+"use client";
+
+import MediaPlayOverlay from "@/components/MediaPlayOverlay";
 import type { ProfilePopularPost } from "@/types/profile";
 
 export default function ProfilePopularPosts({ posts }: { posts: ProfilePopularPost[] }) {
@@ -28,12 +31,8 @@ export default function ProfilePopularPosts({ posts }: { posts: ProfilePopularPo
                   </span>
                 </span>
               ) : null}
-              {post.has_video ? (
-                <span className="profile-post-card__play" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                </span>
+              {post.has_video && !post.members_only ? (
+                <MediaPlayOverlay className="profile-post-card__play" />
               ) : null}
             </div>
             <h3>{post.title}</h3>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import FollowButton from "@/components/FollowButton";
 import { getProfileSlugFromHandle } from "@/lib/profile-slugs";
 
 export interface AudioCreatorCardProps {
@@ -72,18 +73,13 @@ export default function AudioCreatorCard({
           </span>
         </span>
       </Link>
-      <button
-        type="button"
-        className={`audio-top-creator-card__follow${following ? " is-following" : ""}`}
-        aria-pressed={following}
-        onClick={(event) => {
-          event.preventDefault();
-          event.stopPropagation();
-          setFollowing((value) => !value);
-        }}
-      >
-        {following ? "Following" : "Follow"}
-      </button>
+      <FollowButton
+        following={following}
+        onFollowingChange={setFollowing}
+        className="audio-top-creator-card__follow"
+        name={name}
+        stopPropagation
+      />
     </article>
   );
 }

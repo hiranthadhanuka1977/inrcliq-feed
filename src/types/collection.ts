@@ -55,11 +55,11 @@ export interface CollectionProductDetail {
   defaultColorId: string;
   defaultSizeId: string;
   longDescription: string;
-  reviewAverage: number;
-  reviewCount: number;
-  reviewAttributes: CollectionProductReviewAttribute[];
-  reviews: CollectionProductReview[];
-  reviewsTotal: number;
+  reviewAverage?: number;
+  reviewCount?: number;
+  reviewAttributes?: CollectionProductReviewAttribute[];
+  reviews?: CollectionProductReview[];
+  reviewsTotal?: number;
   delivery: CollectionProductDelivery;
 }
 

@@ -7,8 +7,8 @@
       "id": "mc-tee",
       "kind": "physical",
       "name": "Mumbai Marathon Tee",
-      "price": "LKR 2,376.54",
-      "compareAtPrice": "LKR 2,860.12",
+      "price": "$32",
+      "compareAtPrice": "$38",
       "description": "Soft cotton blend race tee with reflective Mumbai skyline print.",
       "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=640&h=640&fit=crop",
       "image_alt": "Mumbai Marathon Tee",
@@ -67,12 +67,36 @@
           }
         ],
         "sizes": [
-          { "id": "s", "label": "S", "hint": "45-54kg" },
-          { "id": "m", "label": "M", "hint": "54-63kg" },
-          { "id": "l", "label": "L", "hint": "63-70kg" },
-          { "id": "xl", "label": "XL", "hint": "70-78kg" },
-          { "id": "xxl", "label": "XXL", "hint": "78-86kg" },
-          { "id": "xxxl", "label": "XXXL", "hint": "88-93kg" }
+          {
+            "id": "s",
+            "label": "S",
+            "hint": "45-54kg"
+          },
+          {
+            "id": "m",
+            "label": "M",
+            "hint": "54-63kg"
+          },
+          {
+            "id": "l",
+            "label": "L",
+            "hint": "63-70kg"
+          },
+          {
+            "id": "xl",
+            "label": "XL",
+            "hint": "70-78kg"
+          },
+          {
+            "id": "xxl",
+            "label": "XXL",
+            "hint": "78-86kg"
+          },
+          {
+            "id": "xxxl",
+            "label": "XXXL",
+            "hint": "88-93kg"
+          }
         ],
         "defaultColorId": "white",
         "defaultSizeId": "m",
@@ -80,9 +104,18 @@
         "reviewAverage": 4.7,
         "reviewCount": 18,
         "reviewAttributes": [
-          { "label": "Fit", "score": 4.8 },
-          { "label": "Quality", "score": 4.7 },
-          { "label": "Value for Money", "score": 4.6 }
+          {
+            "label": "Fit",
+            "score": 4.8
+          },
+          {
+            "label": "Quality",
+            "score": 4.7
+          },
+          {
+            "label": "Value for Money",
+            "score": 4.6
+          }
         ],
         "reviews": [
           {
@@ -116,7 +149,7 @@
         "reviewsTotal": 18,
         "delivery": {
           "location": "Western, Colombo 1-15",
-          "standardFee": "LKR 500.00",
+          "standardFee": "$7",
           "cod": true,
           "returns": "14 days easy return",
           "warranty": "Warranty not available"
@@ -127,8 +160,8 @@
       "id": "mc-cap",
       "kind": "physical",
       "name": "Night Run Reflective Cap",
-      "price": "LKR 1,890.00",
-      "compareAtPrice": "LKR 2,450.00",
+      "price": "$24",
+      "compareAtPrice": "$31",
       "description": "Lightweight running cap with 360° reflective trim for early starts.",
       "image": "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=640&h=640&fit=crop",
       "image_alt": "Night Run Reflective Cap",
@@ -143,7 +176,7 @@
       "id": "mc-roller",
       "kind": "physical",
       "name": "Recovery Foam Roller",
-      "price": "LKR 3,250.00",
+      "price": "$38",
       "description": "Firm grid roller sized for calves, quads, and post-ultra sessions.",
       "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=640&h=640&fit=crop",
       "image_alt": "Recovery Foam Roller",
@@ -158,8 +191,8 @@
       "id": "mc-vest",
       "kind": "physical",
       "name": "Hydration Vest Pro",
-      "price": "LKR 8,990.00",
-      "compareAtPrice": "LKR 11,500.00",
+      "price": "$89",
+      "compareAtPrice": "$114",
       "description": "2L soft-flask vest with bounce-free fit for long Mumbai heat runs.",
       "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=640&h=640&fit=crop",
       "image_alt": "Hydration Vest Pro",
@@ -167,7 +200,7 @@
       "soldLabel": "35+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 2,510.00",
+        "detail": "Save $25",
         "discountLabel": "-22%"
       }
     },
@@ -175,7 +208,7 @@
       "id": "mc-shoes",
       "kind": "physical",
       "name": "Ultra-Light Running Shoes",
-      "price": "LKR 18,750.00",
+      "price": "$129",
       "description": "Responsive daily trainer built for tempo work and easy miles.",
       "image": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=640&h=640&fit=crop",
       "image_alt": "Ultra-Light Running Shoes",
@@ -190,7 +223,7 @@
       "id": "mc-strap",
       "kind": "physical",
       "name": "Race-Day GPS Watch Strap",
-      "price": "LKR 4,250.00",
+      "price": "$45",
       "description": "Breathable nylon quick-release strap that stays put in humidity.",
       "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=640&h=640&fit=crop",
       "image_alt": "Race-Day GPS Watch Strap",
@@ -205,8 +238,8 @@
       "id": "mc-windbreaker",
       "kind": "physical",
       "name": "Dawn Softshell Windbreaker",
-      "price": "LKR 7,480.00",
-      "compareAtPrice": "LKR 9,900.00",
+      "price": "$101",
+      "compareAtPrice": "$133",
       "description": "Packable shell for cool coastal mornings and monsoon wind.",
       "image": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=640&h=640&fit=crop",
       "image_alt": "Dawn Softshell Windbreaker",
@@ -214,7 +247,7 @@
       "soldLabel": "40+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 2,420.00",
+        "detail": "Save $33",
         "discountLabel": "-24%"
       }
     },
@@ -222,7 +255,7 @@
       "id": "mc-socks",
       "kind": "physical",
       "name": "Compression Socks 3-Pack",
-      "price": "LKR 2,150.00",
+      "price": "$29",
       "description": "Arch-support socks for long runs and travel recovery days.",
       "image": "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=640&h=640&fit=crop",
       "image_alt": "Compression Socks 3-Pack",
@@ -237,8 +270,8 @@
       "id": "mc-plan",
       "kind": "digital",
       "name": "12-Week Ultra Training Plan",
-      "price": "LKR 1,590.00",
-      "compareAtPrice": "LKR 2,250.00",
+      "price": "$21",
+      "compareAtPrice": "$30",
       "description": "PDF + calendar plan from base miles to race taper, with weekly notes.",
       "image": "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=640&h=640&fit=crop",
       "image_alt": "12-Week Ultra Training Plan",
@@ -246,7 +279,7 @@
       "soldLabel": "300+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 660.00",
+        "detail": "Save $9",
         "discountLabel": "-29%"
       }
     },
@@ -254,7 +287,7 @@
       "id": "mc-fuel",
       "kind": "digital",
       "name": "Race Day Fueling Guide",
-      "price": "LKR 890.00",
+      "price": "$12",
       "description": "Downloadable gel/timing cheat sheet for half, marathon, and ultra.",
       "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=640&h=640&fit=crop",
       "image_alt": "Race Day Fueling Guide",
@@ -269,7 +302,7 @@
       "id": "mc-gpx",
       "kind": "digital",
       "name": "Mumbai Marathon Route Pack",
-      "price": "LKR 1,250.00",
+      "price": "$17",
       "description": "GPX files for the full course plus three shorter rehearsal loops.",
       "image": "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=640&h=640&fit=crop",
       "image_alt": "Mumbai Marathon Route Pack",
@@ -284,7 +317,7 @@
       "id": "mc-mobility",
       "kind": "digital",
       "name": "Morning Mobility Series",
-      "price": "LKR 2,490.00",
+      "price": "$34",
       "description": "On-demand video set: hips, ankles, and pre-run activation routines.",
       "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640&h=640&fit=crop",
       "image_alt": "Morning Mobility Series",
@@ -299,8 +332,8 @@
       "id": "mc-strength",
       "kind": "digital",
       "name": "Strength for Runners Program",
-      "price": "LKR 3,190.00",
-      "compareAtPrice": "LKR 4,500.00",
+      "price": "$43",
+      "compareAtPrice": "$61",
       "description": "8-week gym-or-home strength plan with progress trackers.",
       "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=640&fit=crop",
       "image_alt": "Strength for Runners Program",
@@ -308,7 +341,7 @@
       "soldLabel": "95+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 1,310.00",
+        "detail": "Save $18",
         "discountLabel": "-29%"
       }
     },
@@ -316,7 +349,7 @@
       "id": "mc-journal",
       "kind": "digital",
       "name": "Race Week Checklist Journal",
-      "price": "LKR 690.00",
+      "price": "$9",
       "description": "Printable race-week planner covering sleep, kit, and nutrition.",
       "image": "https://images.unsplash.com/photo-1517842645767-c639042777db?w=640&h=640&fit=crop",
       "image_alt": "Race Week Checklist Journal",
@@ -331,8 +364,8 @@
       "id": "mc-gaiters",
       "kind": "physical",
       "name": "Trail Ankle Gaiters",
-      "price": "LKR 1,650.00",
-      "compareAtPrice": "LKR 2,100.00",
+      "price": "$22",
+      "compareAtPrice": "$28",
       "description": "Lightweight gaiters that keep dust and grit out on monsoon trails.",
       "image": "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=640&h=640&fit=crop",
       "image_alt": "Trail Ankle Gaiters",
@@ -340,7 +373,7 @@
       "soldLabel": "45+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 450.00",
+        "detail": "Save $6",
         "discountLabel": "-21%"
       }
     },
@@ -348,7 +381,7 @@
       "id": "mc-belt",
       "kind": "physical",
       "name": "Race Day Fuel Belt",
-      "price": "LKR 3,890.00",
+      "price": "$52",
       "description": "Bounce-free belt for gels, soft flasks, and a phone sleeve.",
       "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=640&h=640&fit=crop",
       "image_alt": "Race Day Fuel Belt",
@@ -363,7 +396,7 @@
       "id": "mc-headlamp",
       "kind": "physical",
       "name": "Dawn Patrol Headlamp",
-      "price": "LKR 5,450.00",
+      "price": "$73",
       "description": "USB-C rechargeable headlamp built for 4 AM Marine Drive loops.",
       "image": "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=640&h=640&fit=crop",
       "image_alt": "Dawn Patrol Headlamp",
@@ -378,8 +411,8 @@
       "id": "mc-buff",
       "kind": "physical",
       "name": "Cooling Neck Buff",
-      "price": "LKR 980.00",
-      "compareAtPrice": "LKR 1,350.00",
+      "price": "$13",
+      "compareAtPrice": "$18",
       "description": "Moisture-wicking buff for humidity, dust, and post-run sun.",
       "image": "https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=640&h=640&fit=crop",
       "image_alt": "Cooling Neck Buff",
@@ -387,7 +420,7 @@
       "soldLabel": "130+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 370.00",
+        "detail": "Save $5",
         "discountLabel": "-27%"
       }
     },
@@ -395,7 +428,7 @@
       "id": "mc-shorts",
       "kind": "physical",
       "name": "Split Shorts Pro",
-      "price": "LKR 4,290.00",
+      "price": "$58",
       "description": "Featherweight split shorts with a secure rear zip pocket.",
       "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=640&fit=crop",
       "image_alt": "Split Shorts Pro",
@@ -410,7 +443,7 @@
       "id": "mc-bottle",
       "kind": "physical",
       "name": "Soft Flask 500ml",
-      "price": "LKR 2,750.00",
+      "price": "$37",
       "description": "Compressible soft flask that packs flat when empty.",
       "image": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=640&h=640&fit=crop",
       "image_alt": "Soft Flask 500ml",
@@ -425,8 +458,8 @@
       "id": "mc-massage",
       "kind": "physical",
       "name": "Percussion Mini Massager",
-      "price": "LKR 12,900.00",
-      "compareAtPrice": "LKR 15,900.00",
+      "price": "$174",
+      "compareAtPrice": "$214",
       "description": "Travel-size percussion tool for calves and hip flexors.",
       "image": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=640&h=640&fit=crop",
       "image_alt": "Percussion Mini Massager",
@@ -434,7 +467,7 @@
       "soldLabel": "40+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 3,000.00",
+        "detail": "Save $40",
         "discountLabel": "-19%"
       }
     },
@@ -442,7 +475,7 @@
       "id": "mc-sunglasses",
       "kind": "physical",
       "name": "Polarized Run Shades",
-      "price": "LKR 6,800.00",
+      "price": "$92",
       "description": "Wraparound shades with anti-fog vents for bright coastal runs.",
       "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=640&h=640&fit=crop",
       "image_alt": "Polarized Run Shades",
@@ -457,7 +490,7 @@
       "id": "mc-insoles",
       "kind": "physical",
       "name": "Supportive Training Insoles",
-      "price": "LKR 3,450.00",
+      "price": "$46",
       "description": "Arch-support insoles for high-mileage weeks and race taper.",
       "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=640&h=640&fit=crop",
       "image_alt": "Supportive Training Insoles",
@@ -472,7 +505,7 @@
       "id": "mc-towel",
       "kind": "physical",
       "name": "Quick-Dry Micro Towel",
-      "price": "LKR 1,290.00",
+      "price": "$17",
       "description": "Packable towel for showers, ice baths, and race-day kits.",
       "image": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=640&h=640&fit=crop",
       "image_alt": "Quick-Dry Micro Towel",
@@ -487,8 +520,8 @@
       "id": "mc-gloves",
       "kind": "physical",
       "name": "Touchscreen Run Gloves",
-      "price": "LKR 2,050.00",
-      "compareAtPrice": "LKR 2,650.00",
+      "price": "$28",
+      "compareAtPrice": "$36",
       "description": "Light gloves for cool dawn starts without ditching your watch.",
       "image": "https://images.unsplash.com/photo-1556306535-0f09a537f0a3?w=640&h=640&fit=crop",
       "image_alt": "Touchscreen Run Gloves",
@@ -496,7 +529,7 @@
       "soldLabel": "30+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 600.00",
+        "detail": "Save $8",
         "discountLabel": "-23%"
       }
     },
@@ -504,7 +537,7 @@
       "id": "mc-band",
       "kind": "physical",
       "name": "HRM Chest Strap",
-      "price": "LKR 7,990.00",
+      "price": "$108",
       "description": "Reliable heart-rate strap for threshold sessions and long runs.",
       "image": "https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=640&h=640&fit=crop",
       "image_alt": "HRM Chest Strap",
@@ -519,7 +552,7 @@
       "id": "mc-mat",
       "kind": "physical",
       "name": "Compact Travel Yoga Mat",
-      "price": "LKR 4,750.00",
+      "price": "$64",
       "description": "Foldable mat for hotel-room mobility and strength circuits.",
       "image": "https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=640&h=640&fit=crop",
       "image_alt": "Compact Travel Yoga Mat",
@@ -534,7 +567,7 @@
       "id": "mc-mug",
       "kind": "physical",
       "name": "Post-Run Insulated Mug",
-      "price": "LKR 2,350.00",
+      "price": "$32",
       "description": "Keeps recovery shakes cold and chai hot after long Sundays.",
       "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=640&h=640&fit=crop",
       "image_alt": "Post-Run Insulated Mug",
@@ -549,8 +582,8 @@
       "id": "mc-tape",
       "kind": "physical",
       "name": "Kinesiology Tape Pack",
-      "price": "LKR 1,150.00",
-      "compareAtPrice": "LKR 1,480.00",
+      "price": "$15",
+      "compareAtPrice": "$20",
       "description": "Breathable tape for calves, knees, and race-week niggles.",
       "image": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=640&h=640&fit=crop",
       "image_alt": "Kinesiology Tape Pack",
@@ -558,7 +591,7 @@
       "soldLabel": "110+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 330.00",
+        "detail": "Save $4",
         "discountLabel": "-22%"
       }
     },
@@ -566,7 +599,7 @@
       "id": "mc-pace-plan",
       "kind": "digital",
       "name": "Half Marathon Pace Calculator Pack",
-      "price": "LKR 750.00",
+      "price": "$10",
       "description": "Spreadsheet + PDF paces for goal times from 1:30 to 2:30.",
       "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=640&fit=crop",
       "image_alt": "Half Marathon Pace Calculator Pack",
@@ -581,8 +614,8 @@
       "id": "mc-nutrition",
       "kind": "digital",
       "name": "Ultra Nutrition Spreadsheet",
-      "price": "LKR 1,890.00",
-      "compareAtPrice": "LKR 2,400.00",
+      "price": "$25",
+      "compareAtPrice": "$32",
       "description": "Aid-station calorie planner for 50K and 100K efforts.",
       "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=640&h=640&fit=crop",
       "image_alt": "Ultra Nutrition Spreadsheet",
@@ -590,7 +623,7 @@
       "soldLabel": "90+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 510.00",
+        "detail": "Save $7",
         "discountLabel": "-21%"
       }
     },
@@ -598,7 +631,7 @@
       "id": "mc-form",
       "kind": "digital",
       "name": "Running Form Video Audit",
-      "price": "LKR 4,990.00",
+      "price": "$67",
       "description": "Send a form clip and get annotated feedback within 48 hours.",
       "image": "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=640&h=640&fit=crop",
       "image_alt": "Running Form Video Audit",
@@ -613,7 +646,7 @@
       "id": "mc-podcast-pack",
       "kind": "digital",
       "name": "Miles & Mindset Bonus Episodes",
-      "price": "LKR 990.00",
+      "price": "$13",
       "description": "Exclusive audio set on taper nerves, injury comebacks, and pacing.",
       "image": "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=640&h=640&fit=crop",
       "image_alt": "Miles & Mindset Bonus Episodes",
@@ -628,7 +661,7 @@
       "id": "mc-strength2",
       "kind": "digital",
       "name": "Plyometrics for Runners Mini-Course",
-      "price": "LKR 2,790.00",
+      "price": "$38",
       "description": "Four-week jump and power progressions for road and trail.",
       "image": "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=640&fit=crop",
       "image_alt": "Plyometrics for Runners Mini-Course",
@@ -643,8 +676,8 @@
       "id": "mc-sleep",
       "kind": "digital",
       "name": "Race Week Sleep Protocol PDF",
-      "price": "LKR 590.00",
-      "compareAtPrice": "LKR 890.00",
+      "price": "$8",
+      "compareAtPrice": "$12",
       "description": "Night-by-night sleep plan for the seven days before race day.",
       "image": "https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=640&h=640&fit=crop",
       "image_alt": "Race Week Sleep Protocol PDF",
@@ -652,7 +685,7 @@
       "soldLabel": "180+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 300.00",
+        "detail": "Save $4",
         "discountLabel": "-34%"
       }
     },
@@ -660,7 +693,7 @@
       "id": "mc-gpx2",
       "kind": "digital",
       "name": "Western Ghats Long-Run Bundle",
-      "price": "LKR 1,450.00",
+      "price": "$20",
       "description": "Five GPX routes from 18K to 32K with elevation notes.",
       "image": "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=640&h=640&fit=crop",
       "image_alt": "Western Ghats Long-Run Bundle",
@@ -675,7 +708,7 @@
       "id": "mc-journal2",
       "kind": "digital",
       "name": "Training Log Notion Template",
-      "price": "LKR 1,190.00",
+      "price": "$16",
       "description": "Weekly mileage, mood, and recovery tracker in Notion.",
       "image": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=640&h=640&fit=crop",
       "image_alt": "Training Log Notion Template",
@@ -690,7 +723,7 @@
       "id": "mc-breath",
       "kind": "digital",
       "name": "Breathwork for Race Anxiety Audio",
-      "price": "LKR 850.00",
+      "price": "$11",
       "description": "Guided breathing sessions for start-line nerves and taper weeks.",
       "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=640&h=640&fit=crop",
       "image_alt": "Breathwork for Race Anxiety Audio",
@@ -705,8 +738,8 @@
       "id": "mc-core",
       "kind": "digital",
       "name": "15-Minute Core Circuit Pack",
-      "price": "LKR 1,350.00",
-      "compareAtPrice": "LKR 1,750.00",
+      "price": "$18",
+      "compareAtPrice": "$24",
       "description": "No-equipment core sessions designed for runners after easy miles.",
       "image": "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=640&h=640&fit=crop",
       "image_alt": "15-Minute Core Circuit Pack",
@@ -714,7 +747,7 @@
       "soldLabel": "125+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 400.00",
+        "detail": "Save $5",
         "discountLabel": "-23%"
       }
     },
@@ -722,7 +755,7 @@
       "id": "mc-kit",
       "kind": "digital",
       "name": "Monsoon Race Kit Checklist",
-      "price": "LKR 490.00",
+      "price": "$7",
       "description": "Printable wet-weather kit list for Mumbai and coastal races.",
       "image": "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=640&h=640&fit=crop",
       "image_alt": "Monsoon Race Kit Checklist",
@@ -737,7 +770,7 @@
       "id": "mc-rehab",
       "kind": "digital",
       "name": "IT Band Rehab Guide",
-      "price": "LKR 1,690.00",
+      "price": "$23",
       "description": "Progressive mobility and strength plan for stubborn IT band pain.",
       "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=640&h=640&fit=crop",
       "image_alt": "IT Band Rehab Guide",
@@ -752,7 +785,7 @@
       "id": "mc-photo",
       "kind": "digital",
       "name": "Race Day Photo Preset Pack",
-      "price": "LKR 1,050.00",
+      "price": "$14",
       "description": "Lightroom presets tuned for sunrise race photos and finish-line shots.",
       "image": "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=640&h=640&fit=crop",
       "image_alt": "Race Day Photo Preset Pack",
@@ -767,8 +800,8 @@
       "id": "mc-tempo",
       "kind": "digital",
       "name": "Tempo Block Builder Spreadsheet",
-      "price": "LKR 1,290.00",
-      "compareAtPrice": "LKR 1,690.00",
+      "price": "$17",
+      "compareAtPrice": "$23",
       "description": "Build 4–8 week tempo progressions from current threshold.",
       "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=640&h=640&fit=crop",
       "image_alt": "Tempo Block Builder Spreadsheet",
@@ -776,7 +809,7 @@
       "soldLabel": "72+ sold",
       "offer": {
         "badge": "Sale",
-        "detail": "Save LKR 400.00",
+        "detail": "Save $5",
         "discountLabel": "-24%"
       }
     },
@@ -784,7 +817,7 @@
       "id": "mc-crew",
       "kind": "digital",
       "name": "Crew Captain Briefing Deck",
-      "price": "LKR 2,250.00",
+      "price": "$30",
       "description": "Slide deck and scripts for ultra crew roles and aid-station timing.",
       "image": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=640&h=640&fit=crop",
       "image_alt": "Crew Captain Briefing Deck",

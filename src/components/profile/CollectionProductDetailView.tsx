@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
+import ShareIcon from "@/components/ShareIcon";
+import { resolveProductReviews } from "@/lib/product-reviews";
 import type { CollectionProduct } from "@/types/collection";
 import type { ProfileData } from "@/types/profile";
 
@@ -90,6 +92,8 @@ export default function CollectionProductDetailView({
     .map((part) => part.trim())
     .filter(Boolean);
 
+  const reviewsBlock = useMemo(() => resolveProductReviews(product), [product]);
+
   useEffect(() => {
     if (!galleryOpen) return;
 
@@ -166,29 +170,42 @@ export default function CollectionProductDetailView({
             <div className="product-detail">
               <div className="product-detail__main">
                 <section className="product-detail__gallery" aria-label="Product images">
-                  <button
-                    type="button"
-                    className="product-detail__stage"
-                    aria-label="Expand image view"
-                    onClick={openGallery}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={activeImage} alt="" width={800} height={800} />
-                    {product.offer ? (
-                      <span className="collection-product__media-badge product-detail__badge">
-                        {product.offer.badge}
+                  <div className="product-detail__stage-wrap">
+                    <button
+                      type="button"
+                      className="product-detail__stage"
+                      aria-label="Expand image view"
+                      onClick={openGallery}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={activeImage} alt="" width={800} height={800} />
+                      {product.offer ? (
+                        <span className="collection-product__media-badge product-detail__badge">
+                          {product.offer.badge}
+                        </span>
+                      ) : null}
+                      <span className="product-detail__expand" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="15 3 21 3 21 9" />
+                          <polyline points="9 21 3 21 3 15" />
+                          <line x1="21" y1="3" x2="14" y2="10" />
+                          <line x1="3" y1="21" x2="10" y2="14" />
+                        </svg>
+                        <span>Expand view</span>
                       </span>
-                    ) : null}
-                    <span className="product-detail__expand" aria-hidden="true">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="15 3 21 3 21 9" />
-                        <polyline points="9 21 3 21 3 15" />
-                        <line x1="21" y1="3" x2="14" y2="10" />
-                        <line x1="3" y1="21" x2="10" y2="14" />
+                    </button>
+                    <button
+                      type="button"
+                      className={`collection-product__like${liked ? " is-active" : ""}`}
+                      aria-label={liked ? `Unlike ${product.name}` : `Like ${product.name}`}
+                      aria-pressed={liked}
+                      onClick={() => setLiked((value) => !value)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                       </svg>
-                      <span>Expand view</span>
-                    </span>
-                  </button>
+                    </button>
+                  </div>
                   {gallery.length > 1 ? (
                     <div className="product-detail__thumbs" role="list">
                       {gallery.map((image) => {
@@ -224,24 +241,8 @@ export default function CollectionProductDetailView({
                       ) : null}
                     </div>
                     <div className="product-detail__actions">
-                      <button
-                        type="button"
-                        className={`product-detail__icon-btn${liked ? " is-active" : ""}`}
-                        aria-label={liked ? "Remove from saved" : "Save item"}
-                        aria-pressed={liked}
-                        onClick={() => setLiked((value) => !value)}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                      </button>
                       <button type="button" className="product-detail__icon-btn" aria-label="Share product">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" />
-                        </svg>
+                        <ShareIcon size={18} />
                       </button>
                     </div>
                   </div>
@@ -349,7 +350,7 @@ export default function CollectionProductDetailView({
                     </button>
                   </p>
                   <p className="product-detail__panel-meta">
-                    Standard delivery · {detail?.delivery.standardFee ?? "LKR 500.00"}
+                    Standard delivery · {detail?.delivery.standardFee ?? "$7"}
                   </p>
                   {(detail?.delivery.cod ?? true) ? (
                     <p className="product-detail__cod">Cash on Delivery available</p>
@@ -370,79 +371,89 @@ export default function CollectionProductDetailView({
                 ))}
               </section>
 
-              {detail ? (
-                <section
-                  className="product-detail__section product-detail__section--reviews"
-                  aria-labelledby="product-reviews-heading"
-                >
-                  <h2 id="product-reviews-heading">Ratings &amp; reviews</h2>
+              <section
+                className="product-detail__section product-detail__section--reviews"
+                aria-labelledby="product-reviews-heading"
+              >
+                <h2 id="product-reviews-heading">Ratings &amp; reviews</h2>
 
-                  <div className="product-detail__rating-board">
-                    <div className="product-detail__rating-summary">
-                      <p className="product-detail__rating-average">
-                        <strong>{detail.reviewAverage.toFixed(1)}</strong>
-                        <span>/5</span>
-                      </p>
-                      <StarRating rating={detail.reviewAverage} size={16} />
-                      <p className="product-detail__rating-count">
-                        Based on {detail.reviewCount} reviews
-                      </p>
+                {reviewsBlock.empty ? (
+                  <div className="product-detail__reviews-empty">
+                    <p className="product-detail__reviews-empty-title">No reviews yet</p>
+                    <p className="product-detail__reviews-empty-copy">
+                      Be the first to share your thoughts. Only verified buyers of this product can leave a
+                      review.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="product-detail__rating-board">
+                      <div className="product-detail__rating-summary">
+                        <p className="product-detail__rating-average">
+                          <strong>{reviewsBlock.average.toFixed(1)}</strong>
+                          <span>/5</span>
+                        </p>
+                        <StarRating rating={reviewsBlock.average} size={16} />
+                        <p className="product-detail__rating-count">
+                          Based on {reviewsBlock.count} reviews
+                        </p>
+                      </div>
+
+                      <div className="product-detail__rate-bars" role="list" aria-label="Attribute ratings">
+                        {reviewsBlock.attributes.map((attribute) => {
+                          const pct = Math.max(0, Math.min(100, (attribute.score / 5) * 100));
+                          return (
+                            <div key={attribute.label} className="product-detail__rate-bar" role="listitem">
+                              <div className="product-detail__rate-bar-meta">
+                                <span className="product-detail__rate-bar-label">{attribute.label}</span>
+                                <strong className="product-detail__rate-bar-score">
+                                  {attribute.score.toFixed(1)}
+                                </strong>
+                              </div>
+                              <div
+                                className="product-detail__rate-bar-track"
+                                role="meter"
+                                aria-label={`${attribute.label} rating`}
+                                aria-valuemin={0}
+                                aria-valuemax={5}
+                                aria-valuenow={attribute.score}
+                              >
+                                <span
+                                  className="product-detail__rate-bar-fill"
+                                  style={{ width: `${pct}%` }}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
 
-                    <div className="product-detail__rate-bars" role="list" aria-label="Attribute ratings">
-                      {detail.reviewAttributes.map((attribute) => {
-                        const pct = Math.max(0, Math.min(100, (attribute.score / 5) * 100));
-                        return (
-                          <div key={attribute.label} className="product-detail__rate-bar" role="listitem">
-                            <div className="product-detail__rate-bar-meta">
-                              <span className="product-detail__rate-bar-label">{attribute.label}</span>
-                              <strong className="product-detail__rate-bar-score">
-                                {attribute.score.toFixed(1)}
-                              </strong>
-                            </div>
-                            <div
-                              className="product-detail__rate-bar-track"
-                              role="meter"
-                              aria-label={`${attribute.label} rating`}
-                              aria-valuemin={0}
-                              aria-valuemax={5}
-                              aria-valuenow={attribute.score}
-                            >
-                              <span
-                                className="product-detail__rate-bar-fill"
-                                style={{ width: `${pct}%` }}
-                              />
+                    <div className="product-detail__reviews">
+                      {reviewsBlock.reviews.map((review) => (
+                        <article key={review.id} className="product-detail__review">
+                          <div className="product-detail__review-head">
+                            <span className="product-detail__review-avatar" aria-hidden="true">
+                              {review.avatar_initials}
+                            </span>
+                            <div>
+                              <p className="product-detail__review-name">{review.name}</p>
+                              <p className="product-detail__review-meta">{review.ago}</p>
                             </div>
                           </div>
-                        );
-                      })}
+                          <StarRating rating={review.rating} />
+                          <p className="product-detail__review-variant">{review.variant}</p>
+                          <p className="product-detail__review-text">{review.text}</p>
+                        </article>
+                      ))}
                     </div>
-                  </div>
 
-                  <div className="product-detail__reviews">
-                    {detail.reviews.map((review) => (
-                      <article key={review.id} className="product-detail__review">
-                        <div className="product-detail__review-head">
-                          <span className="product-detail__review-avatar" aria-hidden="true">
-                            {review.avatar_initials}
-                          </span>
-                          <div>
-                            <p className="product-detail__review-name">{review.name}</p>
-                            <p className="product-detail__review-meta">{review.ago}</p>
-                          </div>
-                        </div>
-                        <StarRating rating={review.rating} />
-                        <p className="product-detail__review-variant">{review.variant}</p>
-                        <p className="product-detail__review-text">{review.text}</p>
-                      </article>
-                    ))}
-                  </div>
-
-                  <button type="button" className="btn btn--secondary btn--sm product-detail__all-reviews">
-                    Show all {detail.reviewsTotal} reviews
-                  </button>
-                </section>
-              ) : null}
+                    <button type="button" className="btn btn--secondary btn--sm product-detail__all-reviews">
+                      Show all {reviewsBlock.total} reviews
+                    </button>
+                  </>
+                )}
+              </section>
             </div>
           </div>
         </main>

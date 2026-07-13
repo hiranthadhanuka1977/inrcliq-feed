@@ -1,4 +1,47 @@
+"use client";
+
+import { useState } from "react";
+import FollowButton from "@/components/FollowButton";
+
+type SuggestPerson = {
+  id: string;
+  name: string;
+  meta: string;
+  initials: string;
+  color: string;
+  initiallyFollowing?: boolean;
+};
+
+const SUGGESTIONS: SuggestPerson[] = [
+  {
+    id: "jl",
+    name: "Jennifer Lopez",
+    meta: "48.2M followers",
+    initials: "JL",
+    color: "#8b5cf6",
+  },
+  {
+    id: "ed",
+    name: "Ed Sheeran",
+    meta: "64.1M followers",
+    initials: "ED",
+    color: "#166534",
+  },
+  {
+    id: "ag",
+    name: "Ariana Grande",
+    meta: "89.4M followers",
+    initials: "AG",
+    color: "#f97316",
+    initiallyFollowing: true,
+  },
+];
+
 export default function RightRail() {
+  const [following, setFollowing] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(SUGGESTIONS.map((person) => [person.id, Boolean(person.initiallyFollowing)])),
+  );
+
   return (
     <aside className="right-rail">
       <section className="rail-widget">
@@ -9,42 +52,32 @@ export default function RightRail() {
           </a>
         </div>
         <ul className="suggest-list">
-          <li className="suggest-item">
-            <div className="suggest-item__av" style={{ "--story-color": "#8b5cf6" } as React.CSSProperties} aria-hidden="true">
-              JL
-            </div>
-            <div className="suggest-item__body">
-              <span className="suggest-item__name">Jennifer Lopez</span>
-              <span className="suggest-item__meta">48.2M followers</span>
-            </div>
-            <button type="button" className="suggest-item__btn">
-              Follow
-            </button>
-          </li>
-          <li className="suggest-item">
-            <div className="suggest-item__av" style={{ "--story-color": "#166534" } as React.CSSProperties} aria-hidden="true">
-              ED
-            </div>
-            <div className="suggest-item__body">
-              <span className="suggest-item__name">Ed Sheeran</span>
-              <span className="suggest-item__meta">64.1M followers</span>
-            </div>
-            <button type="button" className="suggest-item__btn">
-              Follow
-            </button>
-          </li>
-          <li className="suggest-item">
-            <div className="suggest-item__av" style={{ "--story-color": "#f97316" } as React.CSSProperties} aria-hidden="true">
-              AG
-            </div>
-            <div className="suggest-item__body">
-              <span className="suggest-item__name">Ariana Grande</span>
-              <span className="suggest-item__meta">89.4M followers</span>
-            </div>
-            <button type="button" className="suggest-item__btn is-following">
-              Following
-            </button>
-          </li>
+          {SUGGESTIONS.map((person) => (
+            <li key={person.id} className="suggest-item">
+              <div
+                className="suggest-item__av"
+                style={{ "--story-color": person.color } as React.CSSProperties}
+                aria-hidden="true"
+              >
+                {person.initials}
+              </div>
+              <div className="suggest-item__body">
+                <span className="suggest-item__name">{person.name}</span>
+                <span className="suggest-item__meta">{person.meta}</span>
+              </div>
+              <FollowButton
+                following={Boolean(following[person.id])}
+                onFollowingChange={(next) =>
+                  setFollowing((prev) => ({
+                    ...prev,
+                    [person.id]: next,
+                  }))
+                }
+                className="suggest-item__btn"
+                name={person.name}
+              />
+            </li>
+          ))}
         </ul>
       </section>
 

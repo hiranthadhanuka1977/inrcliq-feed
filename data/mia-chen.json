@@ -19,36 +19,42 @@
   },
   "collection": [
     {
+      "id": "mc-tee",
       "name": "Mumbai Marathon Tee",
       "price": "$32",
       "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=336&h=336&fit=crop",
       "image_alt": "Mumbai Marathon Tee"
     },
     {
+      "id": "mc-cap",
       "name": "Night Run Reflective Cap",
       "price": "$24",
       "image": "https://images.unsplash.com/photo-1521369909029-2afed882baee?w=336&h=336&fit=crop",
       "image_alt": "Night Run Reflective Cap"
     },
     {
+      "id": "mc-roller",
       "name": "Recovery Foam Roller",
       "price": "$38",
       "image": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=336&h=336&fit=crop",
       "image_alt": "Recovery Foam Roller"
     },
     {
+      "id": "mc-vest",
       "name": "Hydration Vest Pro",
       "price": "$89",
       "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=336&h=336&fit=crop",
       "image_alt": "Hydration Vest Pro"
     },
     {
+      "id": "mc-shoes",
       "name": "Ultra-Light Running Shoes",
       "price": "$129",
       "image": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=336&h=336&fit=crop",
       "image_alt": "Ultra-Light Running Shoes"
     },
     {
+      "id": "mc-strap",
       "name": "Race-Day GPS Watch Strap",
       "price": "$45",
       "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=336&h=336&fit=crop",
@@ -72,7 +78,7 @@
       "comments": "148",
       "image": "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=520&h=325&fit=crop",
       "members_only": true,
-      "has_video": true
+      "has_video": false
     },
     {
       "title": "What I eat on long-run Sundays",
@@ -81,7 +87,7 @@
       "comments": "421",
       "image": "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=520&h=325&fit=crop",
       "members_only": false,
-      "has_video": false
+      "has_video": true
     }
   ],
   "feed_posts": [

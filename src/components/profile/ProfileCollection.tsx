@@ -28,8 +28,15 @@ export default function ProfileCollection({
       </div>
       <ul className="profile-collection__list" id="collection-track">
         {items.map((item) => (
-          <li key={item.name}>
-            <a href="#" className="profile-collection__item">
+          <li key={item.id ?? item.name}>
+            <Link
+              href={
+                item.id
+                  ? `/profile/${slug}/collection/${item.id}`
+                  : `/profile/${slug}/collection`
+              }
+              className="profile-collection__item"
+            >
               <span className="profile-collection__thumb">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.image} alt={item.image_alt} width={168} height={168} />
@@ -38,7 +45,7 @@ export default function ProfileCollection({
                 <span className="profile-collection__name">{item.name}</span>
                 <span className="profile-collection__price">{item.price}</span>
               </span>
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

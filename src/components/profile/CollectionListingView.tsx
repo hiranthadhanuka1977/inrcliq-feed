@@ -6,6 +6,7 @@ import FeedScrollButton from "@/components/FeedScrollButton";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
+import ShareIcon from "@/components/ShareIcon";
 import type { CollectionProduct, CollectionProductKind, CreatorCollection } from "@/types/collection";
 import type { ProfileData } from "@/types/profile";
 
@@ -102,6 +103,7 @@ function CollectionProductCard({
 }) {
   const isSale = Boolean(product.offer?.discountLabel);
   const [imageSrc, setImageSrc] = useState(product.image);
+  const [liked, setLiked] = useState(false);
   const detailHref = `/profile/${profileSlug}/collection/${product.id}`;
 
   useEffect(() => {
@@ -135,6 +137,17 @@ function CollectionProductCard({
             </svg>
           </span>
         </Link>
+        <button
+          type="button"
+          className={`collection-product__like${liked ? " is-active" : ""}`}
+          aria-label={liked ? `Unlike ${product.name}` : `Like ${product.name}`}
+          aria-pressed={liked}
+          onClick={() => setLiked((value) => !value)}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
         <span className={`collection-product__kind collection-product__kind--${product.kind}`}>
           {kindLabel(product.kind)}
         </span>
@@ -291,6 +304,15 @@ export default function CollectionListingView({
                       <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                     </svg>
                   </Link>
+                  <div className="profile-utility-actions" aria-label="Collection utilities">
+                    <button
+                      type="button"
+                      className="btn btn--sm btn--icon btn--ghost-cover"
+                      aria-label="Share collection"
+                    >
+                      <ShareIcon size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -304,6 +326,15 @@ export default function CollectionListingView({
                     <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
                   </svg>
                 </Link>
+                <div className="profile-utility-actions" aria-label="Collection utilities">
+                  <button
+                    type="button"
+                    className="btn btn--sm btn--icon btn--secondary"
+                    aria-label="Share collection"
+                  >
+                    <ShareIcon size={16} />
+                  </button>
+                </div>
               </div>
             )}
 

@@ -187,8 +187,12 @@
   background: transparent;
   color: var(--post-muted);
   font-weight: 600;
-  cursor: default;
-  pointer-events: none;
+  cursor: pointer;
+}
+
+.feed-surface--simple .post-head__follow.is-following:hover {
+  color: var(--color-text-primary);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .feed-surface--simple .post-head__following {
@@ -529,6 +533,20 @@
   color: var(--color-text-primary);
 }
 
+.feed-surface--simple .post-actions--engage .post-action--like.is-liked {
+  background: rgba(192, 57, 43, 0.14);
+  color: #e74c3c;
+}
+
+.feed-surface--simple .post-actions--engage .post-action--like.is-liked:hover {
+  background: rgba(192, 57, 43, 0.2);
+  color: #e74c3c;
+}
+
+.feed-surface--simple .post-actions--engage .post-action--like.is-liked .post-action__count {
+  color: #e74c3c;
+}
+
 .feed-surface--simple .post-actions--engage .post-action--like svg,
 .feed-surface--simple .post-actions--engage .post-action--comment svg {
   width: 1.05rem;
@@ -544,13 +562,13 @@
   letter-spacing: -0.01em;
 }
 
-.feed-surface--simple .post-actions--engage .post-action--share {
+.feed-surface--simple .post-actions--engage .post-action--share,
+.feed-surface--simple .post-actions--engage .post-action--save {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 2.125rem;
   height: 2.125rem;
-  margin-left: auto;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -563,13 +581,28 @@
     transform 0.15s ease;
 }
 
-.feed-surface--simple .post-actions--engage .post-action--share:hover {
+.feed-surface--simple .post-actions--engage .post-action--share {
+  margin-left: auto;
+}
+
+.feed-surface--simple .post-actions--engage .post-action--save {
+  margin-left: 0;
+}
+
+.feed-surface--simple .post-actions--engage .post-action--share:hover,
+.feed-surface--simple .post-actions--engage .post-action--save:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--color-text-primary);
   transform: translateY(-1px);
 }
 
-.feed-surface--simple .post-actions--engage .post-action--share svg {
+.feed-surface--simple .post-actions--engage .post-action--save.is-saved {
+  color: var(--color-brand-primary);
+  background: var(--color-brand-primary-subtle);
+}
+
+.feed-surface--simple .post-actions--engage .post-action--share svg,
+.feed-surface--simple .post-actions--engage .post-action--save svg {
   width: 1rem;
   height: 1rem;
 }
