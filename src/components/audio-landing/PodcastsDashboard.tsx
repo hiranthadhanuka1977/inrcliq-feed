@@ -13,6 +13,7 @@ import {
 } from "@/data/audio-landing";
 import { formatCount } from "@/lib/format";
 import AudioCreatorCard from "@/components/audio/AudioCreatorCard";
+import AudioForYouSection from "@/components/audio-landing/AudioForYouSection";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
 import type { PodcastLiveRoom } from "@/types/audio-landing";
 
@@ -163,6 +164,8 @@ export default function PodcastsDashboard({
           ))}
         </div>
       </section>
+
+      <AudioForYouSection contentType="podcast" onPlay={onPlay} />
 
       <section className="podcast-episodes" aria-label="New episodes">
         <div className="rail-title">

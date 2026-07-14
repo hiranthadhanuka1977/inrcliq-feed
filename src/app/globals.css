@@ -10,10 +10,58 @@
 @import "../styles/profile.css";
 @import "../styles/profile-collection-page.css";
 @import "../styles/profile-product-detail.css";
+@import "../styles/collection-cart-drawer.css";
+@import "../styles/collection-checkout.css";
 @import "../styles/mobile.css";
 @import "../styles/feed-audio-landing.css";
 
 .feed-load-sentinel {
   height: 1px;
   margin-top: var(--space-4);
+}
+
+/* Keep checkout title beside back button; pin header + cards to one column edge */
+.page-checkout .checkout-page__column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--feed-width);
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing: border-box;
+}
+
+.page-checkout .checkout-topbar__inner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: var(--space-3) 0;
+  box-sizing: border-box;
+}
+
+.page-checkout .checkout-back {
+  flex: 0 0 auto;
+  width: var(--button-height-sm);
+  min-width: var(--button-height-sm);
+  max-width: var(--button-height-sm);
+  height: var(--button-height-sm);
+  padding: 0;
+}
+
+.page-checkout .checkout-topbar__copy {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.page-checkout .checkout-layout {
+  width: 100%;
+  max-width: none;
 }

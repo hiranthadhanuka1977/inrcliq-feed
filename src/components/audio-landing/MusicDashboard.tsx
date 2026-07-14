@@ -8,9 +8,9 @@ import {
   MUSIC_GENRES,
   MUSIC_HERO_SLIDES,
   MUSIC_LIVE_EVENTS,
-  MUSIC_NEW_RELEASES,
 } from "@/data/audio-landing";
 import AudioCreatorCard from "@/components/audio/AudioCreatorCard";
+import AudioForYouSection from "@/components/audio-landing/AudioForYouSection";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
 import AudioTopChart from "@/components/audio-landing/AudioTopChart";
 import type { AudioLiveEvent } from "@/types/audio-landing";
@@ -159,32 +159,12 @@ export default function MusicDashboard({
         </div>
       </section>
 
-      <section className="podcast-episodes" aria-label="New releases">
-        <div className="rail-title">
-          <h3>New releases</h3>
-          <span className="audio-section__subtitle">Fresh tracks and singles</span>
-        </div>
-        <div className="podcast-episodes__grid">
-          {MUSIC_NEW_RELEASES.map((release) => (
-            <button
-              key={release.id}
-              type="button"
-              className="podcast-episode-card"
-              onClick={() => onPlay(release.trackId)}
-            >
-              <span className="podcast-episode-card__art">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={release.thumbnail} alt="" />
-              </span>
-              <span className="podcast-episode-card__body">
-                <span className="podcast-episode-card__show">{release.eyebrow}</span>
-                <strong className="podcast-episode-card__title">{release.title}</strong>
-                <span className="podcast-episode-card__meta">{release.meta}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
+      <AudioForYouSection
+        contentType="music"
+        title="New releases"
+        subtitle="Fresh tracks and singles"
+        onPlay={onPlay}
+      />
 
       <section className="podcast-shows" aria-label="Featured albums">
         <div className="rail-title">

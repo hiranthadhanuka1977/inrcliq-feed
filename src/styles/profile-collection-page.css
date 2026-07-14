@@ -454,6 +454,15 @@
   width: auto;
   border-radius: var(--radius-sm);
   flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.collection-bag-cta__plus {
+  display: block;
+  flex-shrink: 0;
 }
 
 .collection-page__sentinel {

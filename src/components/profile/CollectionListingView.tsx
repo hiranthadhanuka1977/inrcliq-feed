@@ -7,6 +7,14 @@ import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
 import ShareIcon from "@/components/ShareIcon";
+import CollectionCartDrawer from "@/components/profile/CollectionCartDrawer";
+import {
+  addProductToCart,
+  cartItemCount,
+  readCollectionCart,
+  writeCollectionCart,
+  type CollectionCartItem,
+} from "@/lib/collection-cart";
 import type { CollectionProduct, CollectionProductKind, CreatorCollection } from "@/types/collection";
 import type { ProfileData } from "@/types/profile";
 
@@ -20,6 +28,32 @@ const FILTERS: { id: FilterId; label: string }[] = [
 
 const COLLECTION_PAGE_SIZE = 8;
 const COLLECTION_LOAD_DELAY_MS = 420;
+
+function BagCtaContent({ label }: { label: string }) {
+  const showPlus = label.trim().toLowerCase() === "add to bag";
+
+  return (
+    <>
+      {showPlus ? (
+        <svg
+          className="collection-bag-cta__plus"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      ) : null}
+      <span>{label}</span>
+    </>
+  );
+}
 
 function CollectionProductSkeleton() {
   return (
@@ -52,7 +86,7 @@ function offerBadgeHelp(badge: string): string {
   return OFFER_BADGE_HELP[badge] ?? `${badge} offer on this item.`;
 }
 
-function CartButton({ count }: { count: number }) {
+function CartButton({ count, onClick }: { count: number; onClick: () => void }) {
   const itemLabel = count === 1 ? "1 item" : `${count} items`;
 
   return (
@@ -60,6 +94,8 @@ function CartButton({ count }: { count: number }) {
       type="button"
       className="btn btn--warning btn--sm collection-cart"
       aria-label={`Shopping bag, ${itemLabel}`}
+      aria-haspopup="dialog"
+      onClick={onClick}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
@@ -196,7 +232,7 @@ function CollectionProductCard({
             className="btn btn--secondary btn--sm collection-product__cta"
             onClick={() => onAdd(product.id)}
           >
-            {product.ctaLabel ?? (product.kind === "digital" ? "Get digital" : "Add to bag")}
+            <BagCtaContent label={product.ctaLabel ?? "Add to bag"} />
           </button>
         </div>
       </div>
@@ -212,13 +248,15 @@ export default function CollectionListingView({
   collection: CreatorCollection;
 }) {
   const [filter, setFilter] = useState<FilterId>("all");
-  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState<CollectionCartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(COLLECTION_PAGE_SIZE);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const loadingLockRef = useRef(false);
   const loadTimeoutRef = useRef(0);
   const handle = profile.handle.startsWith("@") ? profile.handle : `@${profile.handle}`;
+  const cartCount = cartItemCount(cartItems);
 
   const filtered = useMemo(() => {
     if (filter === "all") return collection.products;
@@ -228,6 +266,10 @@ export default function CollectionListingView({
   const visibleProducts = filtered.slice(0, visibleCount);
   const hasMore = visibleCount < filtered.length;
   const skeletonCount = Math.min(COLLECTION_PAGE_SIZE, filtered.length - visibleCount);
+
+  useEffect(() => {
+    setCartItems(readCollectionCart(profile.slug));
+  }, [profile.slug]);
 
   useEffect(() => {
     setVisibleCount(COLLECTION_PAGE_SIZE);
@@ -275,8 +317,16 @@ export default function CollectionListingView({
   const digitalCount = collection.products.filter((p) => p.kind === "digital").length;
   const hasCover = Boolean(profile.cover_url);
 
-  function addToCart() {
-    setCartCount((count) => count + 1);
+  function updateCart(next: CollectionCartItem[]) {
+    setCartItems(next);
+    writeCollectionCart(profile.slug, next);
+  }
+
+  function addToCart(productId: string) {
+    const product = collection.products.find((item) => item.id === productId);
+    if (!product) return;
+    updateCart(addProductToCart(cartItems, product));
+    setCartOpen(true);
   }
 
   return (
@@ -390,7 +440,7 @@ export default function CollectionListingView({
                   </div>
                 </div>
 
-                <CartButton count={cartCount} />
+                <CartButton count={cartCount} onClick={() => setCartOpen(true)} />
               </div>
 
               <p className="profile-header__bio">{collection.subtitle}</p>
@@ -459,6 +509,13 @@ export default function CollectionListingView({
         <FeedScrollButton variant="home" topTargetId="collection-top" />
       </div>
       <MobileNav />
+      <CollectionCartDrawer
+        open={cartOpen}
+        items={cartItems}
+        checkoutHref={`/profile/${profile.slug}/collection/checkout`}
+        onClose={() => setCartOpen(false)}
+        onChangeItems={updateCart}
+      />
     </>
   );
 }

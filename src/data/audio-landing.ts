@@ -212,6 +212,18 @@ export const AUDIO_LANDING_TRACKS: Record<string, AudioLandingTrack> = {
     progressLabel: "Ch. 2 · 52m left",
     accent: ["#0f766e", "#2563eb"],
   },
+  "track-midnight-library": {
+    id: "track-midnight-library",
+    type: "audiobook",
+    title: "The Midnight Library",
+    creator: "Matt Haig · Carey Mulligan",
+    thumbnail:
+      "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80&auto=format&fit=crop",
+    durationSeconds: 31200,
+    progress: 0.21,
+    progressLabel: "Ch. 8 · 41m left",
+    accent: ["#312e81", "#7c3aed"],
+  },
 };
 
 export const AUDIO_HERO_SLIDES: AudioHeroSlide[] = [
@@ -431,6 +443,16 @@ export const AUDIO_FOR_YOU_CARDS: AudioForYouCard[] = [
     likes: 1950,
     comments: 275,
     sharedBy: { initials: "MF", color: "#0f766e", name: "Maya F." },
+  },
+  {
+    id: "fy-midnight-library",
+    trackId: "track-midnight-library",
+    type: "audiobook",
+    title: "The Midnight Library",
+    creator: "Matt Haig",
+    thumbnail: AUDIO_LANDING_TRACKS["track-midnight-library"].thumbnail,
+    likes: 2400,
+    comments: 310,
   },
   {
     id: "fy-birds-2",

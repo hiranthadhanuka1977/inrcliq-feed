@@ -6,11 +6,45 @@ import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
 import ShareIcon from "@/components/ShareIcon";
+import CollectionCartDrawer from "@/components/profile/CollectionCartDrawer";
+import {
+  addProductToCart,
+  cartItemCount,
+  readCollectionCart,
+  writeCollectionCart,
+  type CollectionCartItem,
+} from "@/lib/collection-cart";
 import { resolveProductReviews } from "@/lib/product-reviews";
 import type { CollectionProduct } from "@/types/collection";
 import type { ProfileData } from "@/types/profile";
 
-function CartButton({ count }: { count: number }) {
+function BagCtaContent({ label }: { label: string }) {
+  const showPlus = label.trim().toLowerCase() === "add to bag";
+
+  return (
+    <>
+      {showPlus ? (
+        <svg
+          className="collection-bag-cta__plus"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          aria-hidden="true"
+        >
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+      ) : null}
+      <span>{label}</span>
+    </>
+  );
+}
+
+function CartButton({ count, onClick }: { count: number; onClick: () => void }) {
   const itemLabel = count === 1 ? "1 item" : `${count} items`;
 
   return (
@@ -18,6 +52,8 @@ function CartButton({ count }: { count: number }) {
       type="button"
       className="btn btn--warning btn--sm collection-cart"
       aria-label={`Shopping bag, ${itemLabel}`}
+      aria-haspopup="dialog"
+      onClick={onClick}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
@@ -58,7 +94,8 @@ export default function CollectionProductDetailView({
   product: CollectionProduct;
 }) {
   const detail = product.detail;
-  const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState<CollectionCartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(
     detail?.gallery[0]?.src ?? product.image,
   );
@@ -66,6 +103,7 @@ export default function CollectionProductDetailView({
   const [sizeId, setSizeId] = useState(detail?.defaultSizeId ?? "");
   const [liked, setLiked] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const cartCount = cartItemCount(cartItems);
 
   const selectedColor = useMemo(
     () => detail?.colors.find((color) => color.id === colorId),
@@ -76,7 +114,7 @@ export default function CollectionProductDetailView({
     [detail?.sizes, sizeId],
   );
   const isPreorder = (product.ctaLabel ?? "").toLowerCase() === "pre-order";
-  const bagLabel = product.ctaLabel ?? (product.kind === "digital" ? "Get digital" : "Add to bag");
+  const bagLabel = product.ctaLabel ?? "Add to bag";
 
   const gallery = detail?.gallery?.length
     ? detail.gallery
@@ -95,6 +133,10 @@ export default function CollectionProductDetailView({
   const reviewsBlock = useMemo(() => resolveProductReviews(product), [product]);
 
   useEffect(() => {
+    setCartItems(readCollectionCart(profile.slug));
+  }, [profile.slug]);
+
+  useEffect(() => {
     if (!galleryOpen) return;
 
     const previousOverflow = document.body.style.overflow;
@@ -111,8 +153,21 @@ export default function CollectionProductDetailView({
     };
   }, [galleryOpen]);
 
+  function updateCart(next: CollectionCartItem[]) {
+    setCartItems(next);
+    writeCollectionCart(profile.slug, next);
+  }
+
   function addToCart() {
-    setCartCount((count) => count + 1);
+    const colorLabel = selectedColor?.label;
+    const sizeLabel = selectedSize?.label;
+    const variantParts = [
+      colorLabel ? `Color: ${colorLabel}` : null,
+      sizeLabel ? `Size: ${sizeLabel}` : null,
+    ].filter(Boolean);
+    const variant = variantParts.length > 0 ? variantParts.join(" · ") : undefined;
+    updateCart(addProductToCart(cartItems, product, variant));
+    setCartOpen(true);
   }
 
   function selectColor(nextId: string, image: string) {
@@ -162,7 +217,7 @@ export default function CollectionProductDetailView({
                 <p className="product-detail-topbar__name">{profile.name}</p>
               </div>
 
-              <CartButton count={cartCount} />
+              <CartButton count={cartCount} onClick={() => setCartOpen(true)} />
             </div>
           </header>
 
@@ -331,7 +386,7 @@ export default function CollectionProductDetailView({
                         className={`btn product-detail__cta${isPreorder ? " btn--primary" : " btn--secondary"}`}
                         onClick={addToCart}
                       >
-                        {bagLabel}
+                        <BagCtaContent label={bagLabel} />
                       </button>
                     </div>
                   </div>
@@ -341,26 +396,58 @@ export default function CollectionProductDetailView({
               <aside className="product-detail__aside" aria-label="Delivery and returns">
                 <div className="product-detail__panel">
                   <h2>Delivery options</h2>
-                  <p className="product-detail__panel-row">
-                    <span>{detail?.delivery.location ?? "Western, Colombo 1-15"}</span>
-                    <button type="button" className="product-detail__edit" aria-label="Edit delivery location">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                      </svg>
-                    </button>
-                  </p>
-                  <p className="product-detail__panel-meta">
-                    Standard delivery · {detail?.delivery.standardFee ?? "$7"}
-                  </p>
-                  {(detail?.delivery.cod ?? true) ? (
-                    <p className="product-detail__cod">Cash on Delivery available</p>
-                  ) : null}
+                  {product.kind === "digital" ? (
+                    <div className="product-detail__digital-note">
+                      <span className="product-detail__digital-note-icon" aria-hidden="true">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                          <polyline points="7 10 12 15 17 10" />
+                          <line x1="12" y1="15" x2="12" y2="3" />
+                        </svg>
+                      </span>
+                      <p>
+                        This is a digitally delivered product. After checkout, we&apos;ll email you with
+                        instructions on how to download and access it.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <p className="product-detail__panel-row">
+                        <span>{detail?.delivery.location ?? "Western, Colombo 1-15"}</span>
+                        <button type="button" className="product-detail__edit" aria-label="Edit delivery location">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                          </svg>
+                        </button>
+                      </p>
+                      <p className="product-detail__panel-meta">
+                        Standard delivery · {detail?.delivery.standardFee ?? "$7"}
+                      </p>
+                      {(detail?.delivery.cod ?? true) ? (
+                        <p className="product-detail__cod">Cash on Delivery available</p>
+                      ) : null}
+                    </>
+                  )}
                 </div>
 
                 <div className="product-detail__panel">
                   <h2>Return &amp; warranty</h2>
                   <p className="product-detail__panel-meta">{detail?.delivery.returns ?? "14 days easy return"}</p>
                   <p className="product-detail__panel-meta">{detail?.delivery.warranty ?? "Warranty not available"}</p>
+                  <div className="product-detail__buyer-protection">
+                    <span className="product-detail__buyer-protection-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <polyline points="9 12 11 14 15 10" />
+                      </svg>
+                    </span>
+                    <div>
+                      <p className="product-detail__buyer-protection-title">Buyer Protection</p>
+                      <p className="product-detail__buyer-protection-copy">
+                        Get a full refund if the item is not as described or if it is not delivered.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </aside>
 
@@ -459,6 +546,13 @@ export default function CollectionProductDetailView({
         </main>
       </div>
       <MobileNav />
+      <CollectionCartDrawer
+        open={cartOpen}
+        items={cartItems}
+        checkoutHref={`/profile/${profile.slug}/collection/checkout`}
+        onClose={() => setCartOpen(false)}
+        onChangeItems={updateCart}
+      />
 
       {galleryOpen ? (
         <div

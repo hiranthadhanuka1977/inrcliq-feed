@@ -8,11 +8,11 @@ import {
   AUDIOBOOK_HERO_SLIDES,
   AUDIOBOOK_LIVE_EVENTS,
   AUDIOBOOK_NARRATORS,
-  AUDIOBOOK_NEW_TITLES,
   AUDIOBOOK_TOP_CHART,
 } from "@/data/audio-landing";
 import { formatCount } from "@/lib/format";
 import AudioCreatorCard from "@/components/audio/AudioCreatorCard";
+import AudioForYouSection from "@/components/audio-landing/AudioForYouSection";
 import AudioSpotlightHero from "@/components/audio-landing/AudioSpotlightHero";
 import type { AudioLiveEvent } from "@/types/audio-landing";
 
@@ -160,32 +160,12 @@ export default function AudiobooksDashboard({
         </div>
       </section>
 
-      <section className="podcast-episodes" aria-label="New titles">
-        <div className="rail-title">
-          <h3>New titles</h3>
-          <span className="audio-section__subtitle">Fresh audiobooks worth starting</span>
-        </div>
-        <div className="podcast-episodes__grid">
-          {AUDIOBOOK_NEW_TITLES.map((title) => (
-            <button
-              key={title.id}
-              type="button"
-              className="podcast-episode-card"
-              onClick={() => onPlay(title.trackId)}
-            >
-              <span className="podcast-episode-card__art">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={title.thumbnail} alt="" />
-              </span>
-              <span className="podcast-episode-card__body">
-                <span className="podcast-episode-card__show">{title.eyebrow}</span>
-                <strong className="podcast-episode-card__title">{title.title}</strong>
-                <span className="podcast-episode-card__meta">{title.meta}</span>
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
+      <AudioForYouSection
+        contentType="audiobook"
+        title="New titles"
+        subtitle="Fresh audiobooks worth starting"
+        onPlay={onPlay}
+      />
 
       <section className="podcast-shows" aria-label="Popular titles">
         <div className="rail-title">
