@@ -6,14 +6,13 @@ import {
   cartDeliveryFee,
   cartSubtotal,
   formatCartMoney,
+  normalizeCollectionPromo,
+  readCollectionPromo,
   type CollectionCartItem,
+  type CollectionPromoCode,
   updateCartQuantity,
+  writeCollectionPromo,
 } from "@/lib/collection-cart";
-
-const DEMO_COUPONS: Record<string, { label: string; amount: number }> = {
-  SAVE10: { label: "SAVE10", amount: 10 },
-  WELCOME5: { label: "WELCOME5", amount: 5 },
-};
 
 function AmexMark() {
   return (
@@ -80,12 +79,14 @@ function VisaMark() {
 export default function CollectionCartDrawer({
   open,
   items,
+  profileSlug,
   checkoutHref,
   onClose,
   onChangeItems,
 }: {
   open: boolean;
   items: CollectionCartItem[];
+  profileSlug: string;
   checkoutHref: string;
   onClose: () => void;
   onChangeItems: (next: CollectionCartItem[]) => void;
@@ -95,7 +96,7 @@ export default function CollectionCartDrawer({
   const couponFieldId = useId();
   const [mounted, setMounted] = useState(false);
   const [couponDraft, setCouponDraft] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<{ label: string; amount: number } | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<CollectionPromoCode | null>(null);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
   const subtotal = cartSubtotal(items);
   const deliveryFee = cartDeliveryFee(items);
@@ -105,15 +106,21 @@ export default function CollectionCartDrawer({
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    const saved = readCollectionPromo(profileSlug);
+    if (saved) {
+      setAppliedCoupon(saved);
+      setCouponDraft(saved.label);
+    }
+  }, [profileSlug]);
 
   useEffect(() => {
     if (items.length === 0) {
       setAppliedCoupon(null);
       setCouponDraft("");
       setCouponMessage(null);
+      writeCollectionPromo(profileSlug, null);
     }
-  }, [items.length]);
+  }, [items.length, profileSlug]);
 
   useEffect(() => {
     if (!open) return;
@@ -133,28 +140,27 @@ export default function CollectionCartDrawer({
   }, [open, onClose]);
 
   function applyCoupon() {
-    const code = couponDraft.trim().toUpperCase();
-    if (!code) {
-      setCouponMessage("Enter a coupon code.");
-      return;
-    }
-
-    const match = DEMO_COUPONS[code];
+    const match = normalizeCollectionPromo(couponDraft);
     if (!match) {
-      setAppliedCoupon(null);
-      setCouponMessage("That coupon code isn’t valid.");
+      setCouponMessage("Enter a promo code.");
       return;
     }
 
     setAppliedCoupon(match);
     setCouponDraft(match.label);
-    setCouponMessage(`${match.label} applied — ${formatCartMoney(match.amount)} off.`);
+    writeCollectionPromo(profileSlug, match);
+    setCouponMessage(
+      match.amount > 0
+        ? `${match.label} applied — ${formatCartMoney(match.amount)} off.`
+        : `${match.label} applied.`,
+    );
   }
 
   function clearCoupon() {
     setAppliedCoupon(null);
     setCouponDraft("");
     setCouponMessage(null);
+    writeCollectionPromo(profileSlug, null);
   }
 
   if (!mounted) return null;
@@ -249,7 +255,7 @@ export default function CollectionCartDrawer({
         <footer className="collection-cart-drawer__foot">
           <div className="collection-cart-drawer__coupon">
             <label className="collection-cart-drawer__coupon-label" htmlFor={couponFieldId}>
-              Coupon code
+              Promo code
             </label>
             <div className="collection-cart-drawer__coupon-row">
               <input
@@ -301,7 +307,7 @@ export default function CollectionCartDrawer({
             </div>
             {couponDiscount > 0 ? (
               <div className="collection-cart-drawer__total-row collection-cart-drawer__total-row--discount">
-                <span>Coupon ({appliedCoupon?.label})</span>
+                <span>Promo ({appliedCoupon?.label})</span>
                 <strong>−{formatCartMoney(couponDiscount)}</strong>
               </div>
             ) : null}

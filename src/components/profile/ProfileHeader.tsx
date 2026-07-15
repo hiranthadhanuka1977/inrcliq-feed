@@ -15,6 +15,145 @@ const SUBSCRIBE_MENU_ITEMS: { id: NotificationLevel | "unsubscribe"; label: stri
   { id: "unsubscribe", label: "Unsubscribe" },
 ];
 
+const SPECIAL_REQUESTS_SIZE = 72;
+
+function SpecialRequestsOrb() {
+  const tipId = useId();
+  const orbRef = useRef<HTMLDivElement>(null);
+  const freeRef = useRef(false);
+  const dragRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startY: number;
+    originX: number;
+    originY: number;
+    moved: boolean;
+  } | null>(null);
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null);
+  const [free, setFree] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
+  useEffect(() => {
+    function onPointerMove(event: PointerEvent) {
+      const drag = dragRef.current;
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      if (!drag.moved && dx * dx + dy * dy > 9) {
+        drag.moved = true;
+        freeRef.current = true;
+        setFree(true);
+        setDragging(true);
+      }
+      const size = orbRef.current?.offsetWidth || SPECIAL_REQUESTS_SIZE;
+      setPos({
+        x: Math.min(window.innerWidth - size - 8, Math.max(8, drag.originX + dx)),
+        y: Math.min(window.innerHeight - size - 8, Math.max(8, drag.originY + dy)),
+      });
+    }
+
+    function onPointerUp(event: PointerEvent) {
+      const drag = dragRef.current;
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      dragRef.current = null;
+      setDragging(false);
+      try {
+        orbRef.current?.releasePointerCapture(event.pointerId);
+      } catch {
+        /* already released */
+      }
+    }
+
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    window.addEventListener("pointercancel", onPointerUp);
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+    };
+  }, []);
+
+  function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.button !== 0 || !orbRef.current) return;
+    const rect = orbRef.current.getBoundingClientRect();
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: rect.left,
+      originY: rect.top,
+      moved: false,
+    };
+    if (!freeRef.current) {
+      setPos({ x: rect.left, y: rect.top });
+    }
+    orbRef.current.setPointerCapture(event.pointerId);
+  }
+
+  return (
+    <div
+      ref={orbRef}
+      className={`profile-special-requests${free ? " is-free" : ""}${dragging ? " is-dragging" : ""}`}
+      style={free && pos ? { left: pos.x, top: pos.y } : undefined}
+      tabIndex={0}
+      role="button"
+      aria-label="Special requests available"
+      aria-describedby={tipId}
+      onPointerDown={onPointerDown}
+    >
+      <span className="profile-special-requests__aura" aria-hidden="true">
+        <span className="profile-special-requests__ring profile-special-requests__ring--a" />
+        <span className="profile-special-requests__ring profile-special-requests__ring--b" />
+        <span className="profile-special-requests__glow" />
+      </span>
+      <span className="profile-special-requests__icon" aria-hidden="true">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="8" width="18" height="4" rx="1" />
+          <path d="M12 8v13" />
+          <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" />
+          <path d="M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8" />
+          <path d="M16.5 8a2.5 2.5 0 0 0 0-5C13 3 12 8 12 8" />
+        </svg>
+      </span>
+      <span id={tipId} className="profile-special-requests__popover" role="tooltip">
+        <span className="profile-special-requests__badge">Available now</span>
+        <strong className="profile-special-requests__title">Special Requests</strong>
+        <span className="profile-special-requests__lead">Make your next moment one-of-a-kind.</span>
+        <span className="profile-special-requests__copy">
+          Book personalized messages, private concerts, or live appearances for birthdays and celebrations.
+        </span>
+        <span className="profile-special-requests__perks">
+          <span className="profile-special-requests__perk">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            Messages
+          </span>
+          <span className="profile-special-requests__perk">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+              <line x1="12" y1="19" x2="12" y2="23" />
+              <line x1="8" y1="23" x2="16" y2="23" />
+            </svg>
+            Appearances
+          </span>
+          <span className="profile-special-requests__perk">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+            Events
+          </span>
+        </span>
+      </span>
+    </div>
+  );
+}
+
 function ProfileSubscribedPill({
   creatorName,
   onUnsubscribe,
@@ -313,6 +452,8 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
             ) : null}
           </div>
         </div>
+
+        {profile.special_requests ? <SpecialRequestsOrb /> : null}
       </div>
     </header>
   );

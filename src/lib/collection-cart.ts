@@ -108,3 +108,45 @@ export function updateCartQuantity(
       : item,
   );
 }
+
+export type CollectionPromoCode = {
+  label: string;
+  amount: number;
+};
+
+export const DEMO_COLLECTION_PROMOS: Record<string, CollectionPromoCode> = {
+  SAVE10: { label: "SAVE10", amount: 10 },
+  WELCOME5: { label: "WELCOME5", amount: 5 },
+};
+
+function promoStorageKey(profileSlug: string) {
+  return `inrcliq-collection-promo:${profileSlug}`;
+}
+
+export function readCollectionPromo(profileSlug: string): CollectionPromoCode | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(promoStorageKey(profileSlug));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CollectionPromoCode;
+    if (!parsed?.label || typeof parsed.amount !== "number") return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+export function writeCollectionPromo(profileSlug: string, promo: CollectionPromoCode | null) {
+  if (typeof window === "undefined") return;
+  if (!promo) {
+    window.localStorage.removeItem(promoStorageKey(profileSlug));
+    return;
+  }
+  window.localStorage.setItem(promoStorageKey(profileSlug), JSON.stringify(promo));
+}
+
+export function normalizeCollectionPromo(code: string): CollectionPromoCode | null {
+  const normalized = code.trim().toUpperCase();
+  if (!normalized) return null;
+  return DEMO_COLLECTION_PROMOS[normalized] ?? { label: normalized, amount: 0 };
+}

@@ -549,6 +549,7 @@ export default function CollectionProductDetailView({
       <CollectionCartDrawer
         open={cartOpen}
         items={cartItems}
+        profileSlug={profile.slug}
         checkoutHref={`/profile/${profile.slug}/collection/checkout`}
         onClose={() => setCartOpen(false)}
         onChangeItems={updateCart}

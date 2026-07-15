@@ -35,6 +35,7 @@ export interface ProfileData {
   verified: boolean;
   cover_url: string | null;
   bio: string;
+  special_requests?: boolean;
   stats: ProfileStats;
   subscription: {
     price_label: string;

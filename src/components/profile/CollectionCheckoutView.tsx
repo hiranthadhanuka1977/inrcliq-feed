@@ -11,15 +11,14 @@ import {
   cartNeedsDelivery,
   cartSubtotal,
   formatCartMoney,
+  normalizeCollectionPromo,
   readCollectionCart,
+  readCollectionPromo,
   type CollectionCartItem,
+  type CollectionPromoCode,
+  writeCollectionPromo,
 } from "@/lib/collection-cart";
 import type { ProfileData } from "@/types/profile";
-
-const DEMO_COUPONS: Record<string, { label: string; amount: number }> = {
-  SAVE10: { label: "SAVE10", amount: 10 },
-  WELCOME5: { label: "WELCOME5", amount: 5 },
-};
 
 type PaymentMethod = "card" | "cod";
 
@@ -101,13 +100,13 @@ function formatExpiry(value: string) {
 
 export default function CollectionCheckoutView({ profile }: { profile: ProfileData }) {
   const promoId = useId();
+  const cvvHelpId = useId();
   const [items, setItems] = useState<CollectionCartItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [address, setAddress] = useState<ShippingAddress>(DEFAULT_ADDRESS);
   const [editingAddress, setEditingAddress] = useState(false);
-  const [promoOpen, setPromoOpen] = useState(false);
   const [couponDraft, setCouponDraft] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState<{ label: string; amount: number } | null>(null);
+  const [appliedCoupon, setAppliedCoupon] = useState<CollectionPromoCode | null>(null);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -117,6 +116,14 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
 
   useEffect(() => {
     setItems(readCollectionCart(profile.slug));
+    const saved = readCollectionPromo(profile.slug);
+    if (saved) {
+      setAppliedCoupon(saved);
+      setCouponDraft(saved.label);
+    } else {
+      setAppliedCoupon(null);
+      setCouponDraft("");
+    }
   }, [profile.slug]);
 
   const needsDelivery = cartNeedsDelivery(items);
@@ -132,20 +139,26 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
   );
 
   function applyCoupon() {
-    const code = couponDraft.trim().toUpperCase();
-    if (!code) {
-      setCouponMessage("Enter a promo code.");
-      return;
-    }
-    const match = DEMO_COUPONS[code];
+    const match = normalizeCollectionPromo(couponDraft);
     if (!match) {
-      setAppliedCoupon(null);
-      setCouponMessage("That promo code isn’t valid.");
+      setCouponMessage("Enter a promo code.");
       return;
     }
     setAppliedCoupon(match);
     setCouponDraft(match.label);
-    setCouponMessage(`${match.label} applied — ${formatCartMoney(match.amount)} off.`);
+    writeCollectionPromo(profile.slug, match);
+    setCouponMessage(
+      match.amount > 0
+        ? `${match.label} applied — ${formatCartMoney(match.amount)} off.`
+        : `${match.label} applied.`,
+    );
+  }
+
+  function clearCoupon() {
+    setAppliedCoupon(null);
+    setCouponDraft("");
+    setCouponMessage(null);
+    writeCollectionPromo(profile.slug, null);
   }
 
   function placeOrder() {
@@ -165,31 +178,30 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
       <div className="app-shell page-profile page-collection page-checkout">
         <LeftNav />
         <main className="main-content profile-page collection-page checkout-page">
-          <div className="profile-page__inner checkout-page__column">
-            <div className="checkout-topbar">
-              <div className="checkout-topbar__inner">
-                <Link
-                  href={`/profile/${profile.slug}/collection`}
-                  className="checkout-back btn btn--sm btn--icon btn--secondary"
-                  aria-label="Back to collection"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
-                  </svg>
-                </Link>
-                <div className="checkout-topbar__copy">
-                  <h1>Checkout</h1>
-                  <p>
-                    {count === 0
-                      ? "Your bag is empty"
-                      : `${count} ${count === 1 ? "item" : "items"} from ${profile.name}`}
-                  </p>
-                </div>
+          <header className="product-detail-topbar checkout-topbar">
+            <div className="product-detail-topbar__inner checkout-topbar__inner">
+              <Link
+                href={`/profile/${profile.slug}/collection`}
+                className="product-detail-back checkout-back btn btn--sm btn--icon btn--secondary"
+                aria-label="Back to collection"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" />
+                </svg>
+              </Link>
+              <div className="checkout-topbar__copy">
+                <h1>Checkout</h1>
+                <p>
+                  {count === 0
+                    ? "Your bag is empty"
+                    : `${count} ${count === 1 ? "item" : "items"} from ${profile.name}`}
+                </p>
               </div>
             </div>
+          </header>
 
-            <div className="checkout-layout">
-              {placed ? (
+          <div className="profile-page__inner checkout-layout">
+            {placed ? (
                 <section className="checkout-success" aria-live="polite">
                   <h2>Order placed</h2>
                   <p>
@@ -380,8 +392,38 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
                               placeholder="MM/YY"
                             />
                           </label>
-                          <label>
-                            CVV
+                          <label className="checkout-cvv-field">
+                            <span className="checkout-field-label-row">
+                              CVV
+                              <span
+                                className="checkout-cvv-info"
+                                tabIndex={0}
+                                aria-label="What is CVV?"
+                                aria-describedby={cvvHelpId}
+                              >
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+                                  <path
+                                    d="M12 10.5v5.25M12 8.25h.01"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                  />
+                                </svg>
+                                <span id={cvvHelpId} className="checkout-cvv-popover" role="tooltip">
+                                  <span className="checkout-cvv-popover__card" aria-hidden="true">
+                                    <span className="checkout-cvv-popover__strip" />
+                                    <span className="checkout-cvv-popover__signature">
+                                      <span className="checkout-cvv-popover__code">123</span>
+                                    </span>
+                                  </span>
+                                  <span className="checkout-cvv-popover__copy">
+                                    The 3 or 4-digit security code on the back of your card. On American Express, it
+                                    is on the front.
+                                  </span>
+                                </span>
+                              </span>
+                            </span>
                             <input
                               inputMode="numeric"
                               autoComplete="cc-csc"
@@ -405,31 +447,27 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
 
                   <div className="checkout-summary__rows">
                     <div className="checkout-summary__row">
-                      <span>Sub Total</span>
+                      <span>Sub total</span>
                       <strong>{formatCartMoney(subtotal)}</strong>
                     </div>
 
                     <div className="checkout-summary__promo">
-                      <button
-                        type="button"
-                        className="checkout-summary__promo-toggle"
-                        aria-expanded={promoOpen}
-                        aria-controls={promoId}
-                        onClick={() => setPromoOpen((value) => !value)}
-                      >
-                        <span>Promo Codes</span>
-                        <span className="checkout-summary__promo-value">
-                          {appliedCoupon ? appliedCoupon.label : "Enter"}
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                            <path d="M7 10l5 5 5-5H7z" />
-                          </svg>
-                        </span>
-                      </button>
-                      {promoOpen ? (
-                        <div id={promoId} className="checkout-summary__promo-panel">
+                      <div className="checkout-summary__promo-label" id={promoId}>
+                        Promo code
+                      </div>
+                      {appliedCoupon ? (
+                        <div className="checkout-summary__promo-applied">
+                          <span className="checkout-summary__promo-value">{appliedCoupon.label}</span>
+                          <button type="button" className="checkout-card__change" onClick={clearCoupon}>
+                            Change
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="checkout-summary__promo-panel">
                           <div className="checkout-summary__promo-row">
                             <input
                               type="text"
+                              aria-labelledby={promoId}
                               value={couponDraft}
                               placeholder="Enter code"
                               onChange={(event) => {
@@ -449,25 +487,25 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
                           </div>
                           {couponMessage ? <p className="checkout-summary__promo-message">{couponMessage}</p> : null}
                         </div>
-                      ) : null}
+                      )}
                     </div>
 
                     {couponDiscount > 0 ? (
                       <div className="checkout-summary__row checkout-summary__row--discount">
-                        <span>Discount</span>
+                        <span>Discount ({appliedCoupon?.label})</span>
                         <strong>−{formatCartMoney(couponDiscount)}</strong>
                       </div>
                     ) : null}
 
                     <div className="checkout-summary__row">
-                      <span>Delivery Fee</span>
+                      <span>Delivery fee</span>
                       <strong>{deliveryFee === 0 ? "Free" : formatCartMoney(deliveryFee)}</strong>
                     </div>
                   </div>
 
                   <div className="checkout-summary__total">
                     <div className="checkout-summary__row checkout-summary__row--grand">
-                      <span>Total Charge</span>
+                      <span>Total charge</span>
                       <strong>{formatCartMoney(total)}</strong>
                     </div>
                     <p className="checkout-summary__vat">VAT included, where applicable</p>
@@ -483,7 +521,6 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
                 </aside>
               </>
             )}
-            </div>
           </div>
         </main>
       </div>
