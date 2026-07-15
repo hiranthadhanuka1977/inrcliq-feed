@@ -227,13 +227,17 @@
   justify-content: center;
   width: 1.1rem;
   height: 1.1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--color-text-secondary);
   cursor: help;
   outline: none;
 }
 
 .checkout-cvv-info:hover,
-.checkout-cvv-info:focus-visible {
+.checkout-cvv-info:focus-visible,
+.checkout-cvv-info.is-open {
   color: var(--color-text-primary);
 }
 
@@ -242,45 +246,39 @@
 }
 
 .checkout-cvv-popover {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + 0.55rem);
-  z-index: 8;
+  position: fixed;
+  z-index: 1200;
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
-  width: 12.75rem;
+  max-width: calc(100vw - 1.5rem);
+  box-sizing: border-box;
   padding: 0.75rem;
   border-radius: var(--radius-md);
   background: var(--color-bg-page);
   border: 1px solid var(--color-neutral-200);
-  box-shadow: var(--shadow-md);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(0.2rem);
-  transition:
-    opacity 0.18s ease,
-    transform 0.18s ease,
-    visibility 0.18s ease;
-  pointer-events: none;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
   font-weight: 500;
+  pointer-events: auto;
 }
 
 .checkout-cvv-popover::after {
   content: "";
   position: absolute;
-  top: 100%;
-  right: 0.35rem;
+  right: 0.85rem;
   border: 6px solid transparent;
+}
+
+.checkout-cvv-popover--above::after {
+  top: 100%;
   border-top-color: var(--color-bg-page);
   filter: drop-shadow(0 1px 0 var(--color-neutral-200));
 }
 
-.checkout-cvv-info:hover .checkout-cvv-popover,
-.checkout-cvv-info:focus-visible .checkout-cvv-popover {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+.checkout-cvv-popover--below::after {
+  bottom: 100%;
+  border-bottom-color: var(--color-bg-page);
+  filter: drop-shadow(0 -1px 0 var(--color-neutral-200));
 }
 
 .checkout-cvv-popover__card {

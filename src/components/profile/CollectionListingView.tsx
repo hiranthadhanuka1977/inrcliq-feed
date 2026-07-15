@@ -355,6 +355,7 @@ export default function CollectionListingView({
                     </svg>
                   </Link>
                   <div className="profile-utility-actions" aria-label="Collection utilities">
+                    <CartButton count={cartCount} onClick={() => setCartOpen(true)} />
                     <button
                       type="button"
                       className="btn btn--sm btn--icon btn--ghost-cover"
@@ -377,6 +378,7 @@ export default function CollectionListingView({
                   </svg>
                 </Link>
                 <div className="profile-utility-actions" aria-label="Collection utilities">
+                  <CartButton count={cartCount} onClick={() => setCartOpen(true)} />
                   <button
                     type="button"
                     className="btn btn--sm btn--icon btn--secondary"
@@ -389,58 +391,54 @@ export default function CollectionListingView({
             )}
 
             <div className="profile-header__panel">
-              <div className="collection-header__row">
-                <div className="profile-header__identity" aria-labelledby="collection-heading">
-                  <div
-                    className="story-avatar profile-header__avatar"
-                    style={{ "--story-color": profile.avatar_color } as React.CSSProperties}
-                  >
-                    {profile.avatar_url ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={profile.avatar_url} alt={profile.name} width={88} height={88} />
-                    ) : (
-                      profile.avatar_initials
-                    )}
-                  </div>
-                  <div className="profile-header__info">
-                    <h1 id="collection-heading">{collection.title}</h1>
-                    <p className="profile-header__meta">
-                      <span>{handle}</span>
-                      {profile.verified ? (
-                        <>
-                          <span className="profile-header__dot" aria-hidden="true">
-                            ·
-                          </span>
-                          <span className="profile-header__verified">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                            </svg>
-                            Verified
-                          </span>
-                        </>
-                      ) : null}
-                    </p>
-                    <p className="profile-header__stats">
-                      <span>
-                        <strong>{collection.products.length}</strong> items
-                      </span>
-                      <span className="profile-header__dot" aria-hidden="true">
-                        ·
-                      </span>
-                      <span>
-                        <strong>{physicalCount}</strong> physical
-                      </span>
-                      <span className="profile-header__dot" aria-hidden="true">
-                        ·
-                      </span>
-                      <span>
-                        <strong>{digitalCount}</strong> digital
-                      </span>
-                    </p>
-                  </div>
+              <div className="profile-header__identity" aria-labelledby="collection-heading">
+                <div
+                  className="story-avatar profile-header__avatar"
+                  style={{ "--story-color": profile.avatar_color } as React.CSSProperties}
+                >
+                  {profile.avatar_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={profile.avatar_url} alt={profile.name} width={88} height={88} />
+                  ) : (
+                    profile.avatar_initials
+                  )}
                 </div>
-
-                <CartButton count={cartCount} onClick={() => setCartOpen(true)} />
+                <div className="profile-header__info">
+                  <h1 id="collection-heading">{collection.title}</h1>
+                  <p className="profile-header__meta">
+                    <span>{handle}</span>
+                    {profile.verified ? (
+                      <>
+                        <span className="profile-header__dot" aria-hidden="true">
+                          ·
+                        </span>
+                        <span className="profile-header__verified">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                          </svg>
+                          Verified
+                        </span>
+                      </>
+                    ) : null}
+                  </p>
+                  <p className="profile-header__stats">
+                    <span>
+                      <strong>{collection.products.length}</strong> items
+                    </span>
+                    <span className="profile-header__dot" aria-hidden="true">
+                      ·
+                    </span>
+                    <span>
+                      <strong>{physicalCount}</strong> physical
+                    </span>
+                    <span className="profile-header__dot" aria-hidden="true">
+                      ·
+                    </span>
+                    <span>
+                      <strong>{digitalCount}</strong> digital
+                    </span>
+                  </p>
+                </div>
               </div>
 
               <p className="profile-header__bio">{collection.subtitle}</p>

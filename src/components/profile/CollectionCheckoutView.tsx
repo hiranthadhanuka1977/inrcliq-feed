@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
@@ -43,6 +44,187 @@ const DEFAULT_ADDRESS: ShippingAddress = {
   postalCode: "00900",
   country: "Sri Lanka",
 };
+
+const CVV_POPOVER_GAP = 10;
+const CVV_POPOVER_WIDTH = 204;
+const VIEWPORT_PAD = 12;
+
+type PopoverCoords = {
+  top: number;
+  left: number;
+  width: number;
+  placement: "above" | "below";
+};
+
+function placeCvvPopover(anchor: DOMRect, popover: DOMRect | null): PopoverCoords {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const width = Math.min(popover?.width || CVV_POPOVER_WIDTH, vw - VIEWPORT_PAD * 2);
+  const height = popover?.height || 180;
+
+  const spaceAbove = anchor.top - VIEWPORT_PAD;
+  const spaceBelow = vh - anchor.bottom - VIEWPORT_PAD;
+  const placement: "above" | "below" =
+    spaceAbove >= height + CVV_POPOVER_GAP || spaceAbove > spaceBelow ? "above" : "below";
+
+  let top =
+    placement === "above" ? anchor.top - CVV_POPOVER_GAP - height : anchor.bottom + CVV_POPOVER_GAP;
+  top = Math.min(Math.max(top, VIEWPORT_PAD), Math.max(VIEWPORT_PAD, vh - height - VIEWPORT_PAD));
+
+  let left = anchor.right - width;
+  left = Math.min(Math.max(left, VIEWPORT_PAD), Math.max(VIEWPORT_PAD, vw - width - VIEWPORT_PAD));
+
+  return { top, left, width, placement };
+}
+
+function CvvHelpTip({ tipId }: { tipId: string }) {
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
+  const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState<PopoverCoords | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  function cancelClose() {
+    if (closeTimerRef.current != null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }
+
+  function scheduleClose() {
+    cancelClose();
+    closeTimerRef.current = window.setTimeout(() => setOpen(false), 120);
+  }
+
+  function show() {
+    cancelClose();
+    const anchor = triggerRef.current?.getBoundingClientRect();
+    if (anchor) setCoords(placeCvvPopover(anchor, null));
+    setOpen(true);
+  }
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setCoords(null);
+      return;
+    }
+
+    function updatePosition() {
+      const anchor = triggerRef.current?.getBoundingClientRect();
+      if (!anchor) return;
+      const popover = popoverRef.current?.getBoundingClientRect() ?? null;
+      setCoords(placeCvvPopover(anchor, popover));
+    }
+
+    updatePosition();
+    const frame = window.requestAnimationFrame(updatePosition);
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    function handlePointerDown(event: MouseEvent | TouchEvent) {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (triggerRef.current?.contains(target) || popoverRef.current?.contains(target)) return;
+      setOpen(false);
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setOpen(false);
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
+
+  useEffect(() => () => cancelClose(), []);
+
+  const popoverStyle: CSSProperties = {
+    top: coords?.top ?? 0,
+    left: coords?.left ?? 0,
+    width: coords?.width ?? CVV_POPOVER_WIDTH,
+    visibility: coords ? "visible" : "hidden",
+  };
+
+  return (
+    <>
+      <button
+        ref={triggerRef}
+        type="button"
+        className={`checkout-cvv-info${open ? " is-open" : ""}`}
+        aria-label="What is CVV?"
+        aria-describedby={open ? tipId : undefined}
+        aria-expanded={open}
+        onMouseEnter={show}
+        onMouseLeave={scheduleClose}
+        onFocus={show}
+        onBlur={(event) => {
+          const next = event.relatedTarget as Node | null;
+          if (popoverRef.current?.contains(next)) return;
+          scheduleClose();
+        }}
+        onClick={(event) => {
+          event.preventDefault();
+          if (open) setOpen(false);
+          else show();
+        }}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M12 10.5v5.25M12 8.25h.01"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+      </button>
+      {mounted && open
+        ? createPortal(
+            <div
+              ref={popoverRef}
+              id={tipId}
+              className={`checkout-cvv-popover checkout-cvv-popover--${coords?.placement ?? "above"}`}
+              role="tooltip"
+              style={popoverStyle}
+              onMouseEnter={show}
+              onMouseLeave={scheduleClose}
+            >
+              <span className="checkout-cvv-popover__card" aria-hidden="true">
+                <span className="checkout-cvv-popover__strip" />
+                <span className="checkout-cvv-popover__signature">
+                  <span className="checkout-cvv-popover__code">123</span>
+                </span>
+              </span>
+              <span className="checkout-cvv-popover__copy">
+                The 3 or 4-digit security code on the back of your card. On American Express, it is on the front.
+              </span>
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
+  );
+}
 
 function AmexMark() {
   return (
@@ -395,34 +577,7 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
                           <label className="checkout-cvv-field">
                             <span className="checkout-field-label-row">
                               CVV
-                              <span
-                                className="checkout-cvv-info"
-                                tabIndex={0}
-                                aria-label="What is CVV?"
-                                aria-describedby={cvvHelpId}
-                              >
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-                                  <path
-                                    d="M12 10.5v5.25M12 8.25h.01"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                  />
-                                </svg>
-                                <span id={cvvHelpId} className="checkout-cvv-popover" role="tooltip">
-                                  <span className="checkout-cvv-popover__card" aria-hidden="true">
-                                    <span className="checkout-cvv-popover__strip" />
-                                    <span className="checkout-cvv-popover__signature">
-                                      <span className="checkout-cvv-popover__code">123</span>
-                                    </span>
-                                  </span>
-                                  <span className="checkout-cvv-popover__copy">
-                                    The 3 or 4-digit security code on the back of your card. On American Express, it
-                                    is on the front.
-                                  </span>
-                                </span>
-                              </span>
+                              <CvvHelpTip tipId={cvvHelpId} />
                             </span>
                             <input
                               inputMode="numeric"

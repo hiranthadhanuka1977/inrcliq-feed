@@ -522,10 +522,15 @@
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .profile-header__actions .btn {
   border-radius: var(--radius-sm);
+}
+
+.profile-header__message {
+  margin-left: auto;
 }
 
 .profile-header__subscribe {
@@ -612,16 +617,16 @@
 }
 
 .profile-subscribed-pill__menu {
-  position: absolute;
-  top: calc(100% + 0.45rem);
-  right: 0;
-  z-index: 20;
+  position: fixed;
+  z-index: 1200;
   min-width: 15.5rem;
+  max-width: calc(100vw - 1.5rem);
+  box-sizing: border-box;
   padding: 0.35rem 0;
   border-radius: var(--radius-md);
   background: var(--color-neutral-50);
   border: 1px solid var(--color-neutral-200);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
 }
 
 .profile-subscribed-pill__menu-label {
@@ -719,8 +724,12 @@
     align-items: stretch;
   }
 
-  .profile-header__actions .btn {
+  .profile-header__actions .btn:not(.btn--icon) {
     flex: 1;
+  }
+
+  .profile-header__message {
+    margin-left: 0;
   }
 
   .profile-header__subscribe {

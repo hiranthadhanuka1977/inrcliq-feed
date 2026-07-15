@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import { createPortal } from "react-dom";
 import FollowButton from "@/components/FollowButton";
 import ShareIcon from "@/components/ShareIcon";
+import CollectionCartDrawer from "@/components/profile/CollectionCartDrawer";
+import {
+  cartItemCount,
+  readCollectionCart,
+  writeCollectionCart,
+  type CollectionCartItem,
+} from "@/lib/collection-cart";
 import type { ProfileData } from "@/types/profile";
 
 type NotificationLevel = "all" | "personalized" | "none";
@@ -16,6 +24,34 @@ const SUBSCRIBE_MENU_ITEMS: { id: NotificationLevel | "unsubscribe"; label: stri
 ];
 
 const SPECIAL_REQUESTS_SIZE = 72;
+const MENU_GAP = 8;
+const MENU_MIN_WIDTH = 248;
+const VIEWPORT_PAD = 12;
+
+type MenuCoords = {
+  top: number;
+  left: number;
+  width: number;
+};
+
+function placeSubscribeMenu(anchor: DOMRect, menu: DOMRect | null): MenuCoords {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const width = Math.min(menu?.width || MENU_MIN_WIDTH, vw - VIEWPORT_PAD * 2);
+  const height = menu?.height || 260;
+
+  const spaceBelow = vh - anchor.bottom - VIEWPORT_PAD;
+  const spaceAbove = anchor.top - VIEWPORT_PAD;
+  const placeAbove = spaceBelow < height + MENU_GAP && spaceAbove > spaceBelow;
+
+  let top = placeAbove ? anchor.top - MENU_GAP - height : anchor.bottom + MENU_GAP;
+  top = Math.min(Math.max(top, VIEWPORT_PAD), Math.max(VIEWPORT_PAD, vh - height - VIEWPORT_PAD));
+
+  let left = anchor.right - width;
+  left = Math.min(Math.max(left, VIEWPORT_PAD), Math.max(VIEWPORT_PAD, vw - width - VIEWPORT_PAD));
+
+  return { top, left, width };
+}
 
 function SpecialRequestsOrb() {
   const tipId = useId();
@@ -163,16 +199,49 @@ function ProfileSubscribedPill({
 }) {
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [coords, setCoords] = useState<MenuCoords | null>(null);
   const [notificationLevel, setNotificationLevel] = useState<NotificationLevel>("personalized");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!menuOpen) {
+      setCoords(null);
+      return;
+    }
+
+    function updatePosition() {
+      const anchor = triggerRef.current?.getBoundingClientRect();
+      if (!anchor) return;
+      const menu = menuRef.current?.getBoundingClientRect() ?? null;
+      setCoords(placeSubscribeMenu(anchor, menu));
+    }
+
+    updatePosition();
+    const frame = window.requestAnimationFrame(updatePosition);
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     if (!menuOpen) return;
 
-    function handlePointerDown(event: MouseEvent) {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
+    function handlePointerDown(event: MouseEvent | TouchEvent) {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (rootRef.current?.contains(target) || menuRef.current?.contains(target)) return;
+      setMenuOpen(false);
     }
 
     function handleKeyDown(event: KeyboardEvent) {
@@ -180,9 +249,11 @@ function ProfileSubscribedPill({
     }
 
     document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [menuOpen]);
@@ -198,12 +269,29 @@ function ProfileSubscribedPill({
     setMenuOpen(false);
   }
 
+  function toggleMenu() {
+    if (menuOpen) {
+      setMenuOpen(false);
+      return;
+    }
+    const anchor = triggerRef.current?.getBoundingClientRect();
+    if (anchor) setCoords(placeSubscribeMenu(anchor, null));
+    setMenuOpen(true);
+  }
+
   const bellLabel =
     notificationLevel === "all"
       ? "All notifications on"
       : notificationLevel === "personalized"
         ? "Personalized notifications on"
         : "Notifications off";
+
+  const menuStyle: CSSProperties = {
+    top: coords?.top ?? 0,
+    left: coords?.left ?? 0,
+    width: coords?.width ?? MENU_MIN_WIDTH,
+    visibility: coords ? "visible" : "hidden",
+  };
 
   return (
     <div ref={rootRef} className="profile-subscribed-pill">
@@ -237,13 +325,14 @@ function ProfileSubscribedPill({
 
       <div className="profile-subscribed-pill__menu-wrap">
         <button
+          ref={triggerRef}
           type="button"
           className="profile-subscribed-pill__menu-trigger"
           aria-label={`Subscription options for ${creatorName}`}
           aria-haspopup="menu"
           aria-expanded={menuOpen}
           aria-controls={menuId}
-          onClick={() => setMenuOpen((open) => !open)}
+          onClick={toggleMenu}
         >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             <circle cx="8" cy="3.25" r="1.5" />
@@ -252,42 +341,52 @@ function ProfileSubscribedPill({
           </svg>
         </button>
 
-        {menuOpen ? (
-          <div className="profile-subscribed-pill__menu" id={menuId} role="menu" aria-label={`${creatorName} subscription options`}>
-            <p className="profile-subscribed-pill__menu-label">Notify me about</p>
-            {SUBSCRIBE_MENU_ITEMS.slice(0, 3).map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={`profile-subscribed-pill__menu-item${notificationLevel === item.id ? " is-selected" : ""}`}
-                role="menuitemradio"
-                aria-checked={notificationLevel === item.id}
-                onClick={() => handleMenuSelect(item.id)}
+        {mounted && menuOpen
+          ? createPortal(
+              <div
+                ref={menuRef}
+                className="profile-subscribed-pill__menu"
+                id={menuId}
+                role="menu"
+                aria-label={`${creatorName} subscription options`}
+                style={menuStyle}
               >
-                <span className="profile-subscribed-pill__menu-item-copy">
-                  <span className="profile-subscribed-pill__menu-item-title">{item.label}</span>
-                  {item.description ? (
-                    <span className="profile-subscribed-pill__menu-item-desc">{item.description}</span>
-                  ) : null}
-                </span>
-                {notificationLevel === item.id ? (
-                  <svg className="profile-subscribed-pill__menu-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                ) : null}
-              </button>
-            ))}
-            <div className="profile-subscribed-pill__menu-separator" role="separator" />
-            <button
-              type="button"
-              className="profile-subscribed-pill__menu-item profile-subscribed-pill__menu-item--danger"
-              role="menuitem"
-              onClick={() => handleMenuSelect("unsubscribe")}
-            >
-              <span className="profile-subscribed-pill__menu-item-title">Unsubscribe</span>
-            </button>
-          </div>
-        ) : null}
+                <p className="profile-subscribed-pill__menu-label">Notify me about</p>
+                {SUBSCRIBE_MENU_ITEMS.slice(0, 3).map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    className={`profile-subscribed-pill__menu-item${notificationLevel === item.id ? " is-selected" : ""}`}
+                    role="menuitemradio"
+                    aria-checked={notificationLevel === item.id}
+                    onClick={() => handleMenuSelect(item.id)}
+                  >
+                    <span className="profile-subscribed-pill__menu-item-copy">
+                      <span className="profile-subscribed-pill__menu-item-title">{item.label}</span>
+                      {item.description ? (
+                        <span className="profile-subscribed-pill__menu-item-desc">{item.description}</span>
+                      ) : null}
+                    </span>
+                    {notificationLevel === item.id ? (
+                      <svg className="profile-subscribed-pill__menu-check" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M20 6 9 17l-5-5" />
+                      </svg>
+                    ) : null}
+                  </button>
+                ))}
+                <div className="profile-subscribed-pill__menu-separator" role="separator" />
+                <button
+                  type="button"
+                  className="profile-subscribed-pill__menu-item profile-subscribed-pill__menu-item--danger"
+                  role="menuitem"
+                  onClick={() => handleMenuSelect("unsubscribe")}
+                >
+                  <span className="profile-subscribed-pill__menu-item-title">Unsubscribe</span>
+                </button>
+              </div>,
+              document.body,
+            )
+          : null}
       </div>
     </div>
   );
@@ -296,10 +395,16 @@ function ProfileSubscribedPill({
 function ProfileToolbar({
   onCover,
   className,
+  cartCount,
+  onOpenCart,
 }: {
   onCover: boolean;
   className?: string;
+  cartCount?: number;
+  onOpenCart?: () => void;
 }) {
+  const showCart = typeof cartCount === "number" && onOpenCart;
+
   return (
     <div className={className}>
       <Link
@@ -312,15 +417,24 @@ function ProfileToolbar({
         </svg>
       </Link>
       <div className="profile-utility-actions" aria-label="Profile utilities">
-        <button
-          type="button"
-          className={`btn btn--sm btn--icon${onCover ? " btn--ghost-cover" : " btn--secondary"}`}
-          aria-label="Message"
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-        </button>
+        {showCart ? (
+          <button
+            type="button"
+            className="btn btn--warning btn--sm collection-cart"
+            aria-label={`Shopping bag, ${cartCount === 1 ? "1 item" : `${cartCount} items`}`}
+            aria-haspopup="dialog"
+            onClick={onOpenCart}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+            <span className="collection-cart__label">
+              {cartCount === 1 ? "1 item" : `${cartCount} items`}
+            </span>
+          </button>
+        ) : null}
         <button
           type="button"
           className={`btn btn--sm btn--icon${onCover ? " btn--ghost-cover" : " btn--secondary"}`}
@@ -336,125 +450,171 @@ function ProfileToolbar({
 export default function ProfileHeader({ profile }: { profile: ProfileData }) {
   const [following, setFollowing] = useState(profile.relationship?.following ?? false);
   const [subscribed, setSubscribed] = useState(profile.relationship?.subscribed ?? false);
+  const [cartItems, setCartItems] = useState<CollectionCartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
   const handle = profile.handle.startsWith("@") ? profile.handle : `@${profile.handle}`;
   const hasCover = Boolean(profile.cover_url);
   const hasSubscription = Boolean(profile.subscription);
+  const hasCollection = profile.collection.length > 0;
+  const cartCount = cartItemCount(cartItems);
+
+  useEffect(() => {
+    if (!hasCollection) return;
+    setCartItems(readCollectionCart(profile.slug));
+  }, [hasCollection, profile.slug]);
+
+  function updateCart(next: CollectionCartItem[]) {
+    setCartItems(next);
+    writeCollectionCart(profile.slug, next);
+  }
 
   return (
-    <header className={`profile-header${hasCover ? "" : " profile-header--no-cover"}`} id="profile-top">
-      {hasCover ? (
-        <div className="profile-header__cover">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={profile.cover_url!} alt="" width={1400} height={320} />
-          <div className="profile-header__cover-fade" aria-hidden="true" />
-          <ProfileToolbar onCover className="profile-header__cover-nav" />
-        </div>
-      ) : (
-        <ProfileToolbar onCover={false} className="profile-header__toolbar" />
-      )}
-
-      <div className="profile-header__panel">
-        <div className="profile-header__identity" aria-labelledby="creator-name">
-          <div
-            className="story-avatar profile-header__avatar"
-            style={{ "--story-color": profile.avatar_color } as React.CSSProperties}
-          >
-            {profile.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={profile.avatar_url} alt={profile.name} width={88} height={88} />
-            ) : (
-              profile.avatar_initials
-            )}
-          </div>
-          <div className="profile-header__info">
-            <h1 id="creator-name">{profile.name}</h1>
-            <p className="profile-header__meta">
-              <span>{handle}</span>
-              {profile.verified ? (
-                <>
-                  <span className="profile-header__dot" aria-hidden="true">
-                    ·
-                  </span>
-                  <span className="profile-header__verified">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    Verified
-                  </span>
-                </>
-              ) : null}
-            </p>
-            <p className="profile-header__stats">
-              <span>
-                <strong>{profile.stats.followers}</strong> followers
-              </span>
-              <span className="profile-header__dot" aria-hidden="true">
-                ·
-              </span>
-              <span>
-                <strong>{profile.stats.following.toLocaleString()}</strong> following
-              </span>
-              {hasSubscription ? (
-                <>
-                  <span className="profile-header__dot" aria-hidden="true">
-                    ·
-                  </span>
-                  <span>
-                    <strong>{profile.stats.subscribers.toLocaleString()}</strong> subscribers
-                  </span>
-                </>
-              ) : null}
-              <span className="profile-header__dot" aria-hidden="true">
-                ·
-              </span>
-              <span>
-                <strong>{profile.stats.posts.toLocaleString()}</strong> posts
-              </span>
-            </p>
-          </div>
-        </div>
-
-        <p className="profile-header__bio">{profile.bio}</p>
-
-        <div className="profile-header__footer">
-          <div className="profile-header__actions" aria-label="Profile actions">
-            {hasSubscription ? (
-              subscribed ? (
-                <ProfileSubscribedPill creatorName={profile.name} onUnsubscribe={() => setSubscribed(false)} />
-              ) : (
-                <button
-                  type="button"
-                  className="btn btn--warning btn--sm profile-header__subscribe"
-                  onClick={() => setSubscribed(true)}
-                >
-                  {profile.subscription!.price_label}
-                </button>
-              )
-            ) : null}
-            <FollowButton
-              following={following}
-              onFollowingChange={setFollowing}
-              className={`btn btn--sm profile-header__follow${following ? " btn--outline-brand is-active" : " btn--secondary"}`}
-              name={profile.name}
+    <>
+      <header className={`profile-header${hasCover ? "" : " profile-header--no-cover"}`} id="profile-top">
+        {hasCover ? (
+          <div className="profile-header__cover">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={profile.cover_url!} alt="" width={1400} height={320} />
+            <div className="profile-header__cover-fade" aria-hidden="true" />
+            <ProfileToolbar
+              onCover
+              className="profile-header__cover-nav"
+              cartCount={hasCollection ? cartCount : undefined}
+              onOpenCart={hasCollection ? () => setCartOpen(true) : undefined}
             />
-            {profile.collection.length > 0 ? (
-              <Link
-                href={`/profile/${profile.slug}/collection`}
-                className="btn btn--secondary btn--sm btn--icon"
-                aria-label="View collection"
+          </div>
+        ) : (
+          <ProfileToolbar
+            onCover={false}
+            className="profile-header__toolbar"
+            cartCount={hasCollection ? cartCount : undefined}
+            onOpenCart={hasCollection ? () => setCartOpen(true) : undefined}
+          />
+        )}
+
+        <div className="profile-header__panel">
+          <div className="profile-header__identity" aria-labelledby="creator-name">
+            <div
+              className="story-avatar profile-header__avatar"
+              style={{ "--story-color": profile.avatar_color } as React.CSSProperties}
+            >
+              {profile.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={profile.avatar_url} alt={profile.name} width={88} height={88} />
+              ) : (
+                profile.avatar_initials
+              )}
+            </div>
+            <div className="profile-header__info">
+              <h1 id="creator-name">{profile.name}</h1>
+              <p className="profile-header__meta">
+                <span>{handle}</span>
+                {profile.verified ? (
+                  <>
+                    <span className="profile-header__dot" aria-hidden="true">
+                      ·
+                    </span>
+                    <span className="profile-header__verified">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                      Verified
+                    </span>
+                  </>
+                ) : null}
+              </p>
+              <p className="profile-header__stats">
+                <span>
+                  <strong>{profile.stats.followers}</strong> followers
+                </span>
+                <span className="profile-header__dot" aria-hidden="true">
+                  ·
+                </span>
+                <span>
+                  <strong>{profile.stats.following.toLocaleString()}</strong> following
+                </span>
+                {hasSubscription ? (
+                  <>
+                    <span className="profile-header__dot" aria-hidden="true">
+                      ·
+                    </span>
+                    <span>
+                      <strong>{profile.stats.subscribers.toLocaleString()}</strong> subscribers
+                    </span>
+                  </>
+                ) : null}
+                <span className="profile-header__dot" aria-hidden="true">
+                  ·
+                </span>
+                <span>
+                  <strong>{profile.stats.posts.toLocaleString()}</strong> posts
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <p className="profile-header__bio">{profile.bio}</p>
+
+          <div className="profile-header__footer">
+            <div className="profile-header__actions" aria-label="Profile actions">
+              {hasSubscription ? (
+                subscribed ? (
+                  <ProfileSubscribedPill creatorName={profile.name} onUnsubscribe={() => setSubscribed(false)} />
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn--warning btn--sm profile-header__subscribe"
+                    onClick={() => setSubscribed(true)}
+                  >
+                    {profile.subscription!.price_label}
+                  </button>
+                )
+              ) : null}
+              <FollowButton
+                following={following}
+                onFollowingChange={setFollowing}
+                className={`btn btn--sm profile-header__follow${following ? " btn--outline-brand is-active" : " btn--secondary"}`}
+                name={profile.name}
+              />
+              {hasCollection ? (
+                <Link
+                  href={`/profile/${profile.slug}/collection`}
+                  className="btn btn--secondary btn--sm btn--icon"
+                  aria-label="View collection"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                  </svg>
+                </Link>
+              ) : null}
+              <button
+                type="button"
+                className="btn btn--secondary btn--sm btn--icon profile-header__message"
+                aria-label="Message"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                  <line x1="3" y1="6" x2="21" y2="6" />
-                  <path d="M16 10a4 4 0 0 1-8 0" />
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
-              </Link>
-            ) : null}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {profile.special_requests ? <SpecialRequestsOrb /> : null}
-      </div>
-    </header>
+          {profile.special_requests ? <SpecialRequestsOrb /> : null}
+        </div>
+      </header>
+
+      {hasCollection ? (
+        <CollectionCartDrawer
+          open={cartOpen}
+          items={cartItems}
+          profileSlug={profile.slug}
+          checkoutHref={`/profile/${profile.slug}/collection/checkout`}
+          onClose={() => setCartOpen(false)}
+          onChangeItems={updateCart}
+        />
+      ) : null}
+    </>
   );
 }

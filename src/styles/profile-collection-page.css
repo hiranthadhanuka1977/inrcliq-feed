@@ -32,15 +32,9 @@
   white-space: nowrap;
 }
 
-.collection-header__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-}
-
-.collection-header__row .profile-header__identity {
-  min-width: 0;
+.profile-header__cover-nav .collection-cart,
+.profile-header__toolbar .collection-cart {
+  align-self: center;
 }
 
 /* Match profile page: center the shared inner column inside the flex main */
