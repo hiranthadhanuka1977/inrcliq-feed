@@ -18,6 +18,9 @@ import { resolveProductReviews } from "@/lib/product-reviews";
 import type { CollectionProduct } from "@/types/collection";
 import type { ProfileData } from "@/types/profile";
 
+const REVIEW_INITIAL_COUNT = 6;
+const REVIEW_PAGE_SIZE = 18;
+
 function BagCtaContent({ label }: { label: string }) {
   const showPlus = label.trim().toLowerCase() === "add to bag";
 
@@ -103,6 +106,7 @@ export default function CollectionProductDetailView({
   const [sizeId, setSizeId] = useState(detail?.defaultSizeId ?? "");
   const [liked, setLiked] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_INITIAL_COUNT);
   const cartCount = cartItemCount(cartItems);
 
   const selectedColor = useMemo(
@@ -131,10 +135,17 @@ export default function CollectionProductDetailView({
     .filter(Boolean);
 
   const reviewsBlock = useMemo(() => resolveProductReviews(product), [product]);
+  const availableReviews = reviewsBlock.reviews;
+  const visibleReviews = availableReviews.slice(0, visibleReviewCount);
+  const remainingReviews = Math.max(0, availableReviews.length - visibleReviewCount);
 
   useEffect(() => {
     setCartItems(readCollectionCart(profile.slug));
   }, [profile.slug]);
+
+  useEffect(() => {
+    setVisibleReviewCount(REVIEW_INITIAL_COUNT);
+  }, [product.id]);
 
   useEffect(() => {
     if (!galleryOpen) return;
@@ -517,13 +528,13 @@ export default function CollectionProductDetailView({
                     </div>
 
                     <div className="product-detail__reviews">
-                      {reviewsBlock.reviews.map((review) => (
+                      {visibleReviews.map((review) => (
                         <article key={review.id} className="product-detail__review">
                           <div className="product-detail__review-head">
                             <span className="product-detail__review-avatar" aria-hidden="true">
                               {review.avatar_initials}
                             </span>
-                            <div>
+                            <div className="product-detail__review-identity">
                               <p className="product-detail__review-name">{review.name}</p>
                               <p className="product-detail__review-meta">{review.ago}</p>
                             </div>
@@ -535,9 +546,23 @@ export default function CollectionProductDetailView({
                       ))}
                     </div>
 
-                    <button type="button" className="btn btn--secondary btn--sm product-detail__all-reviews">
-                      Show all {reviewsBlock.total} reviews
-                    </button>
+                    {remainingReviews > 0 ? (
+                      <button
+                        type="button"
+                        className="btn btn--secondary btn--sm product-detail__all-reviews"
+                        onClick={() =>
+                          setVisibleReviewCount((current) =>
+                            Math.min(current + REVIEW_PAGE_SIZE, availableReviews.length),
+                          )
+                        }
+                      >
+                        {visibleReviewCount <= REVIEW_INITIAL_COUNT
+                          ? `Show all ${availableReviews.length} reviews`
+                          : remainingReviews > REVIEW_PAGE_SIZE
+                            ? `Show ${REVIEW_PAGE_SIZE} more reviews`
+                            : `Show remaining ${remainingReviews} reviews`}
+                      </button>
+                    ) : null}
                   </>
                 )}
               </section>

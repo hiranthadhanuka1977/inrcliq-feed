@@ -13,6 +13,7 @@ import {
   cartSubtotal,
   formatCartMoney,
   normalizeCollectionPromo,
+  parsePriceAmount,
   readCollectionCart,
   readCollectionPromo,
   type CollectionCartItem,
@@ -280,6 +281,35 @@ function formatExpiry(value: string) {
   return `${digits.slice(0, 2)}/${digits.slice(2)}`;
 }
 
+function formatArrivalEstimate(daysAhead: number) {
+  const date = new Date();
+  date.setDate(date.getDate() + daysAhead);
+  return date.toLocaleDateString(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function CheckoutLineItem({ item }: { item: CollectionCartItem }) {
+  const lineTotal = parsePriceAmount(item.price) * item.quantity;
+
+  return (
+    <li className="checkout-line-item">
+      <div className="checkout-line-item__thumb">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={item.image} alt="" />
+      </div>
+      <div className="checkout-line-item__meta">
+        <p className="checkout-line-item__name">{item.name}</p>
+        {item.variant ? <p className="checkout-line-item__variant">{item.variant}</p> : null}
+        <p className="checkout-line-item__qty">Qty {item.quantity}</p>
+      </div>
+      <p className="checkout-line-item__price">{formatCartMoney(lineTotal)}</p>
+    </li>
+  );
+}
+
 export default function CollectionCheckoutView({ profile }: { profile: ProfileData }) {
   const promoId = useId();
   const cvvHelpId = useId();
@@ -319,6 +349,13 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
     () => [address.line1, address.line2, `${address.city}, ${address.region} ${address.postalCode}`, address.country].filter(Boolean),
     [address],
   );
+
+  const physicalItems = useMemo(
+    () => items.filter((item) => (item.kind ?? "physical") === "physical"),
+    [items],
+  );
+  const digitalItems = useMemo(() => items.filter((item) => item.kind === "digital"), [items]);
+  const deliveryEstimate = useMemo(() => formatArrivalEstimate(3), []);
 
   function applyCoupon() {
     const match = normalizeCollectionPromo(couponDraft);
@@ -483,10 +520,72 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
                       )
                     ) : (
                       <p className="checkout-digital-note">
-                        This order includes only digital products. We&apos;ll email download instructions
-                        after payment — no shipping address required.
+                        This order includes only digital products. After payment, we&apos;ll send an email with
+                        instructions on how to download your digital merchandise — no shipping address required.
                       </p>
                     )}
+                  </section>
+
+                  <section className="checkout-card" aria-labelledby="checkout-items-heading">
+                    <div className="checkout-card__head">
+                      <h2 id="checkout-items-heading">Review items and delivery</h2>
+                    </div>
+
+                    <div className="checkout-shipments">
+                      {physicalItems.length > 0 ? (
+                        <article className="checkout-shipment" aria-labelledby="checkout-shipment-physical">
+                          <header className="checkout-shipment__head">
+                            <div className="checkout-shipment__badge checkout-shipment__badge--physical">
+                              Shipment 1
+                            </div>
+                            <div className="checkout-shipment__title-block">
+                              <h3 id="checkout-shipment-physical">Arriving {deliveryEstimate}</h3>
+                              <p>
+                                Standard delivery · {formatCartMoney(deliveryFee)}
+                                {address.city ? ` · to ${address.city}` : ""}
+                              </p>
+                            </div>
+                          </header>
+                          <p className="checkout-shipment__method">
+                            These items will be packed and shipped to your address after payment.
+                          </p>
+                          <ul className="checkout-shipment__items">
+                            {physicalItems.map((item) => (
+                              <CheckoutLineItem
+                                key={`physical:${item.productId}:${item.variant ?? ""}`}
+                                item={item}
+                              />
+                            ))}
+                          </ul>
+                        </article>
+                      ) : null}
+
+                      {digitalItems.length > 0 ? (
+                        <article className="checkout-shipment" aria-labelledby="checkout-shipment-digital">
+                          <header className="checkout-shipment__head">
+                            <div className="checkout-shipment__badge checkout-shipment__badge--digital">
+                              Digital delivery
+                            </div>
+                            <div className="checkout-shipment__title-block">
+                              <h3 id="checkout-shipment-digital">Available immediately</h3>
+                              <p>Get it now · Free</p>
+                            </div>
+                          </header>
+                          <p className="checkout-shipment__method">
+                            After payment, we&apos;ll send an email with instructions on how to download your
+                            digital merchandise — no shipping required.
+                          </p>
+                          <ul className="checkout-shipment__items">
+                            {digitalItems.map((item) => (
+                              <CheckoutLineItem
+                                key={`digital:${item.productId}:${item.variant ?? ""}`}
+                                item={item}
+                              />
+                            ))}
+                          </ul>
+                        </article>
+                      ) : null}
+                    </div>
                   </section>
 
                   <section className="checkout-card" aria-labelledby="checkout-payment-heading">
@@ -653,7 +752,7 @@ export default function CollectionCheckoutView({ profile }: { profile: ProfileDa
                     ) : null}
 
                     <div className="checkout-summary__row">
-                      <span>Delivery fee</span>
+                      <span>{needsDelivery ? "Shipping" : "Delivery fee"}</span>
                       <strong>{deliveryFee === 0 ? "Free" : formatCartMoney(deliveryFee)}</strong>
                     </div>
                   </div>

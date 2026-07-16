@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { createPortal } from "react-dom";
 import FollowButton from "@/components/FollowButton";
@@ -53,8 +54,9 @@ function placeSubscribeMenu(anchor: DOMRect, menu: DOMRect | null): MenuCoords {
   return { top, left, width };
 }
 
-function SpecialRequestsOrb() {
+function SpecialRequestsOrb({ profileSlug }: { profileSlug: string }) {
   const tipId = useId();
+  const router = useRouter();
   const orbRef = useRef<HTMLDivElement>(null);
   const freeRef = useRef(false);
   const dragRef = useRef<{
@@ -91,12 +93,16 @@ function SpecialRequestsOrb() {
     function onPointerUp(event: PointerEvent) {
       const drag = dragRef.current;
       if (!drag || event.pointerId !== drag.pointerId) return;
+      const wasClick = !drag.moved;
       dragRef.current = null;
       setDragging(false);
       try {
         orbRef.current?.releasePointerCapture(event.pointerId);
       } catch {
         /* already released */
+      }
+      if (wasClick) {
+        router.push(`/profile/${profileSlug}/requests`);
       }
     }
 
@@ -108,7 +114,7 @@ function SpecialRequestsOrb() {
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
     };
-  }, []);
+  }, [profileSlug, router]);
 
   function onPointerDown(event: React.PointerEvent<HTMLDivElement>) {
     if (event.button !== 0 || !orbRef.current) return;
@@ -133,10 +139,16 @@ function SpecialRequestsOrb() {
       className={`profile-special-requests${free ? " is-free" : ""}${dragging ? " is-dragging" : ""}`}
       style={free && pos ? { left: pos.x, top: pos.y } : undefined}
       tabIndex={0}
-      role="button"
-      aria-label="Special requests available"
+      role="link"
+      aria-label="Open special requests"
       aria-describedby={tipId}
       onPointerDown={onPointerDown}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          router.push(`/profile/${profileSlug}/requests`);
+        }
+      }}
     >
       <span className="profile-special-requests__aura" aria-hidden="true">
         <span className="profile-special-requests__ring profile-special-requests__ring--a" />
@@ -157,7 +169,7 @@ function SpecialRequestsOrb() {
         <strong className="profile-special-requests__title">Special Requests</strong>
         <span className="profile-special-requests__lead">Make your next moment one-of-a-kind.</span>
         <span className="profile-special-requests__copy">
-          Book personalized messages, private concerts, or live appearances for birthdays and celebrations.
+          Book personalized messages, private coaching, or live appearances for races and celebrations.
         </span>
         <span className="profile-special-requests__perks">
           <span className="profile-special-requests__perk">
@@ -173,7 +185,7 @@ function SpecialRequestsOrb() {
               <line x1="12" y1="19" x2="12" y2="23" />
               <line x1="8" y1="23" x2="16" y2="23" />
             </svg>
-            Appearances
+            Coaching
           </span>
           <span className="profile-special-requests__perk">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -601,7 +613,7 @@ export default function ProfileHeader({ profile }: { profile: ProfileData }) {
             </div>
           </div>
 
-          {profile.special_requests ? <SpecialRequestsOrb /> : null}
+          {profile.special_requests ? <SpecialRequestsOrb profileSlug={profile.slug} /> : null}
         </div>
       </header>
 

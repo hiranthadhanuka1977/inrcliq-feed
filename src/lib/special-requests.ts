@@ -1,0 +1,456 @@
+export type RequestServiceMedia = {
+  poster: string;
+  videoSrc: string;
+  videoCaption: string;
+  audioSrc: string;
+  audioTitle: string;
+  audioDuration: string;
+};
+
+export type RequestService = {
+  id: string;
+  label: string;
+  blurb: string;
+  description: string;
+  media: RequestServiceMedia;
+  priceMin: number;
+  priceMax: number;
+  popular?: boolean;
+};
+
+export type RequestCategory = {
+  id: string;
+  title: string;
+  intent: string;
+  blurb: string;
+  icon: "gift" | "coach" | "stage";
+  services: RequestService[];
+};
+
+export type RequestGalleryItem = {
+  id: string;
+  src: string;
+  alt: string;
+  caption: string;
+};
+
+export type CreatorRequestsContent = {
+  intro: string[];
+  gallery: RequestGalleryItem[];
+  categories: RequestCategory[];
+  howItWorks: { title: string; copy: string }[];
+  startingRange: string;
+  responseTime: string;
+  nextAvailable: string;
+  guarantee: string;
+};
+
+const SAMPLE_VIDEOS = [
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+] as const;
+
+const SAMPLE_AUDIOS = [
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+  "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+] as const;
+
+const MEDIA_POSTERS = [
+  "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=640&h=360&fit=crop&q=80&auto=format",
+  "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=640&h=360&fit=crop&q=80&auto=format",
+  "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=640&h=360&fit=crop&q=80&auto=format",
+  "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=640&h=360&fit=crop&q=80&auto=format",
+  "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=640&h=360&fit=crop&q=80&auto=format",
+  "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=640&h=360&fit=crop&q=80&auto=format",
+] as const;
+
+function buildServiceMedia(
+  index: number,
+  videoCaption: string,
+  audioTitle: string,
+  audioDuration = "0:42",
+): RequestServiceMedia {
+  return {
+    poster: MEDIA_POSTERS[index % MEDIA_POSTERS.length],
+    videoSrc: SAMPLE_VIDEOS[index % SAMPLE_VIDEOS.length],
+    videoCaption,
+    audioSrc: SAMPLE_AUDIOS[index % SAMPLE_AUDIOS.length],
+    audioTitle,
+    audioDuration,
+  };
+}
+
+const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
+  intro: [
+    "Mia Chen helps make your next run, celebration, or special occasion one-of-a-kind — from birthday pep talks and race-day shout-outs to coaching sessions and guest appearances that bring trail-tested energy to your moment.",
+  ],
+  gallery: [
+    {
+      id: "g1",
+      src: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=960&h=540&fit=crop&q=80&auto=format",
+      alt: "Mia running at sunrise",
+      caption: "Race-day energy",
+    },
+    {
+      id: "g2",
+      src: "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=480&h=320&fit=crop&q=80&auto=format",
+      alt: "Runner crossing finish line",
+      caption: "Finish-line shout-outs",
+    },
+    {
+      id: "g3",
+      src: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=480&h=320&fit=crop&q=80&auto=format",
+      alt: "Group training session",
+      caption: "Club appearances",
+    },
+    {
+      id: "g4",
+      src: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=480&h=320&fit=crop&q=80&auto=format",
+      alt: "Trail running through hills",
+      caption: "Trail stories",
+    },
+    {
+      id: "g5",
+      src: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=480&h=320&fit=crop&q=80&auto=format",
+      alt: "Athlete recovering after a run",
+      caption: "Recovery coaching",
+    },
+    {
+      id: "g6",
+      src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=480&h=320&fit=crop&q=80&auto=format",
+      alt: "Runner training outdoors",
+      caption: "Event hosting",
+    },
+  ],
+  categories: [
+    {
+      id: "shout-outs",
+      title: "Special occasion shout outs",
+      intent: "Celebrate someone",
+      blurb: "Personalized video messages for birthdays, race days, and the people you love.",
+      icon: "gift",
+      services: [
+        {
+          id: "birthday",
+          label: "Birthday greeting",
+          blurb: "A warm, high-energy video they can replay all day.",
+          description:
+            "Mia records a personalized birthday message with your chosen name, vibe, and any shout-outs you want included. You’ll get a downloadable video ready to share in chat, at a party, or in a race-weekend album.",
+          media: buildServiceMedia(0, "Watch a sample birthday greeting", "Listen to a sample greeting", "0:38"),
+          priceMin: 80,
+          priceMax: 120,
+          popular: true,
+        },
+        {
+          id: "race-pep",
+          label: "Race-day pep talk",
+          blurb: "Motivation delivered before the gun goes off.",
+          description:
+            "A focused pre-race pep talk tailored to the distance, course, and nerves. Mia keeps it short, personal, and easy to replay while you’re pinning your bib or lining up in the corral.",
+          media: buildServiceMedia(1, "See a race-day pep talk example", "Hear a sample pep talk", "0:45"),
+          priceMin: 90,
+          priceMax: 140,
+        },
+        {
+          id: "finish-congrats",
+          label: "Finish-line congratulations",
+          blurb: "Celebrate the PR, the finish, or just showing up.",
+          description:
+            "Celebrate the finish — PR, first race, or tough course conquered. Mia calls out the achievement and the story behind it so the video feels like a keepsake, not a generic congrats.",
+          media: buildServiceMedia(2, "Watch a finish-line congrats sample", "Hear a sample celebration", "0:40"),
+          priceMin: 80,
+          priceMax: 130,
+        },
+        {
+          id: "loved-one",
+          label: "Message for a loved one",
+          blurb: "Make it personal with names, inside jokes, and heart.",
+          description:
+            "Send something thoughtful for a partner, parent, teammate, or friend. Share names, nicknames, and the moment you want honored — Mia weaves them into a warm, shareable video message.",
+          media: buildServiceMedia(3, "Watch a loved-one message sample", "Hear a sample message", "0:44"),
+          priceMin: 85,
+          priceMax: 135,
+        },
+      ],
+    },
+    {
+      id: "training",
+      title: "Training & coaching",
+      intent: "Train with Mia",
+      blurb: "One-to-one guidance for plans, pacing, recovery, and race strategy.",
+      icon: "coach",
+      services: [
+        {
+          id: "plan-review",
+          label: "Training plan review",
+          blurb: "Honest feedback on your current plan and where to adjust.",
+          description:
+            "Share your current plan, recent workouts, and goal race. Mia reviews volume, intensity, and recovery gaps, then sends clear notes on what to keep, cut, or reshape before peak weeks.",
+          media: buildServiceMedia(4, "See how a plan review works", "Listen to a coaching sample", "0:51"),
+          priceMin: 120,
+          priceMax: 200,
+          popular: true,
+        },
+        {
+          id: "virtual-run",
+          label: "Virtual coached run",
+          blurb: "Live session energy — cues, pacing, and accountability.",
+          description:
+            "Join Mia for a live coached run with pacing cues, form reminders, and real-time encouragement. Ideal when you want accountability and trail-tested guidance without waiting for race week.",
+          media: buildServiceMedia(5, "Preview a virtual coached run", "Hear a live-run sample", "0:48"),
+          priceMin: 100,
+          priceMax: 180,
+        },
+        {
+          id: "recovery",
+          label: "Recovery & nutrition tips",
+          blurb: "Practical habits to bounce back stronger after hard weeks.",
+          description:
+            "Get practical recovery and fueling guidance after hard weeks or long races. Mia focuses on habits you can actually keep — sleep, easy days, snacks, and what to watch before your next block.",
+          media: buildServiceMedia(0, "Watch a recovery tips explainer", "Listen to recovery advice", "0:46"),
+          priceMin: 90,
+          priceMax: 160,
+        },
+        {
+          id: "pre-race",
+          label: "Pre-race strategy call",
+          blurb: "Fueling, splits, and mindset locked in before race week.",
+          description:
+            "A one-to-one strategy call covering splits, fueling, weather contingencies, and mindset. You’ll leave race week with a simple plan you can execute under pressure.",
+          media: buildServiceMedia(1, "See a strategy call overview", "Hear a strategy sample", "0:50"),
+          priceMin: 110,
+          priceMax: 190,
+        },
+        {
+          id: "weekly-checkin",
+          label: "Weekly check-in session",
+          blurb: "Stay accountable through peak training with regular touchpoints.",
+          description:
+            "Stay accountable through peak training with a recurring check-in. Review the week, adjust the next one, and keep momentum without overthinking every workout.",
+          media: buildServiceMedia(2, "Watch a weekly check-in sample", "Listen to a check-in clip", "0:43"),
+          priceMin: 140,
+          priceMax: 220,
+        },
+      ],
+    },
+    {
+      id: "appearances",
+      title: "Appearances & events",
+      intent: "Book an appearance",
+      blurb: "Bring Mia to your club, stage, expo, or podcast for a live moment.",
+      icon: "stage",
+      services: [
+        {
+          id: "club-guest",
+          label: "Guest at your run club",
+          blurb: "Join a group run and stick around to chat with members.",
+          description:
+            "Mia joins your club run, brings energy to the group, and stays to chat with members afterward. Great for community nights, milestone runs, or kicking off a new training season.",
+          media: buildServiceMedia(3, "See a run-club guest appearance", "Hear a club welcome sample", "0:47"),
+          priceMin: 180,
+          priceMax: 320,
+          popular: true,
+        },
+        {
+          id: "panel",
+          label: "Panel appearance",
+          blurb: "Trail stories and Q&A that keep an audience leaning in.",
+          description:
+            "A panel appearance built around trail stories, endurance lessons, and audience Q&A. Mia keeps the conversation grounded, practical, and engaging for runners at every level.",
+          media: buildServiceMedia(4, "Watch a panel appearance sample", "Listen to a panel clip", "0:49"),
+          priceMin: 160,
+          priceMax: 280,
+        },
+        {
+          id: "speech",
+          label: "Inspirational speech",
+          blurb: "A keynote-style talk built around grit, community, and finishing.",
+          description:
+            "A keynote-style talk on grit, community, and finishing strong. Share your event theme and audience, and Mia shapes a speech that fits the room — from club nights to brand activations.",
+          media: buildServiceMedia(5, "Preview an inspirational speech", "Hear a speech excerpt", "0:52"),
+          priceMin: 200,
+          priceMax: 360,
+        },
+        {
+          id: "mc",
+          label: "MC a race expo",
+          blurb: "Stage presence that keeps the expo floor energized.",
+          description:
+            "Mia MCs your race expo with clear stage presence, athlete intros, and crowd energy that keeps the floor moving. Includes timing coordination notes so the program stays on track.",
+          media: buildServiceMedia(0, "See race-expo MC energy", "Listen to an MC sample", "0:41"),
+          priceMin: 220,
+          priceMax: 400,
+        },
+        {
+          id: "charity",
+          label: "Charity run appearance",
+          blurb: "Show up for a cause and help rally participants.",
+          description:
+            "Book Mia for a charity run appearance to rally participants, support your cause message, and help the day feel memorable for volunteers and runners alike.",
+          media: buildServiceMedia(1, "Watch a charity appearance sample", "Hear a charity rally clip", "0:44"),
+          priceMin: 150,
+          priceMax: 300,
+        },
+        {
+          id: "podcast",
+          label: "Podcast guest spot",
+          blurb: "An engaging conversation for your listeners and community.",
+          description:
+            "Invite Mia as a podcast guest for an engaging conversation on training, mindset, and community. Share your episode angle in advance so the talk fits your audience and format.",
+          media: buildServiceMedia(2, "Preview a podcast guest spot", "Listen to a podcast sample", "0:55"),
+          priceMin: 100,
+          priceMax: 180,
+        },
+      ],
+    },
+  ],
+  howItWorks: [
+    {
+      title: "Select & Secure",
+      copy: "Choose the service that fits your occasion and lock in Mia’s availability.",
+    },
+    {
+      title: "Personalize & Confirm",
+      copy: "Share names, race details, or talking points so the request feels truly yours.",
+    },
+    {
+      title: "Pay & Enjoy",
+      copy: "Complete payment once Mia accepts — then sit back and enjoy the moment.",
+    },
+  ],
+  startingRange: "$80 – $240",
+  responseTime: "24 hours",
+  nextAvailable: "Jul 22, 2026",
+  guarantee:
+    "You won’t be charged until Mia accepts your request. If she can’t fulfill it, you get a full refund — no questions asked.",
+};
+
+const REQUESTS_BY_SLUG: Record<string, CreatorRequestsContent> = {
+  "mia-chen": MIA_CHEN_REQUESTS,
+};
+
+export type SpecialRequestReview = {
+  id: string;
+  name: string;
+  avatar_initials: string;
+  rating: number;
+  ago: string;
+  variant: string;
+  text: string;
+};
+
+export type SpecialRequestReviewsBlock = {
+  average: number;
+  count: number;
+  attributes: { label: string; score: number }[];
+  reviews: SpecialRequestReview[];
+};
+
+const REQUEST_REVIEWERS = [
+  { name: "Ananya Perera", initials: "AP" },
+  { name: "Rohan Silva", initials: "RS" },
+  { name: "Meera Jay", initials: "MJ" },
+  { name: "Kavish Fernando", initials: "KF" },
+  { name: "Sara Malik", initials: "SM" },
+  { name: "Dev Patel", initials: "DP" },
+  { name: "Nina Okoye", initials: "NO" },
+  { name: "Luis Ortega", initials: "LO" },
+  { name: "Priya Nair", initials: "PN" },
+  { name: "James Cole", initials: "JC" },
+  { name: "Hana Wijesinghe", initials: "HW" },
+  { name: "Omar Hassan", initials: "OH" },
+] as const;
+
+const REQUEST_REVIEW_TEXTS = [
+  "Mia’s birthday greeting made my sister cry happy tears. Felt personal and full of energy.",
+  "Booked a race-day pep talk before Mumbai Marathon — exactly the boost I needed at the start line.",
+  "The training plan review was honest, practical, and tailored to my busy schedule.",
+  "She joined our run club as a guest and stayed to chat with everyone. Absolute pro.",
+  "Recovery tips after my ultra were clear and easy to follow. Worth every rupee.",
+  "Pre-race strategy call helped me pace smarter. Finished stronger than last year.",
+  "Message for my fiancé after his first 10K was perfect — funny, warm, and on-brand Mia.",
+  "Virtual coached run felt like having a friend on the trail. Highly recommend.",
+  "Responded fast, asked great questions, and delivered ahead of the promised date.",
+  "Panel appearance at our charity expo was inspiring. Crowd loved her stories.",
+  "Weekly check-ins kept me accountable through peak training. Soft-spoken but firm.",
+  "Finish-line congratulations video was the highlight of my race weekend album.",
+] as const;
+
+const REQUEST_SERVICE_LABELS = [
+  "Birthday greeting",
+  "Race-day pep talk",
+  "Training plan review",
+  "Guest at your run club",
+  "Recovery & nutrition tips",
+  "Pre-race strategy call",
+  "Message for a loved one",
+  "Virtual coached run",
+  "Panel appearance",
+  "Weekly check-in session",
+  "Finish-line congratulations",
+  "Podcast guest spot",
+] as const;
+
+const REQUEST_AGOS = [
+  "1 day ago",
+  "3 days ago",
+  "1 week ago",
+  "2 weeks ago",
+  "3 weeks ago",
+  "1 month ago",
+] as const;
+
+function hashString(value: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function pick<T>(items: readonly T[], seed: number, offset = 0): T {
+  return items[(seed + offset) % items.length];
+}
+
+function scoreFromSeed(seed: number, offset: number, base = 4.5): number {
+  const bump = ((seed >> offset) & 7) / 20;
+  return Math.min(5, Math.round((base + bump) * 10) / 10);
+}
+
+export function getCreatorRequests(slug: string): CreatorRequestsContent | null {
+  return REQUESTS_BY_SLUG[slug] ?? null;
+}
+
+export function formatRequestPriceRange(min: number, max: number): string {
+  return `$${min} – $${max}`;
+}
+
+export function resolveSpecialRequestReviews(slug: string): SpecialRequestReviewsBlock {
+  const seed = hashString(`requests:${slug}`);
+  const count = 24 + (seed % 12);
+  const average = scoreFromSeed(seed, 2, 4.6);
+  const attributes = [
+    { label: "Response Speed", score: scoreFromSeed(seed, 1, 4.7) },
+    { label: "Personalization", score: scoreFromSeed(seed, 4, 4.8) },
+    { label: "Value for Money", score: scoreFromSeed(seed, 8, 4.5) },
+  ];
+
+  const reviews: SpecialRequestReview[] = Array.from({ length: count }, (_, index) => {
+    const reviewer = pick(REQUEST_REVIEWERS, seed, index * 3);
+    return {
+      id: `${slug}-request-review-${index + 1}`,
+      name: reviewer.name,
+      avatar_initials: reviewer.initials,
+      rating: 4 + ((seed + index) % 2),
+      ago: pick(REQUEST_AGOS, seed, index * 2),
+      variant: pick(REQUEST_SERVICE_LABELS, seed, index + 1),
+      text: pick(REQUEST_REVIEW_TEXTS, seed, index * 4),
+    };
+  });
+
+  return { average, count, attributes, reviews };
+}

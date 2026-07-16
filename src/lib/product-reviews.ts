@@ -83,7 +83,7 @@ function buildGeneratedReviews(product: CollectionProduct, seed: number): Produc
   ];
 
   const variants = product.kind === "digital" ? DIGITAL_VARIANTS : PHYSICAL_VARIANTS;
-  const reviews: CollectionProductReview[] = Array.from({ length: 3 }, (_, index) => {
+  const reviews: CollectionProductReview[] = Array.from({ length: count }, (_, index) => {
     const reviewer = pick(REVIEWERS, seed, index * 3);
     const rating = 4 + ((seed + index) % 2);
     return {
@@ -122,7 +122,7 @@ export function resolveProductReviews(product: CollectionProduct): ProductReview
             { label: "Quality", score: 4.7 },
             { label: "Value for Money", score: 4.6 },
           ],
-      reviews: existing.slice(0, 3),
+      reviews: existing,
       total: detail.reviewsTotal ?? detail.reviewCount ?? existing.length,
       empty: false,
     };
