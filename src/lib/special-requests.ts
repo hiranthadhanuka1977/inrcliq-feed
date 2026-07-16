@@ -1,11 +1,15 @@
-export type RequestServiceMedia = {
-  poster: string;
-  videoSrc: string;
-  videoCaption: string;
-  audioSrc: string;
-  audioTitle: string;
-  audioDuration: string;
-};
+export type RequestServiceMedia =
+  | {
+      kind: "video";
+      poster: string;
+      caption: string;
+    }
+  | {
+      kind: "audio";
+      src: string;
+      title: string;
+      duration: string;
+    };
 
 export type RequestService = {
   id: string;
@@ -45,13 +49,6 @@ export type CreatorRequestsContent = {
   guarantee: string;
 };
 
-const SAMPLE_VIDEOS = [
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-] as const;
-
 const SAMPLE_AUDIOS = [
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
   "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
@@ -67,19 +64,20 @@ const MEDIA_POSTERS = [
   "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=640&h=360&fit=crop&q=80&auto=format",
 ] as const;
 
-function buildServiceMedia(
-  index: number,
-  videoCaption: string,
-  audioTitle: string,
-  audioDuration = "0:42",
-): RequestServiceMedia {
+function buildVideoMedia(index: number, caption: string): RequestServiceMedia {
   return {
+    kind: "video",
     poster: MEDIA_POSTERS[index % MEDIA_POSTERS.length],
-    videoSrc: SAMPLE_VIDEOS[index % SAMPLE_VIDEOS.length],
-    videoCaption,
-    audioSrc: SAMPLE_AUDIOS[index % SAMPLE_AUDIOS.length],
-    audioTitle,
-    audioDuration,
+    caption,
+  };
+}
+
+function buildAudioMedia(index: number, title: string, duration = "0:42"): RequestServiceMedia {
+  return {
+    kind: "audio",
+    src: SAMPLE_AUDIOS[index % SAMPLE_AUDIOS.length],
+    title,
+    duration,
   };
 }
 
@@ -139,7 +137,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "A warm, high-energy video they can replay all day.",
           description:
             "Mia records a personalized birthday message with your chosen name, vibe, and any shout-outs you want included. You’ll get a downloadable video ready to share in chat, at a party, or in a race-weekend album.",
-          media: buildServiceMedia(0, "Watch a sample birthday greeting", "Listen to a sample greeting", "0:38"),
+          media: buildVideoMedia(0, "Watch a sample birthday greeting"),
           priceMin: 80,
           priceMax: 120,
           popular: true,
@@ -150,7 +148,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Motivation delivered before the gun goes off.",
           description:
             "A focused pre-race pep talk tailored to the distance, course, and nerves. Mia keeps it short, personal, and easy to replay while you’re pinning your bib or lining up in the corral.",
-          media: buildServiceMedia(1, "See a race-day pep talk example", "Hear a sample pep talk", "0:45"),
+          media: buildVideoMedia(1, "See a race-day pep talk example"),
           priceMin: 90,
           priceMax: 140,
         },
@@ -160,7 +158,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Celebrate the PR, the finish, or just showing up.",
           description:
             "Celebrate the finish — PR, first race, or tough course conquered. Mia calls out the achievement and the story behind it so the video feels like a keepsake, not a generic congrats.",
-          media: buildServiceMedia(2, "Watch a finish-line congrats sample", "Hear a sample celebration", "0:40"),
+          media: buildVideoMedia(2, "Watch a finish-line congrats sample"),
           priceMin: 80,
           priceMax: 130,
         },
@@ -170,7 +168,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Make it personal with names, inside jokes, and heart.",
           description:
             "Send something thoughtful for a partner, parent, teammate, or friend. Share names, nicknames, and the moment you want honored — Mia weaves them into a warm, shareable video message.",
-          media: buildServiceMedia(3, "Watch a loved-one message sample", "Hear a sample message", "0:44"),
+          media: buildVideoMedia(3, "Watch a loved-one message sample"),
           priceMin: 85,
           priceMax: 135,
         },
@@ -189,7 +187,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Honest feedback on your current plan and where to adjust.",
           description:
             "Share your current plan, recent workouts, and goal race. Mia reviews volume, intensity, and recovery gaps, then sends clear notes on what to keep, cut, or reshape before peak weeks.",
-          media: buildServiceMedia(4, "See how a plan review works", "Listen to a coaching sample", "0:51"),
+          media: buildVideoMedia(4, "See how a plan review works"),
           priceMin: 120,
           priceMax: 200,
           popular: true,
@@ -200,7 +198,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Live session energy — cues, pacing, and accountability.",
           description:
             "Join Mia for a live coached run with pacing cues, form reminders, and real-time encouragement. Ideal when you want accountability and trail-tested guidance without waiting for race week.",
-          media: buildServiceMedia(5, "Preview a virtual coached run", "Hear a live-run sample", "0:48"),
+          media: buildVideoMedia(5, "Preview a virtual coached run"),
           priceMin: 100,
           priceMax: 180,
         },
@@ -210,7 +208,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Practical habits to bounce back stronger after hard weeks.",
           description:
             "Get practical recovery and fueling guidance after hard weeks or long races. Mia focuses on habits you can actually keep — sleep, easy days, snacks, and what to watch before your next block.",
-          media: buildServiceMedia(0, "Watch a recovery tips explainer", "Listen to recovery advice", "0:46"),
+          media: buildAudioMedia(0, "Listen to recovery advice", "0:46"),
           priceMin: 90,
           priceMax: 160,
         },
@@ -220,7 +218,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Fueling, splits, and mindset locked in before race week.",
           description:
             "A one-to-one strategy call covering splits, fueling, weather contingencies, and mindset. You’ll leave race week with a simple plan you can execute under pressure.",
-          media: buildServiceMedia(1, "See a strategy call overview", "Hear a strategy sample", "0:50"),
+          media: buildAudioMedia(1, "Hear a strategy sample", "0:50"),
           priceMin: 110,
           priceMax: 190,
         },
@@ -230,7 +228,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Stay accountable through peak training with regular touchpoints.",
           description:
             "Stay accountable through peak training with a recurring check-in. Review the week, adjust the next one, and keep momentum without overthinking every workout.",
-          media: buildServiceMedia(2, "Watch a weekly check-in sample", "Listen to a check-in clip", "0:43"),
+          media: buildAudioMedia(2, "Listen to a check-in clip", "0:43"),
           priceMin: 140,
           priceMax: 220,
         },
@@ -249,7 +247,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Join a group run and stick around to chat with members.",
           description:
             "Mia joins your club run, brings energy to the group, and stays to chat with members afterward. Great for community nights, milestone runs, or kicking off a new training season.",
-          media: buildServiceMedia(3, "See a run-club guest appearance", "Hear a club welcome sample", "0:47"),
+          media: buildVideoMedia(3, "See a run-club guest appearance"),
           priceMin: 180,
           priceMax: 320,
           popular: true,
@@ -260,7 +258,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Trail stories and Q&A that keep an audience leaning in.",
           description:
             "A panel appearance built around trail stories, endurance lessons, and audience Q&A. Mia keeps the conversation grounded, practical, and engaging for runners at every level.",
-          media: buildServiceMedia(4, "Watch a panel appearance sample", "Listen to a panel clip", "0:49"),
+          media: buildVideoMedia(4, "Watch a panel appearance sample"),
           priceMin: 160,
           priceMax: 280,
         },
@@ -270,7 +268,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "A keynote-style talk built around grit, community, and finishing.",
           description:
             "A keynote-style talk on grit, community, and finishing strong. Share your event theme and audience, and Mia shapes a speech that fits the room — from club nights to brand activations.",
-          media: buildServiceMedia(5, "Preview an inspirational speech", "Hear a speech excerpt", "0:52"),
+          media: buildAudioMedia(0, "Hear a speech excerpt", "0:52"),
           priceMin: 200,
           priceMax: 360,
         },
@@ -280,7 +278,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Stage presence that keeps the expo floor energized.",
           description:
             "Mia MCs your race expo with clear stage presence, athlete intros, and crowd energy that keeps the floor moving. Includes timing coordination notes so the program stays on track.",
-          media: buildServiceMedia(0, "See race-expo MC energy", "Listen to an MC sample", "0:41"),
+          media: buildVideoMedia(0, "See race-expo MC energy"),
           priceMin: 220,
           priceMax: 400,
         },
@@ -290,7 +288,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "Show up for a cause and help rally participants.",
           description:
             "Book Mia for a charity run appearance to rally participants, support your cause message, and help the day feel memorable for volunteers and runners alike.",
-          media: buildServiceMedia(1, "Watch a charity appearance sample", "Hear a charity rally clip", "0:44"),
+          media: buildVideoMedia(1, "Watch a charity appearance sample"),
           priceMin: 150,
           priceMax: 300,
         },
@@ -300,7 +298,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           blurb: "An engaging conversation for your listeners and community.",
           description:
             "Invite Mia as a podcast guest for an engaging conversation on training, mindset, and community. Share your episode angle in advance so the talk fits your audience and format.",
-          media: buildServiceMedia(2, "Preview a podcast guest spot", "Listen to a podcast sample", "0:55"),
+          media: buildAudioMedia(2, "Listen to a podcast sample", "0:55"),
           priceMin: 100,
           priceMax: 180,
         },
