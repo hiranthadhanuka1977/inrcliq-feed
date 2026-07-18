@@ -17,6 +17,42 @@ import type { ProfileData } from "@/types/profile";
 
 const REVIEW_INITIAL_COUNT = 6;
 const REVIEW_PAGE_SIZE = 18;
+const FEED_SURCHARGE = 15;
+const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
+const DURATION_OPTIONS = ["15 seconds", "30 seconds", "60 seconds", "90 seconds", "2 minutes"] as const;
+const TIME_OPTIONS = ["9:00 AM", "12:00 PM", "3:00 PM", "6:00 PM", "9:00 PM"] as const;
+
+type DeliveryMethod = "dm" | "feed";
+type ContentKind = "text" | "audio" | "video";
+
+function startOfDay(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function toDateKey(date: Date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function parseDateKey(value: string) {
+  const [y, m, d] = value.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatDisplayDate(value: string) {
+  if (!value) return "Select a date";
+  return parseDateKey(value).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+}
+
+function monthLabel(year: number, month: number) {
+  return new Date(year, month, 1).toLocaleDateString("en-US", { month: "short" });
+}
 
 function AmexMark() {
   return (
@@ -238,6 +274,42 @@ function ServiceExplainer({
   );
 }
 
+function ContentTypeIcon({ kind }: { kind: ContentKind }) {
+  if (kind === "text") {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M5 6.5h14M5 12h10M5 17.5h7"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+  if (kind === "audio") {
+    return (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path
+          d="M9 18V6l10-2v12"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle cx="7" cy="18" r="2.2" stroke="currentColor" strokeWidth="1.8" />
+        <circle cx="17" cy="16" r="2.2" stroke="currentColor" strokeWidth="1.8" />
+      </svg>
+    );
+  }
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4" y="6" width="16" height="12" rx="2.2" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M10 10.2v4.6l4.2-2.3-4.2-2.3Z" fill="currentColor" />
+    </svg>
+  );
+}
+
 function flattenServices(categories: ReturnType<typeof getCreatorRequests>) {
   if (!categories) return [] as RequestService[];
   return categories.categories.flatMap((category) => category.services);
@@ -258,6 +330,44 @@ export default function ProfileRequestsView({
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_INITIAL_COUNT);
   const [pickerStep, setPickerStep] = useState<1 | 2 | 3 | 4>(1);
+  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("dm");
+  const [contentKind, setContentKind] = useState<ContentKind>("video");
+  const [duration, setDuration] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState("");
+  const [deliveryTime, setDeliveryTime] = useState("");
+  const [calendarCursor, setCalendarCursor] = useState(() => {
+    const now = new Date();
+    return { year: now.getFullYear(), month: now.getMonth() };
+  });
+
+  const earliestDate = useMemo(() => {
+    const parsed = Date.parse(content?.nextAvailable ?? "");
+    const base = Number.isNaN(parsed) ? new Date() : new Date(parsed);
+    return startOfDay(base);
+  }, [content?.nextAvailable]);
+
+  const calendarDays = useMemo(() => {
+    const { year, month } = calendarCursor;
+    const first = new Date(year, month, 1);
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const cells: ({ key: string; date: Date; inMonth: true } | { key: string; inMonth: false })[] = [];
+    for (let i = 0; i < first.getDay(); i += 1) {
+      cells.push({ key: `pad-${i}`, inMonth: false });
+    }
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const date = new Date(year, month, day);
+      cells.push({ key: toDateKey(date), date, inMonth: true });
+    }
+    return cells;
+  }, [calendarCursor]);
+
+  useEffect(() => {
+    if (pickerStep !== 3) return;
+    setCalendarCursor({
+      year: earliestDate.getFullYear(),
+      month: earliestDate.getMonth(),
+    });
+  }, [pickerStep, earliestDate]);
 
   if (!content) return null;
 
@@ -278,6 +388,8 @@ export default function ProfileRequestsView({
   const priceRange = selected
     ? formatRequestPriceRange(selected.priceMin, selected.priceMax)
     : content.startingRange;
+  const dayRate = selected?.priceMin ?? 80;
+  const personalizedReady = Boolean(deliveryMethod && contentKind && duration && deliveryDate && deliveryTime);
   const activeGallery = content.gallery[galleryIndex] ?? content.gallery[0];
   const availableReviews = reviewsBlock.reviews;
   const visibleReviews = availableReviews.slice(0, visibleReviewCount);
@@ -667,23 +779,226 @@ export default function ProfileRequestsView({
                         </aside>
                       </div>
                     </>
+                  ) : pickerStep === 3 ? (
+                    <div className="requests-choose-split">
+                      <div className="requests-personalize">
+                        <fieldset className="requests-delivery-methods">
+                          <legend className="visually-hidden">Delivery method</legend>
+                          <label
+                            className={`requests-delivery-method${deliveryMethod === "dm" ? " is-selected" : ""}`}
+                          >
+                            <input
+                              type="radio"
+                              name="request-delivery-method"
+                              value="dm"
+                              checked={deliveryMethod === "dm"}
+                              onChange={() => setDeliveryMethod("dm")}
+                            />
+                            <span className="requests-delivery-method__radio" aria-hidden="true" />
+                            <span className="requests-delivery-method__copy">
+                              <strong>Audio/Video clip delivered to me</strong>
+                              <span>You’ll receive the shoutout via direct message.</span>
+                            </span>
+                          </label>
+                          <label
+                            className={`requests-delivery-method${deliveryMethod === "feed" ? " is-selected" : ""}`}
+                          >
+                            <input
+                              type="radio"
+                              name="request-delivery-method"
+                              value="feed"
+                              checked={deliveryMethod === "feed"}
+                              onChange={() => setDeliveryMethod("feed")}
+                            />
+                            <span className="requests-delivery-method__radio" aria-hidden="true" />
+                            <span className="requests-delivery-method__copy">
+                              <strong>Tagged post on {profile.name}&apos;s feeds</strong>
+                              <span>Shoutout is visible to all your followers (+${FEED_SURCHARGE}).</span>
+                            </span>
+                          </label>
+                        </fieldset>
+
+                        <section className="requests-personalize__block" aria-labelledby="requests-content-type-heading">
+                          <h2 id="requests-content-type-heading">What type of content do you need?</h2>
+                          <div className="requests-content-types" role="list">
+                            {(
+                              [
+                                { id: "text" as const, label: "Text" },
+                                { id: "audio" as const, label: "Audio" },
+                                { id: "video" as const, label: "Video" },
+                              ] as const
+                            ).map((option) => (
+                              <button
+                                key={option.id}
+                                type="button"
+                                role="listitem"
+                                className={`requests-content-type${contentKind === option.id ? " is-selected" : ""}`}
+                                aria-pressed={contentKind === option.id}
+                                onClick={() => setContentKind(option.id)}
+                              >
+                                <span className="requests-content-type__icon">
+                                  <ContentTypeIcon kind={option.id} />
+                                </span>
+                                <span>{option.label}</span>
+                              </button>
+                            ))}
+                          </div>
+                        </section>
+
+                        <label className="requests-personalize__field">
+                          <span className="requests-personalize__label">How long it should be?</span>
+                          <select
+                            className="requests-personalize__select"
+                            value={duration}
+                            onChange={(event) => setDuration(event.target.value)}
+                          >
+                            <option value="">Select duration</option>
+                            {DURATION_OPTIONS.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+
+                        <section className="requests-personalize__block" aria-labelledby="requests-delivery-date-heading">
+                          <h2 id="requests-delivery-date-heading">What’s your expected delivery date?</h2>
+                          <div className="requests-calendar">
+                            <div className="requests-calendar__toolbar">
+                              <button
+                                type="button"
+                                className="requests-calendar__nav"
+                                aria-label="Previous month"
+                                onClick={() =>
+                                  setCalendarCursor((current) => {
+                                    const date = new Date(current.year, current.month - 1, 1);
+                                    return { year: date.getFullYear(), month: date.getMonth() };
+                                  })
+                                }
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                  <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                                </svg>
+                              </button>
+                              <div className="requests-calendar__period">
+                                <span>{monthLabel(calendarCursor.year, calendarCursor.month)}</span>
+                                <span>{calendarCursor.year}</span>
+                              </div>
+                              <button
+                                type="button"
+                                className="requests-calendar__nav"
+                                aria-label="Next month"
+                                onClick={() =>
+                                  setCalendarCursor((current) => {
+                                    const date = new Date(current.year, current.month + 1, 1);
+                                    return { year: date.getFullYear(), month: date.getMonth() };
+                                  })
+                                }
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                                </svg>
+                              </button>
+                            </div>
+                            <div className="requests-calendar__weekdays" aria-hidden="true">
+                              {WEEKDAY_LABELS.map((label) => (
+                                <span key={label}>{label}</span>
+                              ))}
+                            </div>
+                            <div className="requests-calendar__grid" role="grid" aria-label="Delivery dates">
+                              {calendarDays.map((cell) => {
+                                if (!cell.inMonth) {
+                                  return <span key={cell.key} className="requests-calendar__cell is-empty" />;
+                                }
+                                const key = toDateKey(cell.date);
+                                const disabled = cell.date < earliestDate;
+                                const selectedDay = deliveryDate === key;
+                                const shownPrice =
+                                  dayRate + (deliveryMethod === "feed" ? FEED_SURCHARGE : 0);
+                                return (
+                                  <button
+                                    key={cell.key}
+                                    type="button"
+                                    role="gridcell"
+                                    className={`requests-calendar__cell${selectedDay ? " is-selected" : ""}${disabled ? " is-disabled" : ""}`}
+                                    disabled={disabled}
+                                    aria-pressed={selectedDay}
+                                    onClick={() => setDeliveryDate(key)}
+                                  >
+                                    <span className="requests-calendar__day">{cell.date.getDate()}</span>
+                                    {!disabled ? (
+                                      <span className="requests-calendar__price">${shownPrice}</span>
+                                    ) : null}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </section>
+
+                        <label className="requests-personalize__field">
+                          <span className="requests-personalize__label">What’s your expected delivery time?</span>
+                          <select
+                            className="requests-personalize__select"
+                            value={deliveryTime}
+                            onChange={(event) => setDeliveryTime(event.target.value)}
+                          >
+                            <option value="">Select delivery time</option>
+                            {TIME_OPTIONS.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </label>
+                      </div>
+
+                      <aside className="requests-choose-summary">
+                        <section className="requests-card" aria-labelledby="requests-personalize-summary-heading">
+                          <h2 id="requests-personalize-summary-heading">Your request</h2>
+                          <p className="requests-booking__selected">
+                            {selected?.label ?? "Select a request"}
+                          </p>
+                          <dl className="requests-booking">
+                            <div>
+                              <dt>Delivery</dt>
+                              <dd>
+                                {deliveryMethod === "feed"
+                                  ? `Tagged feed post (+$${FEED_SURCHARGE})`
+                                  : "Direct message"}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt>Content</dt>
+                              <dd>
+                                {contentKind.charAt(0).toUpperCase() + contentKind.slice(1)}
+                                {duration ? ` · ${duration}` : ""}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt>Delivery date</dt>
+                              <dd>{formatDisplayDate(deliveryDate)}</dd>
+                            </div>
+                            <div>
+                              <dt>Delivery time</dt>
+                              <dd>{deliveryTime || "Select a time"}</dd>
+                            </div>
+                          </dl>
+                          <button
+                            type="button"
+                            className="btn btn--primary requests-continue"
+                            disabled={!personalizedReady}
+                            onClick={() => setPickerStep(4)}
+                          >
+                            Continue
+                          </button>
+                        </section>
+                      </aside>
+                    </div>
                   ) : (
                     <section className="requests-card requests-coming-soon" aria-live="polite">
-                      <h2>{pickerStep === 3 ? "Personalize" : "Pay & Confirm"}</h2>
-                      <p>
-                        {pickerStep === 3
-                          ? "This step will collect recipient details, notes, and delivery preferences."
-                          : "This step will summarize your request and take you through payment."}
-                      </p>
-                      {pickerStep === 3 ? (
-                        <button
-                          type="button"
-                          className="btn btn--primary requests-continue"
-                          onClick={() => setPickerStep(4)}
-                        >
-                          Continue
-                        </button>
-                      ) : null}
+                      <h2>Pay & Confirm</h2>
+                      <p>This step will summarize your request and take you through payment.</p>
                     </section>
                   )}
                 </section>
