@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
@@ -10,6 +10,7 @@ import {
   getCreatorRequests,
   resolveSpecialRequestReviews,
   type RequestService,
+  type RequestServiceDetails,
   type RequestServiceMedia,
 } from "@/lib/special-requests";
 import type { ProfileData } from "@/types/profile";
@@ -81,75 +82,6 @@ function DinersMark() {
   );
 }
 
-function CategoryIcon({ icon }: { icon: "gift" | "coach" | "stage" }) {
-  if (icon === "gift") {
-    return (
-      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <rect x="5" y="13" width="22" height="14" rx="3" fill="#F07167" />
-        <rect x="5" y="13" width="22" height="5" rx="2" fill="#E85A5A" />
-        <rect x="14.5" y="13" width="3" height="14" fill="#FFD166" />
-        <rect x="5" y="17.5" width="22" height="3" fill="#FFD166" />
-        <path
-          d="M16 13c-2.2-3.8-6.2-4.4-7.4-2.6C7.2 12.4 9.4 14.4 16 13Z"
-          fill="#FF8FAB"
-        />
-        <path
-          d="M16 13c2.2-3.8 6.2-4.4 7.4-2.6C24.8 12.4 22.6 14.4 16 13Z"
-          fill="#FFB4C8"
-        />
-        <circle cx="16" cy="12.2" r="1.4" fill="#FFD166" />
-      </svg>
-    );
-  }
-
-  if (icon === "coach") {
-    return (
-      <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-        <circle cx="16" cy="16" r="11" fill="#2A9D8F" />
-        <circle cx="16" cy="16" r="8.2" fill="#E9F7F4" />
-        <path
-          d="M16 9.2v7.1l4.4 2.5"
-          stroke="#1F7A6F"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="16" cy="16" r="1.6" fill="#E9C46A" />
-        <path
-          d="M23.8 8.4l1.5-.3.3 1.5"
-          stroke="#E9C46A"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M8.4 23.2l-1.3.5-.5-1.3"
-          stroke="#F4A261"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-
-  return (
-    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <rect x="13.2" y="4" width="5.6" height="12.5" rx="2.8" fill="#4C8BF5" />
-      <rect x="14.3" y="5.2" width="3.4" height="9.2" rx="1.7" fill="#9BC0FF" />
-      <path
-        d="M10.2 14.2a5.8 5.8 0 0 0 11.6 0"
-        stroke="#2F6FE0"
-        strokeWidth="2.2"
-        strokeLinecap="round"
-      />
-      <path d="M16 20v4.5" stroke="#F4A261" strokeWidth="2.2" strokeLinecap="round" />
-      <rect x="10.5" y="24.2" width="11" height="3.2" rx="1.6" fill="#E9C46A" />
-      <circle cx="22.8" cy="8.2" r="2" fill="#F07167" />
-    </svg>
-  );
-}
-
 function StarRating({ rating, size = 12 }: { rating: number; size?: number }) {
   const clamped = Math.max(0, Math.min(5, Math.round(rating)));
 
@@ -173,11 +105,11 @@ function StarRating({ rating, size = 12 }: { rating: number; size?: number }) {
 
 function ServiceExplainer({
   serviceId,
-  description,
+  details,
   media,
 }: {
   serviceId: string;
-  description: string;
+  details: RequestServiceDetails;
   media: RequestServiceMedia;
 }) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -207,57 +139,100 @@ function ServiceExplainer({
   }
 
   return (
-    <div className="requests-service__explainer" onClick={(event) => event.stopPropagation()}>
-      <p className="requests-service__description">{description}</p>
+    <div className="requests-detail" onClick={(event) => event.stopPropagation()}>
+      <div className="requests-detail__hero">
+        <div className="requests-detail__intro">
+          <h3 className="requests-detail__title">About the service</h3>
+          <p className="requests-detail__description">{details.about}</p>
+        </div>
 
-      <div className={`requests-service__media requests-service__media--${media.kind}`}>
-        {media.kind === "video" ? (
-          <div className="requests-service__video">
-            <div className="requests-service__video-frame">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={media.poster} alt="" className="requests-service__video-poster" />
-              <span className="requests-service__video-play" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </span>
-            </div>
-            <p className="requests-service__media-caption">{media.caption}</p>
-          </div>
-        ) : (
-          <div className="requests-service__audio">
-            <button
-              type="button"
-              className={`requests-service__audio-btn${playing ? " is-playing" : ""}`}
-              aria-label={playing ? "Pause audio sample" : "Play audio sample"}
-              onClick={toggleAudio}
-            >
-              <span className="requests-service__audio-icon" aria-hidden="true">
-                {playing ? (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M6 5h4v14H6zm8 0h4v14h-4z" />
-                  </svg>
-                ) : (
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+        <div className={`requests-detail__sample requests-detail__sample--${media.kind}`}>
+          <p className="requests-detail__label">
+            {media.kind === "video" ? "Sample preview" : "Audio sample"}
+          </p>
+          {media.kind === "video" ? (
+            <div className="requests-detail__video">
+              <div className="requests-detail__video-frame">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={media.poster} alt="" />
+                <span className="requests-detail__video-play" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M8 5v14l11-7z" />
                   </svg>
-                )}
-              </span>
-              <span className="requests-service__audio-copy">
-                <strong>{media.title}</strong>
-                <span>{media.duration} audio sample</span>
-              </span>
-            </button>
-            <audio
-              ref={audioRef}
-              src={media.src}
-              preload="none"
-              onEnded={() => setPlaying(false)}
-              onPause={() => setPlaying(false)}
-              onPlay={() => setPlaying(true)}
-            />
-          </div>
-        )}
+                </span>
+              </div>
+              <p className="requests-detail__caption">{media.caption}</p>
+            </div>
+          ) : (
+            <div className="requests-detail__audio">
+              <button
+                type="button"
+                className={`requests-detail__audio-btn${playing ? " is-playing" : ""}`}
+                aria-label={playing ? "Pause audio sample" : "Play audio sample"}
+                onClick={toggleAudio}
+              >
+                <span className="requests-detail__audio-icon" aria-hidden="true">
+                  {playing ? (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 5h4v14H6zm8 0h4v14h-4z" />
+                    </svg>
+                  ) : (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  )}
+                </span>
+                <span className="requests-detail__audio-copy">
+                  <strong>{media.title}</strong>
+                  <span>{media.duration}</span>
+                </span>
+              </button>
+              <audio
+                ref={audioRef}
+                src={media.src}
+                preload="none"
+                onEnded={() => setPlaying(false)}
+                onPause={() => setPlaying(false)}
+                onPlay={() => setPlaying(true)}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="requests-detail__grid">
+        <section className="requests-detail__section">
+          <h4>What’s on offer</h4>
+          <ul>
+            {details.onOffer.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="requests-detail__section">
+          <h4>Booking & payment</h4>
+          <ul>
+            {details.booking.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="requests-detail__section">
+          <h4>Licensing</h4>
+          <ul>
+            {details.licensing.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+            {details.termsHref ? (
+              <li>
+                Please see the full{" "}
+                <a href={details.termsHref}>Terms & conditions of use</a>.
+              </li>
+            ) : null}
+          </ul>
+        </section>
       </div>
     </div>
   );
@@ -282,7 +257,7 @@ export default function ProfileRequestsView({
   const [selectedId, setSelectedId] = useState(allServices[0]?.id ?? "");
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_INITIAL_COUNT);
-  const [pickerStep, setPickerStep] = useState<1 | 2>(1);
+  const [pickerStep, setPickerStep] = useState<1 | 2 | 3 | 4>(1);
 
   if (!content) return null;
 
@@ -369,7 +344,9 @@ export default function ProfileRequestsView({
             </div>
           </header>
 
-          <div className="profile-page__inner requests-layout">
+          <div
+            className={`profile-page__inner requests-layout${isStart ? " requests-layout--start" : ` requests-layout--choose requests-layout--step-${pickerStep}`}`}
+          >
             <div className="requests-main">
               {isStart ? (
                 <>
@@ -380,270 +357,338 @@ export default function ProfileRequestsView({
                     ))}
                   </section>
 
-                  <section className="requests-gallery" aria-label="Request examples">
-                    <div className="requests-gallery__stage">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={activeGallery.src} alt={activeGallery.alt} />
-                      <button
-                        type="button"
-                        className="requests-gallery__nav requests-gallery__nav--prev"
-                        aria-label="Previous example"
-                        onClick={() => goGallery(-1)}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                          <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        className="requests-gallery__nav requests-gallery__nav--next"
-                        aria-label="Next example"
-                        onClick={() => goGallery(1)}
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                          <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                        </svg>
-                      </button>
-                      <button type="button" className="requests-gallery__play" aria-label="Play example">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                          <path d="M8 5v14l11-7z" />
-                        </svg>
-                      </button>
-                      <span className="requests-gallery__caption">{activeGallery.caption}</span>
-                    </div>
-                    <div className="requests-gallery__thumbs" role="list">
-                      {content.gallery.map((item, index) => (
-                        <button
-                          key={item.id}
-                          type="button"
-                          role="listitem"
-                          className={`requests-gallery__thumb${index === galleryIndex ? " is-active" : ""}`}
-                          aria-label={item.caption}
-                          aria-pressed={index === galleryIndex}
-                          onClick={() => setGalleryIndex(index)}
-                        >
+                  <div className="requests-start-split">
+                    <div className="requests-start-main">
+                      <section className="requests-gallery" aria-label="Request examples">
+                        <div className="requests-gallery__stage">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={item.src} alt="" />
-                        </button>
-                      ))}
-                    </div>
-                  </section>
+                          <img src={activeGallery.src} alt={activeGallery.alt} />
+                          <button
+                            type="button"
+                            className="requests-gallery__nav requests-gallery__nav--prev"
+                            aria-label="Previous example"
+                            onClick={() => goGallery(-1)}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                              <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            className="requests-gallery__nav requests-gallery__nav--next"
+                            aria-label="Next example"
+                            onClick={() => goGallery(1)}
+                          >
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                              <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                            </svg>
+                          </button>
+                          <button type="button" className="requests-gallery__play" aria-label="Play example">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </button>
+                          <span className="requests-gallery__caption">{activeGallery.caption}</span>
+                        </div>
+                        <div className="requests-gallery__thumbs" role="list">
+                          {content.gallery.map((item, index) => (
+                            <button
+                              key={item.id}
+                              type="button"
+                              role="listitem"
+                              className={`requests-gallery__thumb${index === galleryIndex ? " is-active" : ""}`}
+                              aria-label={item.caption}
+                              aria-pressed={index === galleryIndex}
+                              onClick={() => setGalleryIndex(index)}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={item.src} alt="" />
+                            </button>
+                          ))}
+                        </div>
+                      </section>
 
-                  <section className="requests-start-cta" aria-label="Start booking">
-                    <div className="requests-start-cta__copy">
-                      <h2>Ready to book something special?</h2>
-                      <p>Pick an occasion, choose a request, and Mia will take it from there.</p>
+                      <section className="requests-start-cta" aria-label="Start booking">
+                        <div className="requests-start-cta__copy">
+                          <h2>Ready to book something special?</h2>
+                          <p>Pick an occasion, choose a request, and Mia will take it from there.</p>
+                        </div>
+                        <Link href={chooseHref} className="btn btn--primary requests-start-cta__btn">
+                          Choose your experience
+                        </Link>
+                      </section>
                     </div>
-                    <Link href={chooseHref} className="btn btn--primary requests-start-cta__btn">
-                      Choose your experience
-                    </Link>
-                  </section>
+
+                    <aside className="requests-aside">
+                      <section className="requests-card" aria-labelledby="requests-how-heading">
+                        <h2 id="requests-how-heading">How it works</h2>
+                        <ol className="requests-steps">
+                          {content.howItWorks.map((step, index) => (
+                            <li key={step.title} className="requests-step">
+                              <span className="requests-step__num" aria-hidden="true">
+                                {index + 1}
+                              </span>
+                              <div>
+                                <strong>{step.title}</strong>
+                                <p>{step.copy}</p>
+                              </div>
+                            </li>
+                          ))}
+                        </ol>
+                      </section>
+
+                      <section
+                        className="requests-card requests-card--guarantee"
+                        aria-labelledby="requests-guarantee-heading"
+                      >
+                        <h2 id="requests-guarantee-heading">Money-back guarantee</h2>
+                        <p>{content.guarantee}</p>
+                        <div className="requests-pay-logos" aria-label="Accepted payment methods">
+                          <AmexMark />
+                          <DinersMark />
+                          <VisaMark />
+                          <PaypalMark />
+                          <MastercardMark />
+                        </div>
+                      </section>
+                    </aside>
+                  </div>
                 </>
               ) : (
                 <section className="requests-guide" aria-labelledby="requests-guide-heading">
-                  <div className="requests-guide__head">
+                  <header className="requests-guide__head">
                     <div className="requests-guide__copy">
+                      <p className="requests-guide__eyebrow">Step {pickerStep} of 4</p>
                       <h1 id="requests-guide-heading" className="requests-guide__title">
-                        Choose your experience
+                        {pickerStep === 1
+                          ? "What do you need?"
+                          : pickerStep === 2
+                            ? "Pick your request"
+                            : pickerStep === 3
+                              ? "Personalize your request"
+                              : "Pay & confirm"}
                       </h1>
-                      <p>Two quick steps — start with what you need, then lock in the request.</p>
+                      <p>
+                        {pickerStep === 1
+                          ? "Choose an occasion type. You’ll refine the exact request next."
+                          : pickerStep === 2
+                            ? `Select one option from ${activeCategory.title.toLowerCase()}.`
+                            : pickerStep === 3
+                              ? "Add the details Mia needs to make this request feel personal."
+                              : "Review your request and complete payment to lock it in."}
+                      </p>
                     </div>
-                    <ol className="requests-guide__steps" aria-label="Request steps">
-                      <li className={pickerStep === 1 ? "is-active" : "is-done"}>
-                        <button type="button" onClick={() => setPickerStep(1)}>
-                          <span aria-hidden="true">1</span>
-                          Occasion
-                        </button>
-                      </li>
-                      <li className={pickerStep === 2 ? "is-active" : undefined}>
-                        <button
-                          type="button"
-                          onClick={() => setPickerStep(2)}
-                          disabled={!hasChosenCategory}
-                        >
-                          <span aria-hidden="true">2</span>
-                          Request
-                        </button>
-                      </li>
-                    </ol>
-                  </div>
+
+                    <nav className="requests-progress" aria-label="Request steps">
+                      {(
+                        [
+                          { step: 1 as const, label: "Occasion", enabled: true },
+                          { step: 2 as const, label: "Request", enabled: hasChosenCategory },
+                          {
+                            step: 3 as const,
+                            label: "Personalize",
+                            enabled: hasChosenCategory && Boolean(selected),
+                          },
+                          {
+                            step: 4 as const,
+                            label: "Pay & Confirm",
+                            enabled: hasChosenCategory && Boolean(selected),
+                          },
+                        ] as const
+                      ).map((item, index) => (
+                        <Fragment key={item.step}>
+                          {index > 0 ? (
+                            <span className="requests-progress__rule" aria-hidden="true" />
+                          ) : null}
+                          <button
+                            type="button"
+                            className={`requests-progress__step${
+                              pickerStep === item.step
+                                ? " is-active"
+                                : pickerStep > item.step
+                                  ? " is-done"
+                                  : ""
+                            }`}
+                            onClick={() => setPickerStep(item.step)}
+                            disabled={!item.enabled}
+                            aria-current={pickerStep === item.step ? "step" : undefined}
+                          >
+                            <span className="requests-progress__num" aria-hidden="true">
+                              {item.step}
+                            </span>
+                            <span className="requests-progress__label">{item.label}</span>
+                          </button>
+                        </Fragment>
+                      ))}
+                    </nav>
+                  </header>
 
                   {pickerStep === 1 ? (
-                    <div className="requests-intent-grid" role="list">
-                      {content.categories.map((category) => {
-                        const fromPrice = Math.min(
-                          ...category.services.map((service) => service.priceMin),
-                        );
-                        const isActive = hasChosenCategory && category.id === categoryId;
-                        return (
-                          <button
-                            key={category.id}
-                            type="button"
-                            role="listitem"
-                            className={`requests-intent${isActive ? " is-selected" : ""}`}
-                            aria-pressed={isActive}
-                            onClick={() => chooseCategory(category.id)}
-                          >
-                            <span
-                              className={`requests-intent__icon requests-intent__icon--${category.icon}`}
-                            >
-                              <CategoryIcon icon={category.icon} />
-                            </span>
-                            <span className="requests-intent__body">
-                              <span className="requests-intent__eyebrow">{category.intent}</span>
-                              <strong>{category.title}</strong>
-                              <span className="requests-intent__blurb">{category.blurb}</span>
-                              <span className="requests-intent__meta">
-                                From ${fromPrice}
-                                <span aria-hidden="true"> · </span>
-                                {category.services.length} options
-                              </span>
-                            </span>
-                            <span className="requests-intent__cta" aria-hidden="true">
-                              Choose
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <div className="requests-service-panel">
-                      <div className="requests-service-panel__toolbar">
-                        <div className="requests-service-panel__context">
-                          <span
-                            className={`requests-service-panel__icon requests-service-panel__icon--${activeCategory.icon}`}
-                            aria-hidden="true"
-                          >
-                            <CategoryIcon icon={activeCategory.icon} />
-                          </span>
-                          <div>
-                            <p className="requests-service-panel__intent">{activeCategory.intent}</p>
-                            <h2>{activeCategory.title}</h2>
-                          </div>
-                        </div>
-                      </div>
-
-                      <fieldset className="requests-service-list">
-                        <legend className="visually-hidden">Select a request</legend>
-                        {activeCategory.services.map((service) => {
-                          const selectedService = service.id === selectedId;
+                    <>
+                      <div className="requests-intent-grid" role="list">
+                        {content.categories.map((category) => {
+                          const fromPrice = Math.min(
+                            ...category.services.map((service) => service.priceMin),
+                          );
+                          const isActive = hasChosenCategory && category.id === categoryId;
                           return (
-                            <label
-                              key={service.id}
-                              className={`requests-service${selectedService ? " is-selected" : ""}`}
+                            <button
+                              key={category.id}
+                              type="button"
+                              role="listitem"
+                              className={`requests-intent${isActive ? " is-selected" : ""}`}
+                              aria-pressed={isActive}
+                              onClick={() => chooseCategory(category.id)}
                             >
-                              <input
-                                type="radio"
-                                name="special-request-service"
-                                value={service.id}
-                                checked={selectedService}
-                                onChange={() => chooseService(service.id)}
-                              />
-                              <span className="requests-service__top">
-                                <span className="requests-service__main">
-                                  <span className="requests-service__title-row">
-                                    <strong>{service.label}</strong>
-                                    {service.popular ? (
-                                      <span className="requests-service__badge">Most booked</span>
-                                    ) : null}
-                                  </span>
-                                  <span className="requests-service__blurb">{service.blurb}</span>
+                              <span className="requests-intent__media">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={category.image} alt="" />
+                              </span>
+                              <span className="requests-intent__content">
+                                <span className="requests-intent__copy">
+                                  <span className="requests-intent__eyebrow">{category.intent}</span>
+                                  <strong>{category.title}</strong>
+                                  <span className="requests-intent__blurb">{category.blurb}</span>
                                 </span>
-                                <span className="requests-service__price">
-                                  {formatRequestPriceRange(service.priceMin, service.priceMax)}
+                                <span className="requests-intent__footer">
+                                  <span className="requests-intent__meta">
+                                    From ${fromPrice}
+                                    <span aria-hidden="true"> · </span>
+                                    {category.services.length} options
+                                  </span>
+                                  <span className="requests-intent__cta">
+                                    Choose
+                                    <svg
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="currentColor"
+                                      aria-hidden="true"
+                                    >
+                                      <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                                    </svg>
+                                  </span>
                                 </span>
                               </span>
-                              {selectedService ? (
-                                <ServiceExplainer
-                                  serviceId={service.id}
-                                  description={service.description}
-                                  media={service.media}
-                                />
-                              ) : null}
-                            </label>
+                            </button>
                           );
                         })}
-                      </fieldset>
-
-                      <div className="requests-pick-summary" aria-live="polite">
-                        <div>
-                          <p className="requests-pick-summary__label">Your pick</p>
-                          <p className="requests-pick-summary__value">
-                            {selected?.label ?? "Select a request"}
-                            {selected ? (
-                              <>
-                                <span aria-hidden="true"> · </span>
-                                {priceRange}
-                              </>
-                            ) : null}
-                          </p>
+                      </div>
+                    </>
+                  ) : pickerStep === 2 ? (
+                    <>
+                      <div className="requests-service-panel__context">
+                        <span className="requests-service-panel__thumb">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={activeCategory.image} alt="" />
+                        </span>
+                        <div className="requests-service-panel__copy">
+                          <p className="requests-service-panel__intent">{activeCategory.intent}</p>
+                          <h2>{activeCategory.title}</h2>
                         </div>
-                        <button type="button" className="btn btn--primary" disabled={!selected}>
+                      </div>
+
+                      <div className="requests-choose-split">
+                        <div className="requests-service-panel">
+                          <fieldset className="requests-service-list">
+                            <legend className="visually-hidden">Select a request</legend>
+                            {activeCategory.services.map((service) => {
+                              const selectedService = service.id === selectedId;
+                              return (
+                                <label
+                                  key={service.id}
+                                  className={`requests-service${selectedService ? " is-selected" : ""}`}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="special-request-service"
+                                    value={service.id}
+                                    checked={selectedService}
+                                    onChange={() => chooseService(service.id)}
+                                  />
+                                  <span className="requests-service__radio" aria-hidden="true" />
+                                  <span className="requests-service__body">
+                                    <span className="requests-service__main">
+                                      <span className="requests-service__title-row">
+                                        <strong>{service.label}</strong>
+                                        {service.popular ? (
+                                          <span className="requests-service__badge">Most booked</span>
+                                        ) : null}
+                                      </span>
+                                      <span className="requests-service__blurb">{service.blurb}</span>
+                                    </span>
+                                    <span className="requests-service__price">
+                                      {formatRequestPriceRange(service.priceMin, service.priceMax)}
+                                    </span>
+                                  </span>
+                                </label>
+                              );
+                            })}
+                          </fieldset>
+
+                          {selected ? (
+                            <ServiceExplainer
+                              serviceId={selected.id}
+                              details={selected.details}
+                              media={selected.media}
+                            />
+                          ) : null}
+                        </div>
+
+                        <aside className="requests-choose-summary">
+                          <section className="requests-card" aria-labelledby="requests-booking-heading">
+                            <h2 id="requests-booking-heading">Your request</h2>
+                            <p className="requests-booking__selected">
+                              {selected?.label ?? "Select a request"}
+                            </p>
+                            <dl className="requests-booking">
+                              <div>
+                                <dt>Price range</dt>
+                                <dd>{priceRange}</dd>
+                              </div>
+                              <div>
+                                <dt>Avg. response</dt>
+                                <dd>{content.responseTime}</dd>
+                              </div>
+                              <div>
+                                <dt>Next available</dt>
+                                <dd>{content.nextAvailable}</dd>
+                              </div>
+                            </dl>
+                            <button
+                              type="button"
+                              className="btn btn--primary requests-continue"
+                              disabled={!selected}
+                              onClick={() => setPickerStep(3)}
+                            >
+                              Personalize
+                            </button>
+                          </section>
+                        </aside>
+                      </div>
+                    </>
+                  ) : (
+                    <section className="requests-card requests-coming-soon" aria-live="polite">
+                      <h2>{pickerStep === 3 ? "Personalize" : "Pay & Confirm"}</h2>
+                      <p>
+                        {pickerStep === 3
+                          ? "This step will collect recipient details, notes, and delivery preferences."
+                          : "This step will summarize your request and take you through payment."}
+                      </p>
+                      {pickerStep === 3 ? (
+                        <button
+                          type="button"
+                          className="btn btn--primary requests-continue"
+                          onClick={() => setPickerStep(4)}
+                        >
                           Continue
                         </button>
-                      </div>
-                    </div>
+                      ) : null}
+                    </section>
                   )}
                 </section>
               )}
             </div>
-
-            <aside className="requests-aside">
-              <section className="requests-card" aria-labelledby="requests-how-heading">
-                <h2 id="requests-how-heading">How it works</h2>
-                <ol className="requests-steps">
-                  {content.howItWorks.map((step, index) => (
-                    <li key={step.title} className="requests-step">
-                      <span className="requests-step__num" aria-hidden="true">
-                        {index + 1}
-                      </span>
-                      <div>
-                        <strong>{step.title}</strong>
-                        <p>{step.copy}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
-              </section>
-
-              {!isStart ? (
-                <section className="requests-card" aria-labelledby="requests-booking-heading">
-                  <h2 id="requests-booking-heading" className="visually-hidden">
-                    Booking details
-                  </h2>
-                  <dl className="requests-booking">
-                    <div>
-                      <dt>Your request</dt>
-                      <dd>{selected?.label ?? "Select a request"}</dd>
-                    </div>
-                    <div>
-                      <dt>Starting Price Range</dt>
-                      <dd>{priceRange}</dd>
-                    </div>
-                    <div>
-                      <dt>Average Response Time</dt>
-                      <dd>{content.responseTime}</dd>
-                    </div>
-                    <div>
-                      <dt>Available for Next Booking</dt>
-                      <dd>{content.nextAvailable}</dd>
-                    </div>
-                  </dl>
-                </section>
-              ) : null}
-
-              <section className="requests-card requests-card--guarantee" aria-labelledby="requests-guarantee-heading">
-                <h2 id="requests-guarantee-heading">Money-back guarantee</h2>
-                <p>{content.guarantee}</p>
-                <div className="requests-pay-logos" aria-label="Accepted payment methods">
-                  <AmexMark />
-                  <DinersMark />
-                  <VisaMark />
-                  <PaypalMark />
-                  <MastercardMark />
-                </div>
-              </section>
-            </aside>
           </div>
 
           {isStart ? (

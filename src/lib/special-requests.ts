@@ -1,3 +1,11 @@
+export type RequestServiceDetails = {
+  about: string;
+  onOffer: string[];
+  booking: string[];
+  licensing: string[];
+  termsHref?: string;
+};
+
 export type RequestServiceMedia =
   | {
       kind: "video";
@@ -15,7 +23,7 @@ export type RequestService = {
   id: string;
   label: string;
   blurb: string;
-  description: string;
+  details: RequestServiceDetails;
   media: RequestServiceMedia;
   priceMin: number;
   priceMax: number;
@@ -28,6 +36,8 @@ export type RequestCategory = {
   intent: string;
   blurb: string;
   icon: "gift" | "coach" | "stage";
+  image: string;
+  imageAlt: string;
   services: RequestService[];
 };
 
@@ -81,6 +91,35 @@ function buildAudioMedia(index: number, title: string, duration = "0:42"): Reque
   };
 }
 
+const SHARED_BOOKING = [
+  "Direct booking: Pay in full to confirm your request instantly.",
+  "No approval needed: Your booking is auto-confirmed upon payment.",
+  "Delivery: The creator will send the completed message by your selected date.",
+] as const;
+
+const SHARED_LICENSING = [
+  "You can download & share your delivery for personal use.",
+  "You cannot alter, remix or use it in defamatory/illegal ways.",
+  "The Creator retains rights of integrity and attribution.",
+] as const;
+
+function buildServiceDetails(
+  about: string,
+  onOffer: string[],
+  options?: {
+    booking?: string[];
+    licensing?: string[];
+  },
+): RequestServiceDetails {
+  return {
+    about,
+    onOffer,
+    booking: options?.booking ?? [...SHARED_BOOKING],
+    licensing: options?.licensing ?? [...SHARED_LICENSING],
+    termsHref: "#",
+  };
+}
+
 const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
   intro: [
     "Mia Chen helps make your next run, celebration, or special occasion one-of-a-kind — from birthday pep talks and race-day shout-outs to coaching sessions and guest appearances that bring trail-tested energy to your moment.",
@@ -130,13 +169,23 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       intent: "Celebrate someone",
       blurb: "Personalized video messages for birthdays, race days, and the people you love.",
       icon: "gift",
+      image:
+        "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=480&h=480&fit=crop&q=80&auto=format",
+      imageAlt: "Celebration moment with confetti and lights",
       services: [
         {
           id: "birthday",
           label: "Birthday greeting",
           blurb: "A warm, high-energy video they can replay all day.",
-          description:
-            "Mia records a personalized birthday message with your chosen name, vibe, and any shout-outs you want included. You’ll get a downloadable video ready to share in chat, at a party, or in a race-weekend album.",
+          details: buildServiceDetails(
+            "Celebrate their birthday with a custom message — short, fun, and personal — to make the day unforgettable. Add names, notes, or inside jokes so it feels uniquely theirs.",
+            [
+              "Personalized birthday video with the recipient’s name and vibe.",
+              "Choose Text, Audio, or Video delivery.",
+              "Add a short message, nickname, or personal note.",
+              "Option to feature the shoutout on Mia’s profile for an extra fee.",
+            ],
+          ),
           media: buildVideoMedia(0, "Watch a sample birthday greeting"),
           priceMin: 80,
           priceMax: 120,
@@ -146,8 +195,15 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "race-pep",
           label: "Race-day pep talk",
           blurb: "Motivation delivered before the gun goes off.",
-          description:
-            "A focused pre-race pep talk tailored to the distance, course, and nerves. Mia keeps it short, personal, and easy to replay while you’re pinning your bib or lining up in the corral.",
+          details: buildServiceDetails(
+            "Get a focused pre-race pep talk tailored to the distance, course, and nerves. Mia keeps it short, personal, and easy to replay while you’re pinning your bib or lining up in the corral.",
+            [
+              "Custom pep talk for your race distance and goal.",
+              "Video or audio format you can replay on race morning.",
+              "Add course notes, splits, or a mantra you want included.",
+              "Option to feature the pep talk on Mia’s profile for an extra fee.",
+            ],
+          ),
           media: buildVideoMedia(1, "See a race-day pep talk example"),
           priceMin: 90,
           priceMax: 140,
@@ -156,8 +212,15 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "finish-congrats",
           label: "Finish-line congratulations",
           blurb: "Celebrate the PR, the finish, or just showing up.",
-          description:
+          details: buildServiceDetails(
             "Celebrate the finish — PR, first race, or tough course conquered. Mia calls out the achievement and the story behind it so the video feels like a keepsake, not a generic congrats.",
+            [
+              "Congrats message built around the race and result you share.",
+              "Downloadable video ready for chat, parties, or race albums.",
+              "Add finishing time, course name, or a personal shout-out.",
+              "Option to feature the congrats video on Mia’s profile for an extra fee.",
+            ],
+          ),
           media: buildVideoMedia(2, "Watch a finish-line congrats sample"),
           priceMin: 80,
           priceMax: 130,
@@ -166,8 +229,15 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "loved-one",
           label: "Message for a loved one",
           blurb: "Make it personal with names, inside jokes, and heart.",
-          description:
-            "Send something thoughtful for a partner, parent, teammate, or friend. Share names, nicknames, and the moment you want honored — Mia weaves them into a warm, shareable video message.",
+          details: buildServiceDetails(
+            "Send something thoughtful for a partner, parent, teammate, or friend. Share names, nicknames, and the moment you want honored — Mia weaves them into a warm, shareable message.",
+            [
+              "Custom message for anniversaries, milestones, or just-because moments.",
+              "Choose Text, Audio, or Video formats.",
+              "Add recipient’s name, short message, or personal note.",
+              "Option to feature the shoutout on Mia’s profile for an extra fee.",
+            ],
+          ),
           media: buildVideoMedia(3, "Watch a loved-one message sample"),
           priceMin: 85,
           priceMax: 135,
@@ -180,13 +250,35 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       intent: "Train with Mia",
       blurb: "One-to-one guidance for plans, pacing, recovery, and race strategy.",
       icon: "coach",
+      image:
+        "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=480&h=480&fit=crop&q=80&auto=format",
+      imageAlt: "Athlete training outdoors with a coach",
       services: [
         {
           id: "plan-review",
           label: "Training plan review",
           blurb: "Honest feedback on your current plan and where to adjust.",
-          description:
+          details: buildServiceDetails(
             "Share your current plan, recent workouts, and goal race. Mia reviews volume, intensity, and recovery gaps, then sends clear notes on what to keep, cut, or reshape before peak weeks.",
+            [
+              "Written review of your current training plan and recent weeks.",
+              "Clear notes on volume, intensity, and recovery adjustments.",
+              "Share workouts, goal race, and schedule constraints.",
+              "Optional follow-up clarification after you receive the review.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Mia sends the review notes by your selected date.",
+              ],
+              licensing: [
+                "You can download & keep the review notes for personal use.",
+                "You cannot alter, remix or use materials in defamatory/illegal ways.",
+                "The Creator retains rights of integrity and attribution.",
+              ],
+            },
+          ),
           media: buildVideoMedia(4, "See how a plan review works"),
           priceMin: 120,
           priceMax: 200,
@@ -196,8 +288,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "virtual-run",
           label: "Virtual coached run",
           blurb: "Live session energy — cues, pacing, and accountability.",
-          description:
+          details: buildServiceDetails(
             "Join Mia for a live coached run with pacing cues, form reminders, and real-time encouragement. Ideal when you want accountability and trail-tested guidance without waiting for race week.",
+            [
+              "Live virtual coached run with pacing and form cues.",
+              "Session tailored to your distance and effort target.",
+              "Share recent training load and any niggles before you start.",
+              "Short post-run notes you can keep for the next week.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Live session on the date and time you select.",
+              ],
+            },
+          ),
           media: buildVideoMedia(5, "Preview a virtual coached run"),
           priceMin: 100,
           priceMax: 180,
@@ -206,8 +312,15 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "recovery",
           label: "Recovery & nutrition tips",
           blurb: "Practical habits to bounce back stronger after hard weeks.",
-          description:
+          details: buildServiceDetails(
             "Get practical recovery and fueling guidance after hard weeks or long races. Mia focuses on habits you can actually keep — sleep, easy days, snacks, and what to watch before your next block.",
+            [
+              "Personalized recovery and nutrition guidance for your training load.",
+              "Audio or written tips you can revisit after hard sessions.",
+              "Share recent races, fatigue signals, and dietary preferences.",
+              "Simple habit checklist for the week after delivery.",
+            ],
+          ),
           media: buildAudioMedia(0, "Listen to recovery advice", "0:46"),
           priceMin: 90,
           priceMax: 160,
@@ -216,8 +329,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "pre-race",
           label: "Pre-race strategy call",
           blurb: "Fueling, splits, and mindset locked in before race week.",
-          description:
+          details: buildServiceDetails(
             "A one-to-one strategy call covering splits, fueling, weather contingencies, and mindset. You’ll leave race week with a simple plan you can execute under pressure.",
+            [
+              "Live strategy call focused on your goal race.",
+              "Splits, fueling, and weather contingencies covered.",
+              "Share course profile, goal time, and open questions.",
+              "Summary notes after the call so nothing gets lost.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Live call on the date and time you select.",
+              ],
+            },
+          ),
           media: buildAudioMedia(1, "Hear a strategy sample", "0:50"),
           priceMin: 110,
           priceMax: 190,
@@ -226,8 +353,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "weekly-checkin",
           label: "Weekly check-in session",
           blurb: "Stay accountable through peak training with regular touchpoints.",
-          description:
+          details: buildServiceDetails(
             "Stay accountable through peak training with a recurring check-in. Review the week, adjust the next one, and keep momentum without overthinking every workout.",
+            [
+              "Weekly check-in to review training and set the next week.",
+              "Adjustments for fatigue, schedule changes, and goal races.",
+              "Share the week’s workouts and how you felt completing them.",
+              "Short written plan for the following seven days.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Session and notes delivered on your selected cadence.",
+              ],
+            },
+          ),
           media: buildAudioMedia(2, "Listen to a check-in clip", "0:43"),
           priceMin: 140,
           priceMax: 220,
@@ -240,13 +381,35 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       intent: "Book an appearance",
       blurb: "Bring Mia to your club, stage, expo, or podcast for a live moment.",
       icon: "stage",
+      image:
+        "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=480&h=480&fit=crop&q=80&auto=format",
+      imageAlt: "Group training session and community event energy",
       services: [
         {
           id: "club-guest",
           label: "Guest at your run club",
           blurb: "Join a group run and stick around to chat with members.",
-          description:
+          details: buildServiceDetails(
             "Mia joins your club run, brings energy to the group, and stays to chat with members afterward. Great for community nights, milestone runs, or kicking off a new training season.",
+            [
+              "Guest appearance at your run club meet-up.",
+              "Group run energy plus post-run conversation time.",
+              "Share club size, route, and any special occasion notes.",
+              "Optional social mention after the appearance for an extra fee.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Mia appears on the agreed date and format you selected.",
+              ],
+              licensing: [
+                "You can share photos or clips from the appearance for personal and event use.",
+                "You cannot alter, remix or use materials in defamatory/illegal ways.",
+                "The Creator retains rights of integrity and attribution.",
+              ],
+            },
+          ),
           media: buildVideoMedia(3, "See a run-club guest appearance"),
           priceMin: 180,
           priceMax: 320,
@@ -256,8 +419,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "panel",
           label: "Panel appearance",
           blurb: "Trail stories and Q&A that keep an audience leaning in.",
-          description:
+          details: buildServiceDetails(
             "A panel appearance built around trail stories, endurance lessons, and audience Q&A. Mia keeps the conversation grounded, practical, and engaging for runners at every level.",
+            [
+              "Live panel segment with stories and audience Q&A.",
+              "In-person or remote format depending on your event.",
+              "Share themes, co-panelists, and audience profile in advance.",
+              "Optional highlight clip for your event channels for an extra fee.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Mia appears on the agreed date and format you selected.",
+              ],
+            },
+          ),
           media: buildVideoMedia(4, "Watch a panel appearance sample"),
           priceMin: 160,
           priceMax: 280,
@@ -266,8 +443,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "speech",
           label: "Inspirational speech",
           blurb: "A keynote-style talk built around grit, community, and finishing.",
-          description:
+          details: buildServiceDetails(
             "A keynote-style talk on grit, community, and finishing strong. Share your event theme and audience, and Mia shapes a speech that fits the room — from club nights to brand activations.",
+            [
+              "Custom inspirational speech matched to your event theme.",
+              "Keynote-style delivery for clubs, brands, or community nights.",
+              "Share audience details, runtime, and preferred talking points.",
+              "Optional recording rights for internal event use for an extra fee.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Mia appears on the agreed date and format you selected.",
+              ],
+            },
+          ),
           media: buildAudioMedia(0, "Hear a speech excerpt", "0:52"),
           priceMin: 200,
           priceMax: 360,
@@ -276,8 +467,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "mc",
           label: "MC a race expo",
           blurb: "Stage presence that keeps the expo floor energized.",
-          description:
+          details: buildServiceDetails(
             "Mia MCs your race expo with clear stage presence, athlete intros, and crowd energy that keeps the floor moving. Includes timing coordination notes so the program stays on track.",
+            [
+              "Full MC coverage for your race expo stage program.",
+              "Athlete intros, announcements, and crowd engagement.",
+              "Share run-of-show, brand partners, and key timings.",
+              "Optional post-event highlight clip for an extra fee.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Mia appears on the agreed date and format you selected.",
+              ],
+            },
+          ),
           media: buildVideoMedia(0, "See race-expo MC energy"),
           priceMin: 220,
           priceMax: 400,
@@ -286,8 +491,22 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "charity",
           label: "Charity run appearance",
           blurb: "Show up for a cause and help rally participants.",
-          description:
+          details: buildServiceDetails(
             "Book Mia for a charity run appearance to rally participants, support your cause message, and help the day feel memorable for volunteers and runners alike.",
+            [
+              "On-site appearance for your charity run or fundraiser.",
+              "Participant rally moments and cause-aligned messaging.",
+              "Share cause details, schedule, and any speaking notes.",
+              "Optional social shoutout supporting the charity for an extra fee.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Mia appears on the agreed date and format you selected.",
+              ],
+            },
+          ),
           media: buildVideoMedia(1, "Watch a charity appearance sample"),
           priceMin: 150,
           priceMax: 300,
@@ -296,8 +515,27 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
           id: "podcast",
           label: "Podcast guest spot",
           blurb: "An engaging conversation for your listeners and community.",
-          description:
+          details: buildServiceDetails(
             "Invite Mia as a podcast guest for an engaging conversation on training, mindset, and community. Share your episode angle in advance so the talk fits your audience and format.",
+            [
+              "Remote or in-studio podcast guest appearance.",
+              "Conversation tailored to your show’s audience and episode angle.",
+              "Share questions, runtime, and preferred topics in advance.",
+              "You keep standard episode distribution rights for the show.",
+            ],
+            {
+              booking: [
+                "Direct booking: Pay in full to confirm your request instantly.",
+                "No approval needed: Your booking is auto-confirmed upon payment.",
+                "Delivery: Recording session on the date and format you selected.",
+              ],
+              licensing: [
+                "You can publish the episode across your usual podcast channels.",
+                "You cannot alter, remix or use materials in defamatory/illegal ways.",
+                "The Creator retains rights of integrity and attribution.",
+              ],
+            },
+          ),
           media: buildAudioMedia(2, "Listen to a podcast sample", "0:55"),
           priceMin: 100,
           priceMax: 180,
