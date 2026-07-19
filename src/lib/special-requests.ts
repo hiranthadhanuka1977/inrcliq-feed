@@ -57,6 +57,7 @@ export type CreatorRequestsContent = {
   responseTime: string;
   nextAvailable: string;
   guarantee: string;
+  guaranteePoints: { title: string; copy: string }[];
 };
 
 const SAMPLE_AUDIOS = [
@@ -122,42 +123,42 @@ function buildServiceDetails(
 
 const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
   intro: [
-    "Mia Chen helps make your next run, celebration, or special occasion one-of-a-kind — from birthday pep talks and race-day shout-outs to coaching sessions and guest appearances that bring trail-tested energy to your moment.",
+    "Birthday pep talks, race-day shout-outs, coaching sessions, and guest appearances — personalized by Mia Chen for your next run, celebration, or special occasion.",
   ],
   gallery: [
     {
       id: "g1",
-      src: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=960&h=540&fit=crop&q=80&auto=format",
+      src: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Mia running at sunrise",
       caption: "Race-day energy",
     },
     {
       id: "g2",
-      src: "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=480&h=320&fit=crop&q=80&auto=format",
+      src: "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Runner crossing finish line",
       caption: "Finish-line shout-outs",
     },
     {
       id: "g3",
-      src: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=480&h=320&fit=crop&q=80&auto=format",
+      src: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Group training session",
       caption: "Club appearances",
     },
     {
       id: "g4",
-      src: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=480&h=320&fit=crop&q=80&auto=format",
+      src: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Trail running through hills",
       caption: "Trail stories",
     },
     {
       id: "g5",
-      src: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=480&h=320&fit=crop&q=80&auto=format",
+      src: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Athlete recovering after a run",
       caption: "Recovery coaching",
     },
     {
       id: "g6",
-      src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=480&h=320&fit=crop&q=80&auto=format",
+      src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Runner training outdoors",
       caption: "Event hosting",
     },
@@ -562,6 +563,16 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
   nextAvailable: "Jul 22, 2026",
   guarantee:
     "You won’t be charged until Mia accepts your request. If she can’t fulfill it, you get a full refund — no questions asked.",
+  guaranteePoints: [
+    {
+      title: "Pay only when accepted",
+      copy: "You won’t be charged until Mia accepts your request.",
+    },
+    {
+      title: "Full refund if unfulfilled",
+      copy: "If she can’t deliver, you get a full refund — no questions asked.",
+    },
+  ],
 };
 
 const REQUESTS_BY_SLUG: Record<string, CreatorRequestsContent> = {

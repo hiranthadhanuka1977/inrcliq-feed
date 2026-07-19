@@ -631,7 +631,6 @@ export default function ProfileRequestsView({
           (recipientTarget === "self" ||
             (recipientName.trim() && recipientUsername.trim())),
       );
-  const activeGallery = content.gallery[galleryIndex] ?? content.gallery[0];
   const availableReviews = filteredReviews;
   const visibleReviews = availableReviews.slice(0, visibleReviewCount);
   const remainingReviews = Math.max(0, availableReviews.length - visibleReviewCount);
@@ -643,6 +642,14 @@ export default function ProfileRequestsView({
       if (next >= content!.gallery.length) return 0;
       return next;
     });
+  }
+
+  function galleryCoverOffset(index: number) {
+    const len = content!.gallery.length;
+    let offset = index - galleryIndex;
+    if (offset > Math.floor(len / 2)) offset -= len;
+    if (offset < -Math.floor((len - 1) / 2)) offset += len;
+    return offset;
   }
 
   function chooseCategory(nextCategoryId: string) {
@@ -707,141 +714,256 @@ export default function ProfileRequestsView({
               {isStart ? (
                 <>
                   <section className="requests-intro" aria-labelledby="requests-heading">
+                    <p className="requests-intro__eyebrow">Special Requests</p>
                     <h1 id="requests-heading">Make it personal</h1>
                     {content.intro.map((paragraph) => (
                       <p key={paragraph}>{paragraph}</p>
                     ))}
                   </section>
 
-                  <div className="requests-start-split">
-                    <div className="requests-start-main">
-                      <section className="requests-gallery" aria-label="Request examples">
-                        <div className="requests-gallery__stage">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={activeGallery.src} alt={activeGallery.alt} />
-                          <button
-                            type="button"
-                            className="requests-gallery__nav requests-gallery__nav--prev"
-                            aria-label="Previous example"
-                            onClick={() => goGallery(-1)}
-                          >
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                              <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                            </svg>
-                          </button>
-                          <button
-                            type="button"
-                            className="requests-gallery__nav requests-gallery__nav--next"
-                            aria-label="Next example"
-                            onClick={() => goGallery(1)}
-                          >
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                              <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                            </svg>
-                          </button>
-                          <button type="button" className="requests-gallery__play" aria-label="Play example">
-                            <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                              <path d="M8 5v14l11-7z" />
-                            </svg>
-                          </button>
-                          <span className="requests-gallery__caption">{activeGallery.caption}</span>
-                        </div>
-                        <div className="requests-gallery__thumbs" role="list">
-                          {content.gallery.map((item, index) => (
+                  <section className="requests-how" aria-labelledby="requests-how-heading">
+                    <header className="requests-how__intro">
+                      <div>
+                        <p className="requests-how__eyebrow">Simple booking</p>
+                        <h2 id="requests-how-heading">How it works</h2>
+                      </div>
+                    </header>
+                    <ol className="requests-how__steps">
+                      {content.howItWorks.map((step, index) => (
+                        <li key={step.title} className="requests-how__step">
+                          <span className="requests-how__num" aria-hidden="true">
+                            {index + 1}
+                          </span>
+                          <div>
+                            <strong>{step.title}</strong>
+                            <p>{step.copy}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+
+                  <div
+                    className="requests-gallery"
+                    aria-label="Request examples"
+                    onKeyDown={(event) => {
+                      if (event.key === "ArrowLeft") {
+                        event.preventDefault();
+                        goGallery(-1);
+                      }
+                      if (event.key === "ArrowRight") {
+                        event.preventDefault();
+                        goGallery(1);
+                      }
+                    }}
+                  >
+                    <div className="requests-gallery__cover">
+                      <button
+                        type="button"
+                        className="requests-gallery__nav requests-gallery__nav--prev"
+                        aria-label="Previous example"
+                        onClick={() => goGallery(-1)}
+                      >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path
+                            d="M14.5 6.5 9 12l5.5 5.5"
+                            stroke="currentColor"
+                            strokeWidth="2.1"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+
+                      <div className="requests-gallery__stage" aria-live="polite">
+                        {content.gallery
+                          .map((item, index) => ({
+                            item,
+                            index,
+                            offset: galleryCoverOffset(index),
+                          }))
+                          .sort((a, b) => Math.abs(b.offset) - Math.abs(a.offset))
+                          .map(({ item, index, offset }) => {
+                          const isActive = offset === 0;
+                          const isVisible = Math.abs(offset) <= 2;
+                          return (
                             <button
                               key={item.id}
                               type="button"
-                              role="listitem"
-                              className={`requests-gallery__thumb${index === galleryIndex ? " is-active" : ""}`}
+                              className={`requests-gallery__card${isActive ? " is-active" : ""}${isVisible ? "" : " is-far"}`}
+                              data-offset={offset}
                               aria-label={item.caption}
-                              aria-pressed={index === galleryIndex}
-                              onClick={() => setGalleryIndex(index)}
+                              aria-current={isActive ? "true" : undefined}
+                              tabIndex={isActive ? 0 : -1}
+                              onClick={() => {
+                                if (!isActive) setGalleryIndex(index);
+                              }}
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={item.src} alt="" />
+                              <img src={item.src} alt={isActive ? item.alt : ""} />
+                              {isActive ? (
+                                <span className="requests-gallery__caption">{item.caption}</span>
+                              ) : null}
                             </button>
-                          ))}
-                        </div>
-                      </section>
+                          );
+                        })}
+                      </div>
 
-                      <section className="requests-start-cta" aria-label="Start booking">
-                        <div className="requests-start-cta__top">
-                          <div className="requests-start-cta__copy">
-                            <h2>Ready to book something special?</h2>
-                            <p>
-                              Pick an occasion, choose a request, and {profile.name} will take it from
-                              there.
-                            </p>
-                          </div>
-                          <Link href={chooseHref} className="btn requests-start-cta__btn">
-                            Choose your experience
-                          </Link>
-                        </div>
-                        <dl className="requests-start-cta__facts">
-                          <div>
-                            <span className="requests-start-cta__fact-icon" aria-hidden="true">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 3v18" />
-                                <path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 3 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3" />
-                              </svg>
-                            </span>
-                            <div className="requests-start-cta__fact-copy">
-                              <dt>Starting Price Range</dt>
-                              <dd>{content.startingRange}</dd>
-                            </div>
-                          </div>
-                          <div>
-                            <span className="requests-start-cta__fact-icon" aria-hidden="true">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="12" cy="12" r="8" />
-                                <path d="M12 8v4l2.5 1.5" />
-                              </svg>
-                            </span>
-                            <div className="requests-start-cta__fact-copy">
-                              <dt>Average Response Time</dt>
-                              <dd>{content.responseTime}</dd>
-                            </div>
-                          </div>
-                          <div>
-                            <span className="requests-start-cta__fact-icon" aria-hidden="true">
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
-                                <path d="M8 3.5v3M16 3.5v3M3.5 10h17" />
-                              </svg>
-                            </span>
-                            <div className="requests-start-cta__fact-copy">
-                              <dt>Available for Next Booking</dt>
-                              <dd>{content.nextAvailable}</dd>
-                            </div>
-                          </div>
-                        </dl>
-                      </section>
+                      <button
+                        type="button"
+                        className="requests-gallery__nav requests-gallery__nav--next"
+                        aria-label="Next example"
+                        onClick={() => goGallery(1)}
+                      >
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                          <path
+                            d="M9.5 6.5 15 12l-5.5 5.5"
+                            stroke="currentColor"
+                            strokeWidth="2.1"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
                     </div>
 
-                    <aside className="requests-aside">
-                      <section className="requests-card" aria-labelledby="requests-how-heading">
-                        <h2 id="requests-how-heading">How it works</h2>
-                        <ol className="requests-steps">
-                          {content.howItWorks.map((step, index) => (
-                            <li key={step.title} className="requests-step">
-                              <span className="requests-step__num" aria-hidden="true">
-                                {index + 1}
-                              </span>
-                              <div>
-                                <strong>{step.title}</strong>
-                                <p>{step.copy}</p>
-                              </div>
-                            </li>
-                          ))}
-                        </ol>
-                      </section>
+                    <div className="requests-gallery__dots" role="tablist" aria-label="Example slides">
+                      {content.gallery.map((item, index) => (
+                        <button
+                          key={`${item.id}-dot`}
+                          type="button"
+                          role="tab"
+                          className={`requests-gallery__dot${index === galleryIndex ? " is-active" : ""}`}
+                          aria-label={`Show ${item.caption}`}
+                          aria-selected={index === galleryIndex}
+                          onClick={() => setGalleryIndex(index)}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-                      <section
-                        className="requests-card requests-card--guarantee"
-                        aria-labelledby="requests-guarantee-heading"
-                      >
-                        <h2 id="requests-guarantee-heading">Money-back guarantee</h2>
-                        <p>{content.guarantee}</p>
+                  <section className="requests-start-cta" aria-label="Start booking">
+                    <div className="requests-start-cta__action">
+                      <div className="requests-start-cta__lead">
+                        <span className="requests-start-cta__icon" aria-hidden="true">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M12 3.2 13.4 8.6 18.8 10 13.4 11.4 12 16.8 10.6 11.4 5.2 10 10.6 8.6 12 3.2Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="m18.2 14.2.7 2.4 2.4.7-2.4.7-.7 2.4-.7-2.4-2.4-.7 2.4-.7.7-2.4Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="m6.4 14.8.55 1.85 1.85.55-1.85.55L6.4 19.6l-.55-1.85-1.85-.55 1.85-.55.55-1.85Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                        <div className="requests-start-cta__copy">
+                          <h2>Ready to book something special?</h2>
+                          <p>
+                            Pick an occasion, choose a request, and {profile.name} will take it from
+                            there.
+                          </p>
+                        </div>
+                      </div>
+                      <Link href={chooseHref} className="btn requests-start-cta__btn">
+                        Choose your experience
+                      </Link>
+                    </div>
+                    <dl className="requests-start-cta__facts">
+                      <div>
+                        <span className="requests-start-cta__fact-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 3v18" />
+                            <path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 3 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3" />
+                          </svg>
+                        </span>
+                        <div className="requests-start-cta__fact-copy">
+                          <dt>Starting Price Range</dt>
+                          <dd>{content.startingRange}</dd>
+                        </div>
+                      </div>
+                      <div>
+                        <span className="requests-start-cta__fact-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="8" />
+                            <path d="M12 8v4l2.5 1.5" />
+                          </svg>
+                        </span>
+                        <div className="requests-start-cta__fact-copy">
+                          <dt>Average Response Time</dt>
+                          <dd>{content.responseTime}</dd>
+                        </div>
+                      </div>
+                      <div>
+                        <span className="requests-start-cta__fact-icon" aria-hidden="true">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
+                            <path d="M8 3.5v3M16 3.5v3M3.5 10h17" />
+                          </svg>
+                        </span>
+                        <div className="requests-start-cta__fact-copy">
+                          <dt>Available for Next Booking</dt>
+                          <dd>{content.nextAvailable}</dd>
+                        </div>
+                      </div>
+                    </dl>
+
+                    <section
+                      className="requests-guarantee"
+                      aria-labelledby="requests-guarantee-heading"
+                    >
+                      <header className="requests-guarantee__intro">
+                        <span className="requests-guarantee__icon" aria-hidden="true">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M12 3 4.5 6.5v5.2c0 4.6 3.1 8.7 7.5 9.8 4.4-1.1 7.5-5.2 7.5-9.8V6.5L12 3Z"
+                              stroke="currentColor"
+                              strokeWidth="1.7"
+                              strokeLinejoin="round"
+                            />
+                            <path
+                              d="m9.2 12.1 1.8 1.8 3.8-3.9"
+                              stroke="currentColor"
+                              strokeWidth="1.7"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </span>
+                        <div>
+                          <p className="requests-guarantee__eyebrow">Booking protection</p>
+                          <h2 id="requests-guarantee-heading">Money-back guarantee</h2>
+                        </div>
+                      </header>
+
+                      <ul className="requests-guarantee__points">
+                        {content.guaranteePoints.map((point) => (
+                          <li key={point.title}>
+                            <span className="requests-guarantee__check" aria-hidden="true">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                                <path
+                                  d="m5 12.5 4.2 4.2L19 7"
+                                  stroke="currentColor"
+                                  strokeWidth="2.2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </span>
+                            <div>
+                              <strong>{point.title}</strong>
+                              <p>{point.copy}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="requests-guarantee__payments">
+                        <p className="requests-guarantee__payments-label">Secure payments</p>
                         <div className="requests-pay-logos" aria-label="Accepted payment methods">
                           <AmexMark />
                           <DinersMark />
@@ -849,9 +971,9 @@ export default function ProfileRequestsView({
                           <PaypalMark />
                           <MastercardMark />
                         </div>
-                      </section>
-                    </aside>
-                  </div>
+                      </div>
+                    </section>
+                  </section>
                 </>
               ) : (
                 <section className="requests-guide" aria-labelledby="requests-guide-heading">
