@@ -5,6 +5,9 @@ import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, typ
 import LeftNav from "@/components/LeftNav";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
+import LocationSearchField, {
+  type SelectedPlace,
+} from "@/components/profile/LocationSearchField";
 import {
   formatRequestPriceRange,
   getCreatorRequests,
@@ -21,6 +24,36 @@ const FEED_SURCHARGE = 15;
 const WEEKDAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const DURATION_OPTIONS = ["15 seconds", "30 seconds", "60 seconds", "90 seconds", "2 minutes"] as const;
 const TIME_OPTIONS = ["9:00 AM", "12:00 PM", "3:00 PM", "6:00 PM", "9:00 PM"] as const;
+const APPEARANCE_DURATION_HOURS = Array.from({ length: 13 }, (_, index) => String(index));
+const APPEARANCE_DURATION_MINUTES = ["0", "15", "30", "45"] as const;
+const REVIEW_SORT_OPTIONS = [
+  { id: "relevant", label: "Most Relevant" },
+  { id: "recent", label: "Most Recent" },
+  { id: "highest", label: "Highest Rated" },
+  { id: "lowest", label: "Lowest Rated" },
+] as const;
+const REVIEW_RATING_OPTIONS = [
+  { id: "all" as const, label: "All stars" },
+  { id: 5 as const, label: "5 stars" },
+  { id: 4 as const, label: "4 stars" },
+  { id: 3 as const, label: "3 stars" },
+  { id: 2 as const, label: "2 stars" },
+  { id: 1 as const, label: "1 star" },
+] as const;
+type ReviewSortId = (typeof REVIEW_SORT_OPTIONS)[number]["id"];
+type ReviewRatingFilter = (typeof REVIEW_RATING_OPTIONS)[number]["id"];
+
+function formatAppearanceDuration(hours: string, minutes: string) {
+  if (!hours && !minutes) return "";
+  const h = Number(hours || 0);
+  const m = Number(minutes || 0);
+  if (!h && !m) return "";
+  const parts: string[] = [];
+  if (h > 0) parts.push(`${h} ${h === 1 ? "hr" : "hrs"}`);
+  if (m > 0) parts.push(`${m} min`);
+  if (!parts.length) return "0 min";
+  return parts.join(" ");
+}
 
 type DeliveryMethod = "dm" | "feed";
 type ContentKind = "text" | "audio" | "video";
@@ -331,6 +364,37 @@ function SummaryInfoTip({
   );
 }
 
+function SectionInfoTip({
+  tipId,
+  title,
+  copy,
+}: {
+  tipId: string;
+  title: string;
+  copy: string;
+}) {
+  return (
+    <span className="requests-section-info">
+      <button
+        type="button"
+        className="requests-section-info__trigger"
+        aria-label={`About ${title}`}
+        aria-describedby={tipId}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+          <path d="M12 10.5v5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <circle cx="12" cy="7.5" r="1" fill="currentColor" />
+        </svg>
+      </button>
+      <span id={tipId} className="requests-section-info__popover" role="tooltip">
+        <strong>{title}</strong>
+        <span>{copy}</span>
+      </span>
+    </span>
+  );
+}
+
 function MoneyBackGuaranteeTag({ copy, tipId }: { copy: string; tipId: string }) {
   return (
     <span className="requests-guarantee-tag">
@@ -383,42 +447,6 @@ function MoneyBackGuaranteeTag({ copy, tipId }: { copy: string; tipId: string })
   );
 }
 
-function ContentTypeIcon({ kind }: { kind: ContentKind }) {
-  if (kind === "text") {
-    return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M5 6.5h14M5 12h10M5 17.5h7"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
-  if (kind === "audio") {
-    return (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path
-          d="M9 18V6l10-2v12"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="7" cy="18" r="2.2" stroke="currentColor" strokeWidth="1.8" />
-        <circle cx="17" cy="16" r="2.2" stroke="currentColor" strokeWidth="1.8" />
-      </svg>
-    );
-  }
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="4" y="6" width="16" height="12" rx="2.2" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M10 10.2v4.6l4.2-2.3-4.2-2.3Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 function flattenServices(categories: ReturnType<typeof getCreatorRequests>) {
   if (!categories) return [] as RequestService[];
   return categories.categories.flatMap((category) => category.services);
@@ -438,6 +466,12 @@ export default function ProfileRequestsView({
   const [selectedId, setSelectedId] = useState(allServices[0]?.id ?? "");
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_INITIAL_COUNT);
+  const [reviewSort, setReviewSort] = useState<ReviewSortId>("relevant");
+  const [reviewRatingFilter, setReviewRatingFilter] = useState<ReviewRatingFilter>("all");
+  const [reviewSortOpen, setReviewSortOpen] = useState(false);
+  const [reviewFilterOpen, setReviewFilterOpen] = useState(false);
+  const reviewSortRef = useRef<HTMLDivElement>(null);
+  const reviewFilterRef = useRef<HTMLDivElement>(null);
   const [pickerStep, setPickerStep] = useState<1 | 2 | 3 | 4>(1);
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("dm");
   const [contentKind, setContentKind] = useState<ContentKind>("video");
@@ -448,6 +482,12 @@ export default function ProfileRequestsView({
   const [recipientName, setRecipientName] = useState("");
   const [recipientUsername, setRecipientUsername] = useState("");
   const [shoutoutMessage, setShoutoutMessage] = useState("");
+  const [appearanceOccasion, setAppearanceOccasion] = useState("");
+  const [appearanceLocation, setAppearanceLocation] = useState<SelectedPlace | null>(null);
+  const [appearanceDurationHours, setAppearanceDurationHours] = useState("");
+  const [appearanceDurationMins, setAppearanceDurationMins] = useState("");
+  const [appearanceExpectation, setAppearanceExpectation] = useState("");
+  const [appearanceReference, setAppearanceReference] = useState<File | null>(null);
   const [calendarCursor, setCalendarCursor] = useState(() => {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() };
@@ -461,6 +501,12 @@ export default function ProfileRequestsView({
   const recipientNameRef = useRef<HTMLInputElement>(null);
   const recipientUsernameRef = useRef<HTMLInputElement>(null);
   const shoutoutMessageRef = useRef<HTMLTextAreaElement>(null);
+  const appearanceOccasionRef = useRef<HTMLInputElement>(null);
+  const appearanceLocationRef = useRef<HTMLInputElement>(null);
+  const appearanceDurationHoursRef = useRef<HTMLSelectElement>(null);
+  const appearanceDurationMinsRef = useRef<HTMLSelectElement>(null);
+  const appearanceExpectationRef = useRef<HTMLTextAreaElement>(null);
+  const appearanceReferenceRef = useRef<HTMLInputElement>(null);
 
   const earliestDate = useMemo(() => {
     const parsed = Date.parse(content?.nextAvailable ?? "");
@@ -491,6 +537,51 @@ export default function ProfileRequestsView({
     });
   }, [pickerStep, earliestDate]);
 
+  useEffect(() => {
+    if (!reviewSortOpen && !reviewFilterOpen) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!reviewSortRef.current?.contains(target)) setReviewSortOpen(false);
+      if (!reviewFilterRef.current?.contains(target)) setReviewFilterOpen(false);
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setReviewSortOpen(false);
+        setReviewFilterOpen(false);
+      }
+    };
+    window.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [reviewSortOpen, reviewFilterOpen]);
+
+  const filteredReviews = useMemo(() => {
+    const filtered =
+      reviewRatingFilter === "all"
+        ? reviewsBlock.reviews
+        : reviewsBlock.reviews.filter((review) => review.rating === reviewRatingFilter);
+
+    const sorted = [...filtered];
+    sorted.sort((a, b) => {
+      if (reviewSort === "recent") return a.daysAgo - b.daysAgo;
+      if (reviewSort === "highest") return b.rating - a.rating || a.daysAgo - b.daysAgo;
+      if (reviewSort === "lowest") return a.rating - b.rating || a.daysAgo - b.daysAgo;
+      // Most relevant: higher rating + newer reviews first
+      const scoreA = a.rating * 20 - a.daysAgo;
+      const scoreB = b.rating * 20 - b.daysAgo;
+      return scoreB - scoreA;
+    });
+    return sorted;
+  }, [reviewsBlock.reviews, reviewRatingFilter, reviewSort]);
+
+  const reviewSortLabel =
+    REVIEW_SORT_OPTIONS.find((option) => option.id === reviewSort)?.label ?? "Most Relevant";
+  const reviewFilterLabel =
+    REVIEW_RATING_OPTIONS.find((option) => option.id === reviewRatingFilter)?.label ?? "All stars";
+
   if (!content) return null;
 
   const isStart = variant === "start";
@@ -503,6 +594,7 @@ export default function ProfileRequestsView({
   const activeCategory =
     content.categories.find((category) => category.id === categoryId) ?? content.categories[0];
   const hasChosenCategory = Boolean(categoryId);
+  const isAppearanceCategory = categoryId === "appearances";
   const selected =
     activeCategory?.services.find((service) => service.id === selectedId) ??
     allServices.find((service) => service.id === selectedId) ??
@@ -511,20 +603,36 @@ export default function ProfileRequestsView({
     ? formatRequestPriceRange(selected.priceMin, selected.priceMax)
     : content.startingRange;
   const dayRate = selected?.priceMin ?? 80;
-  const feedFee = deliveryMethod === "feed" ? FEED_SURCHARGE : 0;
+  const feedFee =
+    !isAppearanceCategory && deliveryMethod === "feed" ? FEED_SURCHARGE : 0;
   const totalFee = dayRate + feedFee;
-  const personalizedReady = Boolean(
-    deliveryMethod &&
-      contentKind &&
-      duration &&
-      deliveryDate &&
-      deliveryTime &&
-      shoutoutMessage.trim() &&
-      (recipientTarget === "self" ||
-        (recipientName.trim() && recipientUsername.trim())),
+  const appearanceDurationLabel = formatAppearanceDuration(
+    appearanceDurationHours,
+    appearanceDurationMins,
   );
+  const appearanceReady = Boolean(
+    appearanceOccasion.trim() &&
+      appearanceLocation?.label.trim() &&
+      deliveryTime &&
+      appearanceDurationHours !== "" &&
+      appearanceDurationMins !== "" &&
+      (Number(appearanceDurationHours) > 0 || Number(appearanceDurationMins) > 0) &&
+      appearanceExpectation.trim(),
+  );
+  const personalizedReady = isAppearanceCategory
+    ? Boolean(deliveryDate && appearanceReady)
+    : Boolean(
+        deliveryMethod &&
+          contentKind &&
+          duration &&
+          deliveryDate &&
+          deliveryTime &&
+          shoutoutMessage.trim() &&
+          (recipientTarget === "self" ||
+            (recipientName.trim() && recipientUsername.trim())),
+      );
   const activeGallery = content.gallery[galleryIndex] ?? content.gallery[0];
-  const availableReviews = reviewsBlock.reviews;
+  const availableReviews = filteredReviews;
   const visibleReviews = availableReviews.slice(0, visibleReviewCount);
   const remainingReviews = Math.max(0, availableReviews.length - visibleReviewCount);
 
@@ -544,6 +652,9 @@ export default function ProfileRequestsView({
     const preferred =
       nextCategory.services.find((service) => service.popular) ?? nextCategory.services[0];
     if (preferred) setSelectedId(preferred.id);
+    if (nextCategoryId === "appearances") {
+      setDeliveryMethod("dm");
+    }
     setPickerStep(2);
   }
 
@@ -654,13 +765,56 @@ export default function ProfileRequestsView({
                       </section>
 
                       <section className="requests-start-cta" aria-label="Start booking">
-                        <div className="requests-start-cta__copy">
-                          <h2>Ready to book something special?</h2>
-                          <p>Pick an occasion, choose a request, and Mia will take it from there.</p>
+                        <div className="requests-start-cta__top">
+                          <div className="requests-start-cta__copy">
+                            <h2>Ready to book something special?</h2>
+                            <p>
+                              Pick an occasion, choose a request, and {profile.name} will take it from
+                              there.
+                            </p>
+                          </div>
+                          <Link href={chooseHref} className="btn requests-start-cta__btn">
+                            Choose your experience
+                          </Link>
                         </div>
-                        <Link href={chooseHref} className="btn btn--primary requests-start-cta__btn">
-                          Choose your experience
-                        </Link>
+                        <dl className="requests-start-cta__facts">
+                          <div>
+                            <span className="requests-start-cta__fact-icon" aria-hidden="true">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M12 3v18" />
+                                <path d="M16.5 7.5c0-1.7-2-3-4.5-3s-4.5 1.3-4.5 3 2 3 4.5 3 4.5 1.3 4.5 3-2 3-4.5 3-4.5-1.3-4.5-3" />
+                              </svg>
+                            </span>
+                            <div className="requests-start-cta__fact-copy">
+                              <dt>Starting Price Range</dt>
+                              <dd>{content.startingRange}</dd>
+                            </div>
+                          </div>
+                          <div>
+                            <span className="requests-start-cta__fact-icon" aria-hidden="true">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="8" />
+                                <path d="M12 8v4l2.5 1.5" />
+                              </svg>
+                            </span>
+                            <div className="requests-start-cta__fact-copy">
+                              <dt>Average Response Time</dt>
+                              <dd>{content.responseTime}</dd>
+                            </div>
+                          </div>
+                          <div>
+                            <span className="requests-start-cta__fact-icon" aria-hidden="true">
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="3.5" y="5" width="17" height="15.5" rx="2" />
+                                <path d="M8 3.5v3M16 3.5v3M3.5 10h17" />
+                              </svg>
+                            </span>
+                            <div className="requests-start-cta__fact-copy">
+                              <dt>Available for Next Booking</dt>
+                              <dd>{content.nextAvailable}</dd>
+                            </div>
+                          </div>
+                        </dl>
                       </section>
                     </div>
 
@@ -711,7 +865,7 @@ export default function ProfileRequestsView({
                             ? "Pick your request"
                             : pickerStep === 3
                               ? "Personalize your request"
-                              : "Pay & confirm"}
+                              : "Review & pay"}
                       </h1>
                       <p>
                         {pickerStep === 1
@@ -719,8 +873,8 @@ export default function ProfileRequestsView({
                           : pickerStep === 2
                             ? `Select one option from ${activeCategory.title.toLowerCase()}.`
                             : pickerStep === 3
-                              ? "Add the details Mia needs to make this request feel personal."
-                              : "Review your request and complete payment to lock it in."}
+                              ? "A few details so everything arrives exactly right."
+                              : "Review everything below, then pay. Use Edit or the steps above to change anything."}
                       </p>
                     </div>
 
@@ -736,8 +890,8 @@ export default function ProfileRequestsView({
                           },
                           {
                             step: 4 as const,
-                            label: "Pay & Confirm",
-                            enabled: hasChosenCategory && Boolean(selected),
+                            label: "Review & Pay",
+                            enabled: hasChosenCategory && Boolean(selected) && personalizedReady,
                           },
                         ] as const
                       ).map((item, index) => (
@@ -921,19 +1075,23 @@ export default function ProfileRequestsView({
                             </div>
 
                             <div className="requests-summary__cta-row">
-                              <button
-                                type="button"
-                                className="btn btn--primary requests-summary__cta"
-                                disabled={!selected}
-                                onClick={() => setPickerStep(3)}
-                              >
-                                Personalize
-                              </button>
-                              <SummaryInfoTip
-                                tipId="requests-personalize-info-tip"
-                                title="What happens next?"
-                                copy="Personalize lets you choose delivery, content type, schedule, and who the shoutout is for — then you’ll review and pay."
-                              />
+                              <div className="requests-summary__cta-shell">
+                                <button
+                                  type="button"
+                                  className="btn btn--primary requests-summary__cta"
+                                  disabled={!selected}
+                                  onClick={() => setPickerStep(3)}
+                                >
+                                  Personalize
+                                </button>
+                                <span className="requests-summary__cta-tip">
+                                  <SummaryInfoTip
+                                    tipId="requests-personalize-info-tip"
+                                    title="What happens next?"
+                                    copy="Personalize lets you choose delivery, content type, schedule, and who the shoutout is for — then you’ll review and pay."
+                                  />
+                                </span>
+                              </div>
                             </div>
                           </section>
                         </aside>
@@ -941,247 +1099,405 @@ export default function ProfileRequestsView({
                     </>
                   ) : pickerStep === 3 ? (
                     <div className="requests-choose-split">
-                      <div className="requests-personalize">
-                        <section className="requests-personalize__section" aria-labelledby="requests-delivery-heading">
-                          <header className="requests-personalize__section-head">
-                            <h2 id="requests-delivery-heading">Delivery</h2>
-                            <p>Choose how you want to receive this shoutout.</p>
-                          </header>
-                          <fieldset className="requests-delivery-methods">
-                            <legend className="visually-hidden">Delivery method</legend>
-                            <label
-                              className={`requests-delivery-method${deliveryMethod === "dm" ? " is-selected" : ""}`}
-                            >
-                              <input
-                                type="radio"
-                                name="request-delivery-method"
-                                value="dm"
-                                checked={deliveryMethod === "dm"}
-                                onChange={() => {
-                                  setDeliveryMethod("dm");
-                                  focusPersonalizeControl(contentTypeRefs.current[contentKind] ?? null);
-                                }}
-                              />
-                              <span className="requests-delivery-method__radio" aria-hidden="true" />
-                              <span className="requests-delivery-method__copy">
-                                <strong>Audio/Video clip delivered to me</strong>
-                                <span>You’ll receive the shoutout via direct message.</span>
-                              </span>
-                            </label>
-                            <label
-                              className={`requests-delivery-method${deliveryMethod === "feed" ? " is-selected" : ""}`}
-                            >
-                              <input
-                                type="radio"
-                                name="request-delivery-method"
-                                value="feed"
-                                checked={deliveryMethod === "feed"}
-                                onChange={() => {
-                                  setDeliveryMethod("feed");
-                                  focusPersonalizeControl(contentTypeRefs.current[contentKind] ?? null);
-                                }}
-                              />
-                              <span className="requests-delivery-method__radio" aria-hidden="true" />
-                              <span className="requests-delivery-method__copy">
-                                <strong>Tagged post on {profile.name}&apos;s feeds</strong>
-                                <span>Shoutout is visible to all your followers (+${FEED_SURCHARGE}).</span>
-                              </span>
-                            </label>
-                          </fieldset>
-                        </section>
-
-                        <section className="requests-personalize__section" aria-labelledby="requests-content-heading">
-                          <header className="requests-personalize__section-head">
-                            <h2 id="requests-content-heading">Content</h2>
-                            <p>Pick the format and length for your request.</p>
-                          </header>
-                          <div className="requests-personalize__section-body">
-                            <div className="requests-personalize__block">
-                              <p className="requests-personalize__label">What type of content do you need?</p>
-                              <div className="requests-content-types" role="list">
-                                {(
-                                  [
-                                    { id: "text" as const, label: "Text" },
-                                    { id: "audio" as const, label: "Audio" },
-                                    { id: "video" as const, label: "Video" },
-                                  ] as const
-                                ).map((option) => (
-                                  <button
-                                    key={option.id}
-                                    type="button"
-                                    role="listitem"
-                                    ref={(node) => {
-                                      contentTypeRefs.current[option.id] = node;
-                                    }}
-                                    className={`requests-content-type${contentKind === option.id ? " is-selected" : ""}`}
-                                    aria-pressed={contentKind === option.id}
-                                    onClick={() => {
-                                      setContentKind(option.id);
-                                      focusPersonalizeControl(durationRef.current);
-                                    }}
-                                  >
-                                    <span className="requests-content-type__icon">
-                                      <ContentTypeIcon kind={option.id} />
-                                    </span>
-                                    <span>{option.label}</span>
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-                            <label className="requests-personalize__field">
-                              <span className="requests-personalize__label">How long it should be?</span>
-                              <select
-                                ref={durationRef}
-                                className="requests-personalize__select"
-                                value={duration}
-                                onChange={(event) => {
-                                  setDuration(event.target.value);
-                                  if (event.target.value) {
-                                    focusPersonalizeControl(
-                                      firstDateRef.current ?? deliveryTimeRef.current,
-                                    );
-                                  }
-                                }}
-                              >
-                                <option value="">Select duration</option>
-                                {DURATION_OPTIONS.map((option) => (
-                                  <option key={option} value={option}>
-                                    {option}
-                                  </option>
-                                ))}
-                              </select>
-                            </label>
-                          </div>
-                        </section>
-
-                        <section className="requests-personalize__section" aria-labelledby="requests-schedule-heading">
-                          <header className="requests-personalize__section-head">
-                            <h2 id="requests-schedule-heading">Schedule</h2>
-                            <p>Set when you expect the shoutout to be delivered.</p>
-                          </header>
-                          <div className="requests-personalize__section-body">
-                            <div className="requests-personalize__block">
-                              <p className="requests-personalize__label">What’s your expected delivery date?</p>
-                              <div className="requests-calendar">
-                                <div className="requests-calendar__toolbar">
-                                  <button
-                                    type="button"
-                                    className="requests-calendar__nav"
-                                    aria-label="Previous month"
-                                    onClick={() =>
-                                      setCalendarCursor((current) => {
-                                        const date = new Date(current.year, current.month - 1, 1);
-                                        return { year: date.getFullYear(), month: date.getMonth() };
-                                      })
-                                    }
-                                  >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                      <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                                    </svg>
-                                  </button>
-                                  <div className="requests-calendar__period">
-                                    <span>{monthLabel(calendarCursor.year, calendarCursor.month)}</span>
-                                    <span>{calendarCursor.year}</span>
-                                  </div>
-                                  <button
-                                    type="button"
-                                    className="requests-calendar__nav"
-                                    aria-label="Next month"
-                                    onClick={() =>
-                                      setCalendarCursor((current) => {
-                                        const date = new Date(current.year, current.month + 1, 1);
-                                        return { year: date.getFullYear(), month: date.getMonth() };
-                                      })
-                                    }
-                                  >
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                      <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                                    </svg>
-                                  </button>
+                      <form
+                        className="requests-pz"
+                        aria-label="Personalize your request"
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          if (personalizedReady) setPickerStep(4);
+                        }}
+                      >
+                        {!isAppearanceCategory ? (
+                          <section className="requests-pz__block">
+                            <div className="requests-pz__bundle">
+                              <div className="requests-pz__bundle-section">
+                                <div className="requests-pz__head">
+                                  <p className="requests-pz__eyebrow">Delivery</p>
+                                  <SectionInfoTip
+                                    tipId="requests-pz-delivery-tip"
+                                    title="Delivery"
+                                    copy="Choose how the shoutout reaches you — privately by direct message, or as a tagged post on the creator’s feed for an extra fee."
+                                  />
                                 </div>
-                                <div className="requests-calendar__weekdays" aria-hidden="true">
-                                  {WEEKDAY_LABELS.map((label) => (
-                                    <span key={label}>{label}</span>
+                                <div className="requests-pz__delivery" role="radiogroup" aria-label="Delivery method">
+                                  <label
+                                    className={`requests-pz__delivery-tile${deliveryMethod === "dm" ? " is-selected" : ""}`}
+                                  >
+                                    <input
+                                      type="radio"
+                                      name="request-delivery-method"
+                                      value="dm"
+                                      checked={deliveryMethod === "dm"}
+                                      onChange={() => setDeliveryMethod("dm")}
+                                    />
+                                    <span className="requests-pz__delivery-mark" aria-hidden="true" />
+                                    <strong>Audio/Video clip delivered to me</strong>
+                                    <span>You’ll receive the shoutout via direct message</span>
+                                  </label>
+                                  <label
+                                    className={`requests-pz__delivery-tile${deliveryMethod === "feed" ? " is-selected" : ""}`}
+                                  >
+                                    <input
+                                      type="radio"
+                                      name="request-delivery-method"
+                                      value="feed"
+                                      checked={deliveryMethod === "feed"}
+                                      onChange={() => setDeliveryMethod("feed")}
+                                    />
+                                    <span className="requests-pz__delivery-mark" aria-hidden="true" />
+                                    <strong>Tagged post on {profile.name}&apos;s feeds</strong>
+                                    <span>Shoutout is visible to all your followers (+${FEED_SURCHARGE})</span>
+                                  </label>
+                                </div>
+                              </div>
+
+                              <div className="requests-pz__bundle-section">
+                                <div className="requests-pz__head">
+                                  <p className="requests-pz__eyebrow">Format</p>
+                                  <SectionInfoTip
+                                    tipId="requests-pz-format-tip"
+                                    title="Format"
+                                    copy="Pick whether you want a text, audio, or video shoutout, then choose how long it should be."
+                                  />
+                                </div>
+                                <div className="requests-pz__format" role="list" aria-label="Content format">
+                                  {(
+                                    [
+                                      {
+                                        id: "text" as const,
+                                        label: "Text",
+                                        icon: (
+                                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <path d="M4 7h16M4 12h10M4 17h13" />
+                                          </svg>
+                                        ),
+                                      },
+                                      {
+                                        id: "audio" as const,
+                                        label: "Audio",
+                                        icon: (
+                                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <path d="M12 3v11" />
+                                            <path d="M8 14a4 4 0 0 0 8 0" />
+                                            <path d="M5 10v2a7 7 0 0 0 14 0v-2" />
+                                          </svg>
+                                        ),
+                                      },
+                                      {
+                                        id: "video" as const,
+                                        label: "Video",
+                                        icon: (
+                                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                            <rect x="3" y="6" width="13" height="12" rx="2" />
+                                            <path d="m16 10 5-3v10l-5-3z" />
+                                          </svg>
+                                        ),
+                                      },
+                                    ] as const
+                                  ).map((option) => (
+                                    <button
+                                      key={option.id}
+                                      type="button"
+                                      role="listitem"
+                                      ref={(node) => {
+                                        contentTypeRefs.current[option.id] = node;
+                                      }}
+                                      className={`requests-pz__format-tile${contentKind === option.id ? " is-selected" : ""}`}
+                                      aria-pressed={contentKind === option.id}
+                                      onClick={() => {
+                                        setContentKind(option.id);
+                                        focusPersonalizeControl(durationRef.current);
+                                      }}
+                                    >
+                                      <span className="requests-pz__format-mark" aria-hidden="true" />
+                                      <span className="requests-pz__format-icon">{option.icon}</span>
+                                      <strong>{option.label}</strong>
+                                    </button>
                                   ))}
                                 </div>
-                                <div className="requests-calendar__grid" role="grid" aria-label="Delivery dates">
-                                  {(() => {
-                                    let firstAvailableAssigned = false;
-                                    return calendarDays.map((cell) => {
-                                      if (!cell.inMonth) {
-                                        return <span key={cell.key} className="requests-calendar__cell is-empty" />;
-                                      }
-                                      const key = toDateKey(cell.date);
-                                      const disabled = cell.date < earliestDate;
-                                      const selectedDay = deliveryDate === key;
-                                      const shownPrice =
-                                        dayRate + (deliveryMethod === "feed" ? FEED_SURCHARGE : 0);
-                                      const isFirstAvailable = !disabled && !firstAvailableAssigned;
-                                      if (isFirstAvailable) firstAvailableAssigned = true;
-                                      return (
-                                        <button
-                                          key={cell.key}
-                                          type="button"
-                                          role="gridcell"
-                                          ref={isFirstAvailable ? firstDateRef : undefined}
-                                          className={`requests-calendar__cell${selectedDay ? " is-selected" : ""}${disabled ? " is-disabled" : ""}`}
-                                          disabled={disabled}
-                                          aria-pressed={selectedDay}
-                                          onClick={() => {
-                                            setDeliveryDate(key);
-                                            focusPersonalizeControl(deliveryTimeRef.current);
-                                          }}
-                                        >
-                                          <span className="requests-calendar__day">{cell.date.getDate()}</span>
-                                          {!disabled ? (
-                                            <span className="requests-calendar__price">${shownPrice}</span>
-                                          ) : null}
-                                        </button>
-                                      );
-                                    });
-                                  })()}
-                                </div>
+                                <label className="requests-pz__field">
+                                  <span className="requests-pz__label">Length</span>
+                                  <select
+                                    ref={durationRef}
+                                    className="requests-pz__input"
+                                    value={duration}
+                                    onChange={(event) => setDuration(event.target.value)}
+                                  >
+                                    <option value="">Select</option>
+                                    {DURATION_OPTIONS.map((option) => (
+                                      <option key={option} value={option}>
+                                        {option}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </label>
                               </div>
                             </div>
-                            <label className="requests-personalize__field">
-                              <span className="requests-personalize__label">What’s your expected delivery time?</span>
-                              <select
-                                ref={deliveryTimeRef}
-                                className="requests-personalize__select"
-                                value={deliveryTime}
-                                onChange={(event) => {
-                                  setDeliveryTime(event.target.value);
-                                  if (event.target.value) {
-                                    focusPersonalizeControl(
-                                      recipientTarget === "self"
+                          </section>
+                        ) : null}
+
+                        <section className="requests-pz__block">
+                          <div className="requests-pz__head">
+                            <p className="requests-pz__eyebrow">
+                              {isAppearanceCategory ? "When" : "Schedule"}
+                            </p>
+                            <SectionInfoTip
+                              tipId="requests-pz-schedule-tip"
+                              title={isAppearanceCategory ? "When" : "Schedule"}
+                              copy={
+                                isAppearanceCategory
+                                  ? "Pick the appearance date and start time. Available days show the request fee so you can plan ahead."
+                                  : "Pick the delivery date and time. Available days show pricing so you can choose what works best."
+                              }
+                            />
+                          </div>
+                          {deliveryDate ? (
+                            <p className="requests-pz__confirm">
+                              {formatDisplayDate(deliveryDate)}
+                              {deliveryTime ? ` · ${deliveryTime}` : ""}
+                            </p>
+                          ) : null}
+                          <div className="requests-calendar">
+                            <div className="requests-calendar__toolbar">
+                              <button
+                                type="button"
+                                className="requests-calendar__nav"
+                                aria-label="Previous month"
+                                onClick={() =>
+                                  setCalendarCursor((current) => {
+                                    const date = new Date(current.year, current.month - 1, 1);
+                                    return { year: date.getFullYear(), month: date.getMonth() };
+                                  })
+                                }
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                  <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+                                </svg>
+                              </button>
+                              <div className="requests-calendar__period">
+                                {monthLabel(calendarCursor.year, calendarCursor.month)} {calendarCursor.year}
+                              </div>
+                              <button
+                                type="button"
+                                className="requests-calendar__nav"
+                                aria-label="Next month"
+                                onClick={() =>
+                                  setCalendarCursor((current) => {
+                                    const date = new Date(current.year, current.month + 1, 1);
+                                    return { year: date.getFullYear(), month: date.getMonth() };
+                                  })
+                                }
+                              >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                  <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+                                </svg>
+                              </button>
+                            </div>
+                            <div className="requests-calendar__weekdays" aria-hidden="true">
+                              {WEEKDAY_LABELS.map((label) => (
+                                <span key={label}>{label}</span>
+                              ))}
+                            </div>
+                            <div className="requests-calendar__grid" role="grid" aria-label="Available dates">
+                              {(() => {
+                                let firstAvailableAssigned = false;
+                                return calendarDays.map((cell) => {
+                                  if (!cell.inMonth) {
+                                    return <span key={cell.key} className="requests-calendar__cell is-empty" />;
+                                  }
+                                  const key = toDateKey(cell.date);
+                                  const disabled = cell.date < earliestDate;
+                                  const selectedDay = deliveryDate === key;
+                                  const shownPrice =
+                                    dayRate +
+                                    (!isAppearanceCategory && deliveryMethod === "feed"
+                                      ? FEED_SURCHARGE
+                                      : 0);
+                                  const isFirstAvailable = !disabled && !firstAvailableAssigned;
+                                  if (isFirstAvailable) firstAvailableAssigned = true;
+                                  return (
+                                    <button
+                                      key={cell.key}
+                                      type="button"
+                                      role="gridcell"
+                                      ref={isFirstAvailable ? firstDateRef : undefined}
+                                      className={`requests-calendar__cell${selectedDay ? " is-selected" : ""}${disabled ? " is-disabled" : ""}`}
+                                      disabled={disabled}
+                                      aria-pressed={selectedDay}
+                                      onClick={() => {
+                                        setDeliveryDate(key);
+                                        focusPersonalizeControl(deliveryTimeRef.current);
+                                      }}
+                                    >
+                                      <span className="requests-calendar__day">{cell.date.getDate()}</span>
+                                      {!disabled ? (
+                                        <span className="requests-calendar__price">${shownPrice}</span>
+                                      ) : null}
+                                    </button>
+                                  );
+                                });
+                              })()}
+                            </div>
+                          </div>
+                          <label className="requests-pz__field">
+                            <span className="requests-pz__label">
+                              {isAppearanceCategory ? "Start time" : "Delivery time"}
+                            </span>
+                            <select
+                              ref={deliveryTimeRef}
+                              className="requests-pz__input"
+                              value={deliveryTime}
+                              onChange={(event) => {
+                                setDeliveryTime(event.target.value);
+                                if (event.target.value) {
+                                  focusPersonalizeControl(
+                                    isAppearanceCategory
+                                      ? appearanceOccasionRef.current
+                                      : recipientTarget === "self"
                                         ? shoutoutMessageRef.current
                                         : recipientOtherRef.current,
-                                    );
-                                  }
-                                }}
-                              >
-                                <option value="">Select delivery time</option>
-                                {TIME_OPTIONS.map((option) => (
-                                  <option key={option} value={option}>
-                                    {option}
-                                  </option>
-                                ))}
-                              </select>
-                            </label>
-                          </div>
+                                  );
+                                }
+                              }}
+                            >
+                              <option value="">Select</option>
+                              {TIME_OPTIONS.map((option) => (
+                                <option key={option} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          </label>
                         </section>
 
-                        <section className="requests-personalize__section" aria-labelledby="requests-recipient-heading">
-                          <header className="requests-personalize__section-head">
-                            <h2 id="requests-recipient-heading">Recipient &amp; Message</h2>
-                            <p>Tell Mia who this is for and what to say.</p>
-                          </header>
-                          <div className="requests-personalize__section-body">
-                            <div className="requests-recipient-toggle" role="group" aria-label="Who is this for">
+                        {isAppearanceCategory ? (
+                          <section className="requests-pz__block">
+                            <p className="requests-pz__eyebrow">Event</p>
+                            <label className="requests-pz__field">
+                              <span className="requests-pz__label">Occasion</span>
+                              <input
+                                ref={appearanceOccasionRef}
+                                className="requests-pz__input"
+                                type="text"
+                                value={appearanceOccasion}
+                                placeholder="Anniversary run, expo, podcast…"
+                                onChange={(event) => setAppearanceOccasion(event.target.value)}
+                                onKeyDown={(event) => {
+                                  if (event.key === "Enter") {
+                                    event.preventDefault();
+                                    focusPersonalizeControl(appearanceLocationRef.current);
+                                  }
+                                }}
+                              />
+                            </label>
+                            <LocationSearchField
+                              label="Location"
+                              value={appearanceLocation}
+                              onChange={(place) => {
+                                setAppearanceLocation(place);
+                                if (place) focusPersonalizeControl(appearanceDurationHoursRef.current);
+                              }}
+                              inputRef={appearanceLocationRef}
+                              placeholder="Venue or address"
+                            />
+                            <div className="requests-pz__field">
+                              <span className="requests-pz__label">Duration</span>
+                              <div className="requests-pz__pair">
+                                <select
+                                  ref={appearanceDurationHoursRef}
+                                  className="requests-pz__input"
+                                  value={appearanceDurationHours}
+                                  aria-label="Hours"
+                                  onChange={(event) => {
+                                    const nextHours = event.target.value;
+                                    setAppearanceDurationHours(nextHours);
+                                    if (nextHours !== "" && appearanceDurationMins === "") {
+                                      setAppearanceDurationMins("0");
+                                    }
+                                  }}
+                                >
+                                  <option value="">Hours</option>
+                                  {APPEARANCE_DURATION_HOURS.map((option) => (
+                                    <option key={option} value={option}>
+                                      {option}h
+                                    </option>
+                                  ))}
+                                </select>
+                                <select
+                                  ref={appearanceDurationMinsRef}
+                                  className="requests-pz__input"
+                                  value={appearanceDurationMins}
+                                  aria-label="Minutes"
+                                  onChange={(event) => setAppearanceDurationMins(event.target.value)}
+                                >
+                                  <option value="">Mins</option>
+                                  {APPEARANCE_DURATION_MINUTES.map((option) => (
+                                    <option key={option} value={option}>
+                                      {option}m
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            </div>
+                            <label className="requests-pz__field">
+                              <span className="requests-pz__label">Expectation</span>
+                              <textarea
+                                ref={appearanceExpectationRef}
+                                className="requests-pz__input requests-pz__input--area"
+                                value={appearanceExpectation}
+                                placeholder={`What should ${profile.name} prepare for?`}
+                                rows={4}
+                                onChange={(event) => setAppearanceExpectation(event.target.value)}
+                              />
+                            </label>
+                            <div className="requests-pz__field">
+                              <span className="requests-pz__label">
+                                Reference <em>optional</em>
+                              </span>
+                              <div className="requests-pz__file">
+                                <input
+                                  ref={appearanceReferenceRef}
+                                  className="requests-pz__file-input"
+                                  type="file"
+                                  accept="image/*,.pdf,.doc,.docx,.txt"
+                                  onChange={(event) => {
+                                    const file = event.target.files?.[0] ?? null;
+                                    setAppearanceReference(file);
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  className="requests-pz__file-btn"
+                                  onClick={() => appearanceReferenceRef.current?.click()}
+                                >
+                                  {appearanceReference ? appearanceReference.name : "Attach a file"}
+                                </button>
+                                {appearanceReference ? (
+                                  <button
+                                    type="button"
+                                    className="requests-pz__file-clear"
+                                    aria-label="Remove file"
+                                    onClick={() => {
+                                      setAppearanceReference(null);
+                                      if (appearanceReferenceRef.current) {
+                                        appearanceReferenceRef.current.value = "";
+                                      }
+                                    }}
+                                  >
+                                    Remove
+                                  </button>
+                                ) : null}
+                              </div>
+                            </div>
+                          </section>
+                        ) : (
+                          <section className="requests-pz__block">
+                            <p className="requests-pz__eyebrow">Message</p>
+                            <div className="requests-pz__options" role="group" aria-label="Who is this for">
                               <button
                                 type="button"
                                 ref={recipientSelfRef}
-                                className={`requests-recipient-toggle__btn${recipientTarget === "self" ? " is-selected" : ""}`}
+                                className={`requests-pz__option${recipientTarget === "self" ? " is-selected" : ""}`}
                                 aria-pressed={recipientTarget === "self"}
                                 onClick={() => {
                                   setRecipientTarget("self");
@@ -1193,7 +1509,7 @@ export default function ProfileRequestsView({
                               <button
                                 type="button"
                                 ref={recipientOtherRef}
-                                className={`requests-recipient-toggle__btn${recipientTarget === "other" ? " is-selected" : ""}`}
+                                className={`requests-pz__option${recipientTarget === "other" ? " is-selected" : ""}`}
                                 aria-pressed={recipientTarget === "other"}
                                 onClick={() => {
                                   setRecipientTarget("other");
@@ -1202,20 +1518,19 @@ export default function ProfileRequestsView({
                                   }, 0);
                                 }}
                               >
-                                For someone else
+                                Someone else
                               </button>
                             </div>
-
                             {recipientTarget === "other" ? (
-                              <>
-                                <label className="requests-personalize__field">
-                                  <span className="requests-personalize__label">Recipient&apos;s name</span>
+                              <div className="requests-pz__pair">
+                                <label className="requests-pz__field">
+                                  <span className="requests-pz__label">Name</span>
                                   <input
                                     ref={recipientNameRef}
-                                    className="requests-personalize__input"
+                                    className="requests-pz__input"
                                     type="text"
                                     value={recipientName}
-                                    placeholder="Enter Name"
+                                    placeholder="Name"
                                     onChange={(event) => setRecipientName(event.target.value)}
                                     onKeyDown={(event) => {
                                       if (event.key === "Enter") {
@@ -1226,14 +1541,14 @@ export default function ProfileRequestsView({
                                     autoComplete="name"
                                   />
                                 </label>
-                                <label className="requests-personalize__field">
-                                  <span className="requests-personalize__label">Recipient&apos;s Username</span>
+                                <label className="requests-pz__field">
+                                  <span className="requests-pz__label">Username</span>
                                   <input
                                     ref={recipientUsernameRef}
-                                    className="requests-personalize__input"
+                                    className="requests-pz__input"
                                     type="text"
                                     value={recipientUsername}
-                                    placeholder="Enter Username"
+                                    placeholder="@username"
                                     onChange={(event) => setRecipientUsername(event.target.value)}
                                     onKeyDown={(event) => {
                                       if (event.key === "Enter") {
@@ -1244,33 +1559,22 @@ export default function ProfileRequestsView({
                                     autoComplete="username"
                                   />
                                 </label>
-                              </>
+                              </div>
                             ) : null}
-
-                            <label className="requests-personalize__field">
-                              <span className="requests-personalize__label">Message for your Shoutout</span>
+                            <label className="requests-pz__field">
+                              <span className="requests-pz__label">Your message</span>
                               <textarea
                                 ref={shoutoutMessageRef}
-                                className="requests-personalize__textarea"
+                                className="requests-pz__input requests-pz__input--area"
                                 value={shoutoutMessage}
-                                placeholder="Type your message here."
+                                placeholder="What should be said, and for whom…"
                                 rows={5}
                                 onChange={(event) => setShoutoutMessage(event.target.value)}
                               />
                             </label>
-
-                            <aside className="requests-personalize__tip" role="note">
-                              <span className="requests-personalize__tip-icon" aria-hidden="true">
-                                !
-                              </span>
-                              <p>
-                                Remember: The more specific and personal you are, the more memorable and special
-                                your shoutout will be!
-                              </p>
-                            </aside>
-                          </div>
-                        </section>
-                      </div>
+                          </section>
+                        )}
+                      </form>
 
                       <aside className="requests-choose-summary">
                         <section className="requests-summary" aria-labelledby="requests-personalize-summary-heading">
@@ -1287,32 +1591,51 @@ export default function ProfileRequestsView({
                           </header>
 
                           <dl className="requests-summary__facts">
-                            <div className="requests-summary__fact">
-                              <dt>Delivery</dt>
-                              <dd>
-                                {deliveryMethod === "feed"
-                                  ? `Feed post (+$${FEED_SURCHARGE})`
-                                  : "Direct message"}
-                              </dd>
-                            </div>
-                            <div className="requests-summary__fact">
-                              <dt>Content</dt>
-                              <dd>
-                                {contentKind.charAt(0).toUpperCase() + contentKind.slice(1)}
-                                {duration ? ` · ${duration}` : ""}
-                              </dd>
-                            </div>
-                            <div className="requests-summary__fact">
-                              <dt>Recipient</dt>
-                              <dd>
-                                {recipientTarget === "self"
-                                  ? "For me"
-                                  : recipientName.trim() || "Someone else"}
-                              </dd>
-                            </div>
+                            {!isAppearanceCategory ? (
+                              <>
+                                <div className="requests-summary__fact">
+                                  <dt>Delivery</dt>
+                                  <dd>
+                                    {deliveryMethod === "feed"
+                                      ? `Tagged feed (+$${FEED_SURCHARGE})`
+                                      : "Direct message"}
+                                  </dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Format</dt>
+                                  <dd>
+                                    {contentKind.charAt(0).toUpperCase() + contentKind.slice(1)}
+                                    {duration ? ` · ${duration}` : ""}
+                                  </dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Recipient</dt>
+                                  <dd>
+                                    {recipientTarget === "self"
+                                      ? "For me"
+                                      : recipientName.trim() || "Someone else"}
+                                  </dd>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="requests-summary__fact">
+                                  <dt>Occasion</dt>
+                                  <dd>{appearanceOccasion.trim() || "Add occasion"}</dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Location</dt>
+                                  <dd>{appearanceLocation?.label.split(",")[0] || "Search location"}</dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Duration</dt>
+                                  <dd>{appearanceDurationLabel || "Select duration"}</dd>
+                                </div>
+                              </>
+                            )}
                             <div className="requests-summary__fact">
                               <dt>Date</dt>
-                              <dd>{formatDisplayDate(deliveryDate)}</dd>
+                              <dd>{deliveryDate ? formatDisplayDate(deliveryDate) : "Select a date"}</dd>
                             </div>
                             <div className="requests-summary__fact">
                               <dt>Time</dt>
@@ -1341,28 +1664,326 @@ export default function ProfileRequestsView({
                           </div>
 
                           <div className="requests-summary__cta-row">
-                            <button
-                              type="button"
-                              className="btn btn--primary requests-summary__cta"
-                              disabled={!personalizedReady}
-                              onClick={() => setPickerStep(4)}
-                            >
-                              Continue
-                            </button>
-                            <SummaryInfoTip
-                              tipId="requests-continue-info-tip"
-                              title="What happens next?"
-                              copy="Continue takes you to Pay & Confirm, where you’ll review your details and complete payment to lock in the request."
-                            />
+                            <div className="requests-summary__cta-shell">
+                              <button
+                                type="button"
+                                className="btn btn--primary requests-summary__cta"
+                                disabled={!personalizedReady}
+                                onClick={() => setPickerStep(4)}
+                              >
+                                Continue
+                              </button>
+                              <span className="requests-summary__cta-tip">
+                                <SummaryInfoTip
+                                  tipId="requests-continue-info-tip"
+                                  title="What happens next?"
+                                  copy="Continue takes you to Review & Pay, where you’ll review your details and complete payment to lock in the request."
+                                />
+                              </span>
+                            </div>
                           </div>
                         </section>
                       </aside>
                     </div>
                   ) : (
-                    <section className="requests-card requests-coming-soon" aria-live="polite">
-                      <h2>Pay & Confirm</h2>
-                      <p>This step will summarize your request and take you through payment.</p>
-                    </section>
+                    <div className="requests-choose-split requests-review-layout">
+                      <div className="requests-review">
+                        <section className="requests-review__panel" aria-label="Request review">
+                          <div className="requests-review__section" aria-labelledby="requests-review-request-heading">
+                            <header className="requests-review__head">
+                              <div>
+                                <p className="requests-review__eyebrow">Occasion &amp; request</p>
+                                <h2 id="requests-review-request-heading">{selected?.label ?? "Your request"}</h2>
+                              </div>
+                              <div className="requests-review__actions">
+                                <button type="button" className="requests-review__edit" onClick={() => setPickerStep(1)}>
+                                  Edit occasion
+                                </button>
+                                <button type="button" className="requests-review__edit" onClick={() => setPickerStep(2)}>
+                                  Edit request
+                                </button>
+                              </div>
+                            </header>
+                            <dl className="requests-review__facts">
+                              <div className="requests-review__fact">
+                                <dt>Category</dt>
+                                <dd>{activeCategory.title}</dd>
+                              </div>
+                              <div className="requests-review__fact">
+                                <dt>Request</dt>
+                                <dd>{selected?.label}</dd>
+                              </div>
+                              {selected?.blurb ? (
+                                <div className="requests-review__fact requests-review__fact--wide">
+                                  <dt>Includes</dt>
+                                  <dd>{selected.blurb}</dd>
+                                </div>
+                              ) : null}
+                            </dl>
+                          </div>
+
+                          {!isAppearanceCategory ? (
+                            <>
+                              <hr className="requests-review__rule" />
+                              <div className="requests-review__section" aria-labelledby="requests-review-delivery-heading">
+                                <header className="requests-review__head">
+                                  <div>
+                                    <p className="requests-review__eyebrow">Personalize</p>
+                                    <h2 id="requests-review-delivery-heading">Delivery &amp; content</h2>
+                                  </div>
+                                  <button type="button" className="requests-review__edit" onClick={() => setPickerStep(3)}>
+                                    Edit
+                                  </button>
+                                </header>
+                                <dl className="requests-review__facts">
+                                  <div className="requests-review__fact">
+                                    <dt>Delivery</dt>
+                                    <dd>
+                                      {deliveryMethod === "feed"
+                                        ? `Tagged feed post (+$${FEED_SURCHARGE})`
+                                        : "Direct message"}
+                                    </dd>
+                                  </div>
+                                  <div className="requests-review__fact">
+                                    <dt>Content</dt>
+                                    <dd>
+                                      {contentKind.charAt(0).toUpperCase() + contentKind.slice(1)}
+                                      {duration ? ` · ${duration}` : ""}
+                                    </dd>
+                                  </div>
+                                </dl>
+                              </div>
+                            </>
+                          ) : null}
+
+                          <hr className="requests-review__rule" />
+                          <div className="requests-review__section" aria-labelledby="requests-review-schedule-heading">
+                            <header className="requests-review__head">
+                              <div>
+                                <p className="requests-review__eyebrow">Personalize</p>
+                                <h2 id="requests-review-schedule-heading">Schedule</h2>
+                              </div>
+                              <button type="button" className="requests-review__edit" onClick={() => setPickerStep(3)}>
+                                Edit
+                              </button>
+                            </header>
+                            <dl className="requests-review__facts">
+                              <div className="requests-review__fact">
+                                <dt>Date</dt>
+                                <dd>{formatDisplayDate(deliveryDate)}</dd>
+                              </div>
+                              <div className="requests-review__fact">
+                                <dt>Time</dt>
+                                <dd>{deliveryTime || "—"}</dd>
+                              </div>
+                            </dl>
+                          </div>
+
+                          {isAppearanceCategory ? (
+                            <>
+                              <hr className="requests-review__rule" />
+                              <div className="requests-review__section" aria-labelledby="requests-review-event-heading">
+                                <header className="requests-review__head">
+                                  <div>
+                                    <p className="requests-review__eyebrow">Personalize</p>
+                                    <h2 id="requests-review-event-heading">Event details</h2>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    className="requests-review__edit"
+                                    onClick={() => setPickerStep(3)}
+                                  >
+                                    Edit
+                                  </button>
+                                </header>
+                                <dl className="requests-review__facts">
+                                  <div className="requests-review__fact">
+                                    <dt>Occasion</dt>
+                                    <dd>{appearanceOccasion.trim() || "—"}</dd>
+                                  </div>
+                                  <div className="requests-review__fact">
+                                    <dt>Duration</dt>
+                                    <dd>{appearanceDurationLabel || "—"}</dd>
+                                  </div>
+                                  <div className="requests-review__fact requests-review__fact--wide">
+                                    <dt>Location</dt>
+                                    <dd>{appearanceLocation?.label || "—"}</dd>
+                                  </div>
+                                  <div className="requests-review__fact requests-review__fact--wide">
+                                    <dt>Expectation</dt>
+                                    <dd className="requests-review__message">
+                                      {appearanceExpectation.trim() || "—"}
+                                    </dd>
+                                  </div>
+                                  <div className="requests-review__fact">
+                                    <dt>Reference</dt>
+                                    <dd>{appearanceReference?.name || "None attached"}</dd>
+                                  </div>
+                                </dl>
+                              </div>
+                            </>
+                          ) : (
+                            <>
+                              <hr className="requests-review__rule" />
+                              <div className="requests-review__section" aria-labelledby="requests-review-recipient-heading">
+                                <header className="requests-review__head">
+                                  <div>
+                                    <p className="requests-review__eyebrow">Personalize</p>
+                                    <h2 id="requests-review-recipient-heading">Recipient &amp; message</h2>
+                                  </div>
+                                  <button type="button" className="requests-review__edit" onClick={() => setPickerStep(3)}>
+                                    Edit
+                                  </button>
+                                </header>
+                                <dl className="requests-review__facts">
+                                  <div className="requests-review__fact">
+                                    <dt>For</dt>
+                                    <dd>
+                                      {recipientTarget === "self"
+                                        ? "Me"
+                                        : recipientName.trim() || "Someone else"}
+                                    </dd>
+                                  </div>
+                                  {recipientTarget === "other" ? (
+                                    <div className="requests-review__fact">
+                                      <dt>Username</dt>
+                                      <dd>
+                                        {recipientUsername.trim()
+                                          ? `@${recipientUsername.trim().replace(/^@/, "")}`
+                                          : "—"}
+                                      </dd>
+                                    </div>
+                                  ) : null}
+                                  <div className="requests-review__fact requests-review__fact--wide">
+                                    <dt>Message</dt>
+                                    <dd className="requests-review__message">
+                                      {shoutoutMessage.trim() || "—"}
+                                    </dd>
+                                  </div>
+                                </dl>
+                              </div>
+                            </>
+                          )}
+                        </section>
+                      </div>
+
+                      <aside className="requests-choose-summary">
+                        <section className="requests-summary" aria-labelledby="requests-review-summary-heading">
+                          <header className="requests-summary__head">
+                            <p className="requests-summary__eyebrow" id="requests-review-summary-heading">
+                              Order summary
+                            </p>
+                            <h2 className="requests-summary__title">
+                              {selected?.label ?? "Your request"}
+                            </h2>
+                            {activeCategory ? (
+                              <p className="requests-summary__context">{activeCategory.title}</p>
+                            ) : null}
+                          </header>
+
+                          <dl className="requests-summary__facts">
+                            {!isAppearanceCategory ? (
+                              <>
+                                <div className="requests-summary__fact">
+                                  <dt>Delivery</dt>
+                                  <dd>
+                                    {deliveryMethod === "feed"
+                                      ? `Feed post (+$${FEED_SURCHARGE})`
+                                      : "Direct message"}
+                                  </dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Content</dt>
+                                  <dd>
+                                    {contentKind.charAt(0).toUpperCase() + contentKind.slice(1)}
+                                    {duration ? ` · ${duration}` : ""}
+                                  </dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Recipient</dt>
+                                  <dd>
+                                    {recipientTarget === "self"
+                                      ? "For me"
+                                      : recipientName.trim() || "Someone else"}
+                                  </dd>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="requests-summary__fact">
+                                  <dt>Occasion</dt>
+                                  <dd>{appearanceOccasion.trim() || "—"}</dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Location</dt>
+                                  <dd>{appearanceLocation?.label.split(",")[0] || "—"}</dd>
+                                </div>
+                                <div className="requests-summary__fact">
+                                  <dt>Duration</dt>
+                                  <dd>{appearanceDurationLabel || "—"}</dd>
+                                </div>
+                              </>
+                            )}
+                            <div className="requests-summary__fact">
+                              <dt>When</dt>
+                              <dd>
+                                {formatDisplayDate(deliveryDate)}
+                                {deliveryTime ? ` · ${deliveryTime}` : ""}
+                              </dd>
+                            </div>
+                          </dl>
+
+                          <div className="requests-summary__total">
+                            <dl className="requests-summary__breakdown">
+                              <div>
+                                <dt>Request fee</dt>
+                                <dd>${dayRate}</dd>
+                              </div>
+                              {feedFee > 0 ? (
+                                <div>
+                                  <dt>Feed post</dt>
+                                  <dd>+${feedFee}</dd>
+                                </div>
+                              ) : null}
+                            </dl>
+                            <div className="requests-summary__total-copy">
+                              <span>Total due</span>
+                              <strong>${totalFee}</strong>
+                            </div>
+                            <MoneyBackGuaranteeTag copy={content.guarantee} tipId="requests-guarantee-tip-step4" />
+                          </div>
+
+                          <div className="requests-review__pay">
+                            <p className="requests-review__pay-label">Accepted payments</p>
+                            <div className="requests-pay-logos" aria-label="Accepted payment methods">
+                              <AmexMark />
+                              <DinersMark />
+                              <VisaMark />
+                              <PaypalMark />
+                              <MastercardMark />
+                            </div>
+                          </div>
+
+                          <div className="requests-summary__cta-row">
+                            <button
+                              type="button"
+                              className="btn btn--primary requests-summary__cta"
+                              disabled={!personalizedReady}
+                              onClick={() => {
+                                // Payment integration comes next; keep the review flow complete for now.
+                              }}
+                            >
+                              Pay ${totalFee}
+                            </button>
+                            <SummaryInfoTip
+                              tipId="requests-pay-info-tip"
+                              title="Before you pay"
+                              copy={`You can still change any detail using Edit or the step tracker. Payment locks in your request with ${profile.name}.`}
+                            />
+                          </div>
+                        </section>
+                      </aside>
+                    </div>
                   )}
                 </section>
               )}
@@ -1413,8 +2034,93 @@ export default function ProfileRequestsView({
                 </div>
               </div>
 
+              <div className="product-detail__reviews-toolbar">
+                <div className="product-detail__review-menu" ref={reviewFilterRef}>
+                  <button
+                    type="button"
+                    className="product-detail__review-menu-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded={reviewFilterOpen}
+                    onClick={() => {
+                      setReviewFilterOpen((open) => !open);
+                      setReviewSortOpen(false);
+                    }}
+                  >
+                    <span>
+                      Filter by <strong>{reviewFilterLabel}</strong>
+                    </span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                  </button>
+                  {reviewFilterOpen ? (
+                    <ul className="product-detail__review-menu-list" role="listbox" aria-label="Filter by star rating">
+                      {REVIEW_RATING_OPTIONS.map((option) => (
+                        <li key={String(option.id)} role="none">
+                          <button
+                            type="button"
+                            role="option"
+                            aria-selected={reviewRatingFilter === option.id}
+                            className={`product-detail__review-menu-option${reviewRatingFilter === option.id ? " is-selected" : ""}`}
+                            onClick={() => {
+                              setReviewRatingFilter(option.id);
+                              setReviewFilterOpen(false);
+                              setVisibleReviewCount(REVIEW_INITIAL_COUNT);
+                            }}
+                          >
+                            {option.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+
+                <div className="product-detail__review-menu" ref={reviewSortRef}>
+                  <button
+                    type="button"
+                    className="product-detail__review-menu-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded={reviewSortOpen}
+                    onClick={() => {
+                      setReviewSortOpen((open) => !open);
+                      setReviewFilterOpen(false);
+                    }}
+                  >
+                    <span>
+                      Sort by <strong>{reviewSortLabel}</strong>
+                    </span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M7 10l5 5 5-5z" />
+                    </svg>
+                  </button>
+                  {reviewSortOpen ? (
+                    <ul className="product-detail__review-menu-list" role="listbox" aria-label="Sort reviews">
+                      {REVIEW_SORT_OPTIONS.map((option) => (
+                        <li key={option.id} role="none">
+                          <button
+                            type="button"
+                            role="option"
+                            aria-selected={reviewSort === option.id}
+                            className={`product-detail__review-menu-option${reviewSort === option.id ? " is-selected" : ""}`}
+                            onClick={() => {
+                              setReviewSort(option.id);
+                              setReviewSortOpen(false);
+                              setVisibleReviewCount(REVIEW_INITIAL_COUNT);
+                            }}
+                          >
+                            {option.label}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </div>
+              </div>
+
               <div className="product-detail__reviews">
-                {visibleReviews.map((review) => (
+                {visibleReviews.length ? (
+                  visibleReviews.map((review) => (
                   <article key={review.id} className="product-detail__review">
                     <div className="product-detail__review-head">
                       <span className="product-detail__review-avatar" aria-hidden="true">
@@ -1429,7 +2135,12 @@ export default function ProfileRequestsView({
                     <p className="product-detail__review-variant">{review.variant}</p>
                     <p className="product-detail__review-text">{review.text}</p>
                   </article>
-                ))}
+                  ))
+                ) : (
+                  <p className="product-detail__reviews-empty-copy product-detail__reviews-filter-empty">
+                    No reviews match this filter.
+                  </p>
+                )}
               </div>
 
               {remainingReviews > 0 ? (

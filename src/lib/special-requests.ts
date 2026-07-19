@@ -574,6 +574,7 @@ export type SpecialRequestReview = {
   avatar_initials: string;
   rating: number;
   ago: string;
+  daysAgo: number;
   variant: string;
   text: string;
 };
@@ -631,12 +632,12 @@ const REQUEST_SERVICE_LABELS = [
 ] as const;
 
 const REQUEST_AGOS = [
-  "1 day ago",
-  "3 days ago",
-  "1 week ago",
-  "2 weeks ago",
-  "3 weeks ago",
-  "1 month ago",
+  { label: "1 day ago", days: 1 },
+  { label: "3 days ago", days: 3 },
+  { label: "1 week ago", days: 7 },
+  { label: "2 weeks ago", days: 14 },
+  { label: "3 weeks ago", days: 21 },
+  { label: "1 month ago", days: 30 },
 ] as const;
 
 function hashString(value: string): number {
@@ -673,16 +674,21 @@ export function resolveSpecialRequestReviews(slug: string): SpecialRequestReview
     { label: "Response Speed", score: scoreFromSeed(seed, 1, 4.7) },
     { label: "Personalization", score: scoreFromSeed(seed, 4, 4.8) },
     { label: "Value for Money", score: scoreFromSeed(seed, 8, 4.5) },
+    { label: "Performance standards", score: scoreFromSeed(seed, 3, 4.6) },
+    { label: "Ease of booking", score: scoreFromSeed(seed, 6, 4.7) },
+    { label: "Professionalism", score: scoreFromSeed(seed, 9, 4.8) },
   ];
 
   const reviews: SpecialRequestReview[] = Array.from({ length: count }, (_, index) => {
     const reviewer = pick(REQUEST_REVIEWERS, seed, index * 3);
+    const ago = pick(REQUEST_AGOS, seed, index * 2);
     return {
       id: `${slug}-request-review-${index + 1}`,
       name: reviewer.name,
       avatar_initials: reviewer.initials,
-      rating: 4 + ((seed + index) % 2),
-      ago: pick(REQUEST_AGOS, seed, index * 2),
+      rating: 3 + ((seed + index * 5) % 3),
+      ago: ago.label,
+      daysAgo: ago.days,
       variant: pick(REQUEST_SERVICE_LABELS, seed, index + 1),
       text: pick(REQUEST_REVIEW_TEXTS, seed, index * 4),
     };
