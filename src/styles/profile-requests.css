@@ -442,6 +442,20 @@
   color: rgba(255, 255, 255, 0.62);
 }
 
+.requests-gallery__proof .collection-product__stars {
+  gap: 0.1rem;
+  margin-top: -0.1rem;
+}
+
+.requests-gallery__proof .collection-product__stars svg {
+  stroke: rgba(255, 255, 255, 0.38);
+}
+
+.requests-gallery__proof .collection-product__stars svg.is-filled {
+  fill: #f5c518;
+  stroke: #f5c518;
+}
+
 .requests-gallery__proof blockquote {
   margin: 0;
   max-width: 16.5rem;

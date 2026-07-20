@@ -54,6 +54,7 @@ export type RequestGalleryItem = {
   teaser?: string;
   quote?: string;
   quoteBy?: string;
+  quoteRating?: number;
   hasPlay?: boolean;
 };
 
@@ -143,6 +144,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       teaser: "A pre-race pep talk they can replay at the start line.",
       quote: "Booked a race-day pep talk before Mumbai Marathon — exactly the boost I needed at the start line.",
       quoteBy: "Rohan Silva",
+      quoteRating: 5,
       categoryId: "shout-outs",
       serviceId: "race-pep",
       hasPlay: true,
@@ -155,6 +157,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       teaser: "Celebrate the PR, the finish, or just showing up.",
       quote: "Finish-line congratulations video was the highlight of my race weekend album.",
       quoteBy: "James Cole",
+      quoteRating: 5,
       categoryId: "shout-outs",
       serviceId: "finish-congrats",
       hasPlay: true,
@@ -167,6 +170,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       teaser: "Bring Mia to your run club for a live guest moment.",
       quote: "She joined our run club as a guest and stayed to chat with everyone. Absolute pro.",
       quoteBy: "Kavish Fernando",
+      quoteRating: 5,
       categoryId: "appearances",
       serviceId: "club-guest",
       hasPlay: true,
@@ -179,6 +183,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       teaser: "A personal message with trail-tested heart.",
       quote: "Message for my fiancé after his first 10K was perfect — funny, warm, and on-brand Mia.",
       quoteBy: "Nina Okoye",
+      quoteRating: 5,
       categoryId: "shout-outs",
       serviceId: "loved-one",
     },
@@ -190,6 +195,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       teaser: "Practical habits to bounce back after hard weeks.",
       quote: "Recovery tips after my ultra were clear and easy to follow. Worth every rupee.",
       quoteBy: "Sara Malik",
+      quoteRating: 4,
       categoryId: "training",
       serviceId: "recovery",
     },
@@ -201,6 +207,7 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       teaser: "Stage energy for your next community event.",
       quote: "Panel appearance at our charity expo was inspiring. Crowd loved her stories.",
       quoteBy: "Priya Nair",
+      quoteRating: 5,
       categoryId: "appearances",
       serviceId: "mc",
       hasPlay: true,

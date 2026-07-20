@@ -1001,6 +1001,9 @@ export default function ProfileRequestsView({
                             {activeGalleryItem.quoteBy ? (
                               <figcaption>{activeGalleryItem.quoteBy}</figcaption>
                             ) : null}
+                            {activeGalleryItem.quoteRating ? (
+                              <StarRating rating={activeGalleryItem.quoteRating} size={11} />
+                            ) : null}
                             <blockquote>{activeGalleryItem.quote}</blockquote>
                           </figure>
                         ) : null}
