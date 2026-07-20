@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Fragment, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import LeftNav from "@/components/LeftNav";
+import MediaPlayOverlay from "@/components/MediaPlayOverlay";
 import MobileNav from "@/components/MobileNav";
 import PageBodyClass from "@/components/PageBodyClass";
 import LocationSearchField, {
@@ -455,16 +456,54 @@ function flattenServices(categories: ReturnType<typeof getCreatorRequests>) {
 export default function ProfileRequestsView({
   profile,
   variant = "start",
+  initialCategoryId,
+  initialServiceId,
 }: {
   profile: ProfileData;
   variant?: "start" | "choose";
+  initialCategoryId?: string;
+  initialServiceId?: string;
 }) {
   const content = getCreatorRequests(profile.slug);
   const allServices = useMemo(() => flattenServices(content), [content]);
   const reviewsBlock = useMemo(() => resolveSpecialRequestReviews(profile.slug), [profile.slug]);
-  const [categoryId, setCategoryId] = useState("");
-  const [selectedId, setSelectedId] = useState(allServices[0]?.id ?? "");
+
+  const resolvedInitialCategoryId = useMemo(() => {
+    if (!content) return "";
+    if (initialCategoryId && content.categories.some((category) => category.id === initialCategoryId)) {
+      return initialCategoryId;
+    }
+    if (initialServiceId) {
+      const match = content.categories.find((category) =>
+        category.services.some((service) => service.id === initialServiceId),
+      );
+      return match?.id ?? "";
+    }
+    return "";
+  }, [content, initialCategoryId, initialServiceId]);
+
+  const resolvedInitialServiceId = useMemo(() => {
+    if (!content || !resolvedInitialCategoryId) {
+      if (initialServiceId && allServices.some((service) => service.id === initialServiceId)) {
+        return initialServiceId;
+      }
+      return allServices[0]?.id ?? "";
+    }
+    const category = content.categories.find((item) => item.id === resolvedInitialCategoryId);
+    if (!category) return allServices[0]?.id ?? "";
+    if (initialServiceId && category.services.some((service) => service.id === initialServiceId)) {
+      return initialServiceId;
+    }
+    return category.services.find((service) => service.popular)?.id ?? category.services[0]?.id ?? "";
+  }, [allServices, content, initialServiceId, resolvedInitialCategoryId]);
+
+  const [categoryId, setCategoryId] = useState(resolvedInitialCategoryId);
+  const [selectedId, setSelectedId] = useState(resolvedInitialServiceId);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [galleryPaused, setGalleryPaused] = useState(false);
+  const [stickyCtaVisible, setStickyCtaVisible] = useState(false);
+  const introCtaRef = useRef<HTMLDivElement>(null);
+  const bottomCtaRef = useRef<HTMLSectionElement>(null);
   const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_INITIAL_COUNT);
   const [reviewSort, setReviewSort] = useState<ReviewSortId>("relevant");
   const [reviewRatingFilter, setReviewRatingFilter] = useState<ReviewRatingFilter>("all");
@@ -472,7 +511,9 @@ export default function ProfileRequestsView({
   const [reviewFilterOpen, setReviewFilterOpen] = useState(false);
   const reviewSortRef = useRef<HTMLDivElement>(null);
   const reviewFilterRef = useRef<HTMLDivElement>(null);
-  const [pickerStep, setPickerStep] = useState<1 | 2 | 3 | 4>(1);
+  const [pickerStep, setPickerStep] = useState<1 | 2 | 3 | 4>(
+    resolvedInitialCategoryId ? 2 : 1,
+  );
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>("dm");
   const [contentKind, setContentKind] = useState<ContentKind>("video");
   const [duration, setDuration] = useState("");
@@ -558,6 +599,48 @@ export default function ProfileRequestsView({
     };
   }, [reviewSortOpen, reviewFilterOpen]);
 
+  useEffect(() => {
+    if (variant !== "start" || !content?.gallery.length || galleryPaused) return;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => {
+      setGalleryIndex((current) => {
+        const len = content.gallery.length;
+        return current >= len - 1 ? 0 : current + 1;
+      });
+    }, 5200);
+    return () => window.clearInterval(timer);
+  }, [content?.gallery.length, galleryPaused, variant]);
+
+  useEffect(() => {
+    if (variant !== "start") return;
+
+    const updateFromScroll = () => {
+      const mobile = window.matchMedia("(max-width: 900px)").matches;
+      if (!mobile) {
+        setStickyCtaVisible(false);
+        return;
+      }
+      const introEl = introCtaRef.current;
+      const bottomEl = bottomCtaRef.current;
+      if (!introEl || !bottomEl) return;
+      const introRect = introEl.getBoundingClientRect();
+      const bottomRect = bottomEl.getBoundingClientRect();
+      const introGone = introRect.bottom < 48;
+      const bottomProminent =
+        bottomRect.top < window.innerHeight * 0.52 && bottomRect.bottom > 80;
+      setStickyCtaVisible(introGone && !bottomProminent);
+    };
+
+    updateFromScroll();
+    window.addEventListener("scroll", updateFromScroll, { passive: true });
+    window.addEventListener("resize", updateFromScroll);
+    return () => {
+      window.removeEventListener("scroll", updateFromScroll);
+      window.removeEventListener("resize", updateFromScroll);
+    };
+  }, [variant, content]);
+
   const filteredReviews = useMemo(() => {
     const filtered =
       reviewRatingFilter === "all"
@@ -591,8 +674,21 @@ export default function ProfileRequestsView({
     ? `Back to ${profile.name}'s profile`
     : "Back to Special Requests";
 
+  function buildChooseHref(nextCategoryId: string, nextServiceId?: string) {
+    const params = new URLSearchParams();
+    if (nextCategoryId) params.set("category", nextCategoryId);
+    if (nextServiceId) params.set("service", nextServiceId);
+    const query = params.toString();
+    return query ? `${chooseHref}?${query}` : chooseHref;
+  }
+
+  const activeGalleryItem = content.gallery[galleryIndex] ?? content.gallery[0];
+  const reviewAverageLabel = reviewsBlock.average.toFixed(1);
+
   const activeCategory =
     content.categories.find((category) => category.id === categoryId) ?? content.categories[0];
+  const popularCategory =
+    content.categories.find((category) => category.popular) ?? content.categories[0];
   const hasChosenCategory = Boolean(categoryId);
   const isAppearanceCategory = categoryId === "appearances";
   const selected =
@@ -642,14 +738,6 @@ export default function ProfileRequestsView({
       if (next >= content!.gallery.length) return 0;
       return next;
     });
-  }
-
-  function galleryCoverOffset(index: number) {
-    const len = content!.gallery.length;
-    let offset = index - galleryIndex;
-    if (offset > Math.floor(len / 2)) offset -= len;
-    if (offset < -Math.floor((len - 1) / 2)) offset += len;
-    return offset;
   }
 
   function chooseCategory(nextCategoryId: string) {
@@ -714,38 +802,39 @@ export default function ProfileRequestsView({
               {isStart ? (
                 <>
                   <section className="requests-intro" aria-labelledby="requests-heading">
-                    <p className="requests-intro__eyebrow">Special Requests</p>
-                    <h1 id="requests-heading">Make it personal</h1>
+                    <p className="requests-intro__eyebrow">Special Requests · {profile.name}</p>
+                    <h1 id="requests-heading">Make their next moment unforgettable</h1>
                     {content.intro.map((paragraph) => (
                       <p key={paragraph}>{paragraph}</p>
                     ))}
-                  </section>
-
-                  <section className="requests-how" aria-labelledby="requests-how-heading">
-                    <header className="requests-how__intro">
-                      <div>
-                        <p className="requests-how__eyebrow">Simple booking</p>
-                        <h2 id="requests-how-heading">How it works</h2>
-                      </div>
-                    </header>
-                    <ol className="requests-how__steps">
-                      {content.howItWorks.map((step, index) => (
-                        <li key={step.title} className="requests-how__step">
-                          <span className="requests-how__num" aria-hidden="true">
-                            {index + 1}
-                          </span>
-                          <div>
-                            <strong>{step.title}</strong>
-                            <p>{step.copy}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
+                    <div className="requests-intro__actions" ref={introCtaRef}>
+                      <Link
+                        href={chooseHref}
+                        className="btn requests-intro__cta"
+                      >
+                        Book with {profile.name.split(" ")[0]}
+                      </Link>
+                      <p className="requests-intro__proof">
+                        <span aria-hidden="true">★</span>
+                        <strong>{reviewAverageLabel}</strong>
+                        <span>
+                          · {reviewsBlock.count} bookings
+                        </span>
+                      </p>
+                    </div>
                   </section>
 
                   <div
                     className="requests-gallery"
                     aria-label="Request examples"
+                    onMouseEnter={() => setGalleryPaused(true)}
+                    onMouseLeave={() => setGalleryPaused(false)}
+                    onFocusCapture={() => setGalleryPaused(true)}
+                    onBlurCapture={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                        setGalleryPaused(false);
+                      }
+                    }}
                     onKeyDown={(event) => {
                       if (event.key === "ArrowLeft") {
                         event.preventDefault();
@@ -757,74 +846,87 @@ export default function ProfileRequestsView({
                       }
                     }}
                   >
-                    <div className="requests-gallery__cover">
-                      <button
-                        type="button"
-                        className="requests-gallery__nav requests-gallery__nav--prev"
-                        aria-label="Previous example"
-                        onClick={() => goGallery(-1)}
-                      >
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path
-                            d="M14.5 6.5 9 12l5.5 5.5"
-                            stroke="currentColor"
-                            strokeWidth="2.1"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-
-                      <div className="requests-gallery__stage" aria-live="polite">
-                        {content.gallery
-                          .map((item, index) => ({
-                            item,
-                            index,
-                            offset: galleryCoverOffset(index),
-                          }))
-                          .sort((a, b) => Math.abs(b.offset) - Math.abs(a.offset))
-                          .map(({ item, index, offset }) => {
-                          const isActive = offset === 0;
-                          const isVisible = Math.abs(offset) <= 2;
+                    <div className="requests-gallery__panel">
+                      <div className="requests-gallery__media" aria-live="polite">
+                        {content.gallery.map((item, index) => {
+                          const isActive = index === galleryIndex;
                           return (
-                            <button
+                            <div
                               key={item.id}
-                              type="button"
-                              className={`requests-gallery__card${isActive ? " is-active" : ""}${isVisible ? "" : " is-far"}`}
-                              data-offset={offset}
-                              aria-label={item.caption}
-                              aria-current={isActive ? "true" : undefined}
-                              tabIndex={isActive ? 0 : -1}
-                              onClick={() => {
-                                if (!isActive) setGalleryIndex(index);
-                              }}
+                              className={`requests-gallery__slide${isActive ? " is-active" : ""}`}
+                              aria-hidden={!isActive}
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img src={item.src} alt={isActive ? item.alt : ""} />
-                              {isActive ? (
-                                <span className="requests-gallery__caption">{item.caption}</span>
-                              ) : null}
-                            </button>
+                            </div>
                           );
                         })}
+
+                        <MediaPlayOverlay className="requests-gallery__play" />
+
+                        <button
+                          type="button"
+                          className="requests-gallery__nav requests-gallery__nav--prev"
+                          aria-label="Previous example"
+                          onClick={() => goGallery(-1)}
+                        >
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path
+                              d="M14.5 6.5 9 12l5.5 5.5"
+                              stroke="currentColor"
+                              strokeWidth="2.1"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          className="requests-gallery__nav requests-gallery__nav--next"
+                          aria-label="Next example"
+                          onClick={() => goGallery(1)}
+                        >
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path
+                              d="M9.5 6.5 15 12l-5.5 5.5"
+                              stroke="currentColor"
+                              strokeWidth="2.1"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
+
+                        {activeGalleryItem?.quote ? (
+                          <figure className="requests-gallery__proof" aria-live="polite">
+                            {activeGalleryItem.quoteBy ? (
+                              <figcaption>{activeGalleryItem.quoteBy}</figcaption>
+                            ) : null}
+                            <blockquote>{activeGalleryItem.quote}</blockquote>
+                          </figure>
+                        ) : null}
                       </div>
 
-                      <button
-                        type="button"
-                        className="requests-gallery__nav requests-gallery__nav--next"
-                        aria-label="Next example"
-                        onClick={() => goGallery(1)}
-                      >
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <path
-                            d="M9.5 6.5 15 12l-5.5 5.5"
-                            stroke="currentColor"
-                            strokeWidth="2.1"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
+                      {activeGalleryItem ? (
+                        <div className="requests-gallery__footer">
+                          <div className="requests-gallery__copy">
+                            <p className="requests-gallery__eyebrow">Example</p>
+                            <h2 className="requests-gallery__caption">{activeGalleryItem.caption}</h2>
+                            {activeGalleryItem.teaser ? (
+                              <p className="requests-gallery__teaser">{activeGalleryItem.teaser}</p>
+                            ) : null}
+                          </div>
+                          <Link
+                            href={buildChooseHref(
+                              activeGalleryItem.categoryId,
+                              activeGalleryItem.serviceId,
+                            )}
+                            className="btn requests-gallery__book"
+                          >
+                            Book this
+                          </Link>
+                        </div>
+                      ) : null}
                     </div>
 
                     <div className="requests-gallery__dots" role="tablist" aria-label="Example slides">
@@ -842,37 +944,27 @@ export default function ProfileRequestsView({
                     </div>
                   </div>
 
-                  <section className="requests-start-cta" aria-label="Start booking">
-                    <div className="requests-start-cta__action">
-                      <div className="requests-start-cta__lead">
-                        <span className="requests-start-cta__icon" aria-hidden="true">
-                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                            <path
-                              d="M12 3.2 13.4 8.6 18.8 10 13.4 11.4 12 16.8 10.6 11.4 5.2 10 10.6 8.6 12 3.2Z"
-                              fill="currentColor"
-                            />
-                            <path
-                              d="m18.2 14.2.7 2.4 2.4.7-2.4.7-.7 2.4-.7-2.4-2.4-.7 2.4-.7.7-2.4Z"
-                              fill="currentColor"
-                            />
-                            <path
-                              d="m6.4 14.8.55 1.85 1.85.55-1.85.55L6.4 19.6l-.55-1.85-1.85-.55 1.85-.55.55-1.85Z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
-                        <div className="requests-start-cta__copy">
-                          <h2>Ready to book something special?</h2>
-                          <p>
-                            Pick an occasion, choose a request, and {profile.name} will take it from
-                            there.
-                          </p>
-                        </div>
-                      </div>
-                      <Link href={chooseHref} className="btn requests-start-cta__btn">
-                        Choose your experience
-                      </Link>
+                  <section className="requests-start-cta" ref={bottomCtaRef} aria-label="Booking details">
+                    <div className="requests-start-cta__how">
+                      <header className="requests-start-cta__how-head">
+                        <p className="requests-start-cta__how-eyebrow">Simple booking</p>
+                        <h2 id="requests-how-heading">How it works</h2>
+                      </header>
+                      <ol className="requests-how__steps" aria-labelledby="requests-how-heading">
+                        {content.howItWorks.map((step, index) => (
+                          <li key={step.title} className="requests-how__step">
+                            <span className="requests-how__num" aria-hidden="true">
+                              {index + 1}
+                            </span>
+                            <div>
+                              <strong>{step.title}</strong>
+                              <p>{step.copy}</p>
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
                     </div>
+
                     <dl className="requests-start-cta__facts">
                       <div>
                         <span className="requests-start-cta__fact-icon" aria-hidden="true">
@@ -998,21 +1090,39 @@ export default function ProfileRequestsView({
                               ? "A few details so everything arrives exactly right."
                               : "Review everything below, then pay. Use Edit or the steps above to change anything."}
                       </p>
+                      {pickerStep === 1 ? (
+                        <p className="requests-guide__trust">
+                          <span aria-hidden="true">★</span> {reviewAverageLabel} ·{" "}
+                          {reviewsBlock.count} bookings · Avg. response {content.responseTime}
+                        </p>
+                      ) : null}
                     </div>
 
                     <nav className="requests-progress" aria-label="Request steps">
                       {(
                         [
-                          { step: 1 as const, label: "Occasion", enabled: true },
-                          { step: 2 as const, label: "Request", enabled: hasChosenCategory },
+                          {
+                            step: 1 as const,
+                            label: "Occasion",
+                            shortLabel: "Occasion",
+                            enabled: true,
+                          },
+                          {
+                            step: 2 as const,
+                            label: "Request",
+                            shortLabel: "Request",
+                            enabled: hasChosenCategory,
+                          },
                           {
                             step: 3 as const,
                             label: "Personalize",
+                            shortLabel: "Details",
                             enabled: hasChosenCategory && Boolean(selected),
                           },
                           {
                             step: 4 as const,
                             label: "Review & Pay",
+                            shortLabel: "Pay",
                             enabled: hasChosenCategory && Boolean(selected) && personalizedReady,
                           },
                         ] as const
@@ -1033,11 +1143,15 @@ export default function ProfileRequestsView({
                             onClick={() => setPickerStep(item.step)}
                             disabled={!item.enabled}
                             aria-current={pickerStep === item.step ? "step" : undefined}
+                            aria-label={item.label}
                           >
                             <span className="requests-progress__num" aria-hidden="true">
                               {item.step}
                             </span>
-                            <span className="requests-progress__label">{item.label}</span>
+                            <span className="requests-progress__label" aria-hidden="true">
+                              <span className="requests-progress__label-full">{item.label}</span>
+                              <span className="requests-progress__label-short">{item.shortLabel}</span>
+                            </span>
                           </button>
                         </Fragment>
                       ))}
@@ -1046,8 +1160,8 @@ export default function ProfileRequestsView({
 
                   {pickerStep === 1 ? (
                     <>
-                      <div className="requests-intent-grid" role="list">
-                        {content.categories.map((category, index) => {
+                      <div className="requests-pick" role="list">
+                        {content.categories.map((category) => {
                           const fromPrice = Math.min(
                             ...category.services.map((service) => service.priceMin),
                           );
@@ -1057,46 +1171,44 @@ export default function ProfileRequestsView({
                               key={category.id}
                               type="button"
                               role="listitem"
-                              className={`requests-intent${isActive ? " is-selected" : ""}`}
+                              className={`requests-pick__option${isActive ? " is-selected" : ""}`}
                               aria-pressed={isActive}
+                              aria-label={`${category.intent}. From $${fromPrice}${
+                                category.popular ? ". Most booked" : ""
+                              }`}
                               onClick={() => chooseCategory(category.id)}
                             >
-                              <span className="requests-intent__media" aria-hidden="true">
+                              <span className="requests-pick__media" aria-hidden="true">
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img src={category.image} alt="" />
                               </span>
-                              <span className="requests-intent__shade" aria-hidden="true" />
-                              <span className="requests-intent__body">
-                                <span className="requests-intent__index">
-                                  {String(index + 1).padStart(2, "0")}
-                                </span>
-                                <span className="requests-intent__eyebrow">{category.intent}</span>
-                                <strong>{category.title}</strong>
-                                <span className="requests-intent__blurb">{category.blurb}</span>
-                                <span className="requests-intent__footer">
-                                  <span className="requests-intent__meta">
-                                    From ${fromPrice}
-                                    <span aria-hidden="true"> · </span>
-                                    {category.services.length} options
+                              <span className="requests-pick__veil" aria-hidden="true" />
+                              <span className="requests-pick__label">
+                                {category.popular ? (
+                                  <span className="requests-pick__note">Most booked</span>
+                                ) : (
+                                  <span className="requests-pick__note requests-pick__note--quiet">
+                                    {category.formats[0]}
                                   </span>
-                                  <span className="requests-intent__cta">
-                                    Choose
-                                    <svg
-                                      width="16"
-                                      height="16"
-                                      viewBox="0 0 24 24"
-                                      fill="currentColor"
-                                      aria-hidden="true"
-                                    >
-                                      <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
-                                    </svg>
-                                  </span>
-                                </span>
+                                )}
+                                <strong>{category.intent}</strong>
+                                <span className="requests-pick__price">From ${fromPrice}</span>
                               </span>
                             </button>
                           );
                         })}
                       </div>
+                      <p className="requests-intent-help">
+                        Not sure?{" "}
+                        <button
+                          type="button"
+                          className="requests-intent-help__action"
+                          onClick={() => chooseCategory(popularCategory.id)}
+                        >
+                          Start with {popularCategory.intent}
+                        </button>
+                        — {profile.name.split(" ")[0]}’s most booked.
+                      </p>
                     </>
                   ) : pickerStep === 2 ? (
                     <>
@@ -2285,6 +2397,28 @@ export default function ProfileRequestsView({
             </section>
           ) : null}
         </main>
+        {isStart ? (
+          <div
+            className={`requests-sticky-cta${stickyCtaVisible ? " is-visible" : ""}`}
+            aria-hidden={!stickyCtaVisible}
+          >
+            <div className="requests-sticky-cta__inner">
+              <div className="requests-sticky-cta__copy">
+                <strong>Book with {profile.name.split(" ")[0]}</strong>
+                <span>
+                  ★ {reviewAverageLabel} · from {content.startingRange}
+                </span>
+              </div>
+              <Link
+                href={chooseHref}
+                className="btn requests-sticky-cta__btn"
+                tabIndex={stickyCtaVisible ? 0 : -1}
+              >
+                Book now
+              </Link>
+            </div>
+          </div>
+        ) : null}
         <MobileNav />
       </div>
     </>

@@ -38,6 +38,9 @@ export type RequestCategory = {
   icon: "gift" | "coach" | "stage";
   image: string;
   imageAlt: string;
+  popular?: boolean;
+  examples: string[];
+  formats: string[];
   services: RequestService[];
 };
 
@@ -46,6 +49,12 @@ export type RequestGalleryItem = {
   src: string;
   alt: string;
   caption: string;
+  categoryId: string;
+  serviceId?: string;
+  teaser?: string;
+  quote?: string;
+  quoteBy?: string;
+  hasPlay?: boolean;
 };
 
 export type CreatorRequestsContent = {
@@ -123,7 +132,7 @@ function buildServiceDetails(
 
 const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
   intro: [
-    "Birthday pep talks, race-day shout-outs, coaching sessions, and guest appearances — personalized by Mia Chen for your next run, celebration, or special occasion.",
+    "A finish-line shout-out, birthday pep talk, coaching session, or club appearance — personalized by Mia Chen for the moments that matter.",
   ],
   gallery: [
     {
@@ -131,36 +140,70 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       src: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Mia running at sunrise",
       caption: "Race-day energy",
+      teaser: "A pre-race pep talk they can replay at the start line.",
+      quote: "Booked a race-day pep talk before Mumbai Marathon — exactly the boost I needed at the start line.",
+      quoteBy: "Rohan Silva",
+      categoryId: "shout-outs",
+      serviceId: "race-pep",
+      hasPlay: true,
     },
     {
       id: "g2",
       src: "https://images.unsplash.com/photo-1502904550040-7534597429ae?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Runner crossing finish line",
       caption: "Finish-line shout-outs",
+      teaser: "Celebrate the PR, the finish, or just showing up.",
+      quote: "Finish-line congratulations video was the highlight of my race weekend album.",
+      quoteBy: "James Cole",
+      categoryId: "shout-outs",
+      serviceId: "finish-congrats",
+      hasPlay: true,
     },
     {
       id: "g3",
       src: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Group training session",
       caption: "Club appearances",
+      teaser: "Bring Mia to your run club for a live guest moment.",
+      quote: "She joined our run club as a guest and stayed to chat with everyone. Absolute pro.",
+      quoteBy: "Kavish Fernando",
+      categoryId: "appearances",
+      serviceId: "club-guest",
+      hasPlay: true,
     },
     {
       id: "g4",
       src: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Trail running through hills",
       caption: "Trail stories",
+      teaser: "A personal message with trail-tested heart.",
+      quote: "Message for my fiancé after his first 10K was perfect — funny, warm, and on-brand Mia.",
+      quoteBy: "Nina Okoye",
+      categoryId: "shout-outs",
+      serviceId: "loved-one",
     },
     {
       id: "g5",
       src: "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Athlete recovering after a run",
       caption: "Recovery coaching",
+      teaser: "Practical habits to bounce back after hard weeks.",
+      quote: "Recovery tips after my ultra were clear and easy to follow. Worth every rupee.",
+      quoteBy: "Sara Malik",
+      categoryId: "training",
+      serviceId: "recovery",
     },
     {
       id: "g6",
       src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=960&h=600&fit=crop&q=80&auto=format",
       alt: "Runner training outdoors",
       caption: "Event hosting",
+      teaser: "Stage energy for your next community event.",
+      quote: "Panel appearance at our charity expo was inspiring. Crowd loved her stories.",
+      quoteBy: "Priya Nair",
+      categoryId: "appearances",
+      serviceId: "mc",
+      hasPlay: true,
     },
   ],
   categories: [
@@ -168,11 +211,14 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       id: "shout-outs",
       title: "Special occasion shout outs",
       intent: "Celebrate someone",
-      blurb: "Personalized video messages for birthdays, race days, and the people you love.",
+      blurb: "A personal message for birthdays, race days, and the people you love.",
       icon: "gift",
       image:
         "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=480&h=480&fit=crop&q=80&auto=format",
       imageAlt: "Celebration moment with confetti and lights",
+      popular: true,
+      examples: ["Birthday", "Race day", "Loved one"],
+      formats: ["Video", "Audio", "Text"],
       services: [
         {
           id: "birthday",
@@ -254,6 +300,8 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       image:
         "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=480&h=480&fit=crop&q=80&auto=format",
       imageAlt: "Athlete training outdoors with a coach",
+      examples: ["Plan review", "Coached run", "Recovery"],
+      formats: ["Live", "Audio", "Written"],
       services: [
         {
           id: "plan-review",
@@ -380,11 +428,13 @@ const MIA_CHEN_REQUESTS: CreatorRequestsContent = {
       id: "appearances",
       title: "Appearances & events",
       intent: "Book an appearance",
-      blurb: "Bring Mia to your club, stage, expo, or podcast for a live moment.",
+      blurb: "Bring Mia to your club, stage, expo, or podcast.",
       icon: "stage",
       image:
         "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=480&h=480&fit=crop&q=80&auto=format",
       imageAlt: "Group training session and community event energy",
+      examples: ["Run club", "Panel", "Podcast"],
+      formats: ["Live", "In person", "Remote"],
       services: [
         {
           id: "club-guest",
@@ -693,6 +743,7 @@ export function resolveSpecialRequestReviews(slug: string): SpecialRequestReview
   const reviews: SpecialRequestReview[] = Array.from({ length: count }, (_, index) => {
     const reviewer = pick(REQUEST_REVIEWERS, seed, index * 3);
     const ago = pick(REQUEST_AGOS, seed, index * 2);
+    const storyIndex = (seed + index * 7) % REQUEST_REVIEW_TEXTS.length;
     return {
       id: `${slug}-request-review-${index + 1}`,
       name: reviewer.name,
@@ -700,8 +751,8 @@ export function resolveSpecialRequestReviews(slug: string): SpecialRequestReview
       rating: 3 + ((seed + index * 5) % 3),
       ago: ago.label,
       daysAgo: ago.days,
-      variant: pick(REQUEST_SERVICE_LABELS, seed, index + 1),
-      text: pick(REQUEST_REVIEW_TEXTS, seed, index * 4),
+      variant: REQUEST_SERVICE_LABELS[storyIndex % REQUEST_SERVICE_LABELS.length],
+      text: REQUEST_REVIEW_TEXTS[storyIndex],
     };
   });
 
