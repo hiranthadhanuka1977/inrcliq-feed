@@ -1258,6 +1258,23 @@
   border-color: color-mix(in srgb, var(--color-brand-primary) 55%, var(--color-neutral-200));
 }
 
+.requests-pz__input.is-invalid,
+.requests-pz__field.is-invalid .requests-pz__input {
+  border-color: #f07178;
+}
+
+.requests-pz__input.is-invalid:focus-visible,
+.requests-pz__field.is-invalid .requests-pz__input:focus-visible {
+  border-color: #f07178;
+  box-shadow: 0 0 0 2px color-mix(in srgb, #f07178 28%, transparent);
+}
+
+.requests-calendar.is-invalid {
+  outline: 1px solid #f07178;
+  outline-offset: 2px;
+  border-radius: var(--radius-md);
+}
+
 .requests-pz__input::placeholder {
   color: color-mix(in srgb, var(--color-text-secondary) 75%, transparent);
   font-weight: 500;
@@ -1856,11 +1873,36 @@ select.requests-pz__input {
 }
 
 .requests-intent-help {
-  margin: 1.35rem 0 0;
-  font-size: 0.88rem;
-  font-weight: 500;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin: 1.5rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 550;
   line-height: 1.45;
   color: var(--color-text-secondary);
+}
+
+.requests-intent-help__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  margin-top: 0.05rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, #f5c518 18%, var(--color-neutral-100));
+  color: #f5c518;
+}
+
+.requests-intent-help__icon svg {
+  display: block;
+}
+
+.requests-intent-help__copy {
+  min-width: 0;
+  padding-top: 0.2rem;
 }
 
 .requests-intent-help__action {
@@ -1872,17 +1914,17 @@ select.requests-pz__input {
   font: inherit;
   font-weight: 800;
   text-decoration: underline;
-  text-underline-offset: 0.12em;
+  text-underline-offset: 0.14em;
   cursor: pointer;
 }
 
 .requests-intent-help__action:hover,
 .requests-intent-help__action:focus-visible {
-  color: var(--color-brand-primary);
+  color: #f5c518;
 }
 
 .requests-intent-help__action:focus-visible {
-  outline: 2px solid var(--color-brand-primary);
+  outline: 2px solid #f5c518;
   outline-offset: 2px;
 }
 
@@ -2165,9 +2207,18 @@ select.requests-pz__input {
 
 .requests-summary__cta-row {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 0.55rem;
   margin-top: 0.25rem;
+}
+
+.requests-summary__cta-error {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 650;
+  line-height: 1.35;
+  color: #f07178;
 }
 
 .requests-summary__cta-shell {

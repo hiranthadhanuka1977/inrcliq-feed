@@ -503,7 +503,7 @@ export default function ProfileRequestsView({
   const [galleryPaused, setGalleryPaused] = useState(false);
   const [stickyCtaVisible, setStickyCtaVisible] = useState(false);
   const introCtaRef = useRef<HTMLDivElement>(null);
-  const bottomCtaRef = useRef<HTMLSectionElement>(null);
+  const bottomCtaRef = useRef<HTMLElement | null>(null);
   const [visibleReviewCount, setVisibleReviewCount] = useState(REVIEW_INITIAL_COUNT);
   const [reviewSort, setReviewSort] = useState<ReviewSortId>("relevant");
   const [reviewRatingFilter, setReviewRatingFilter] = useState<ReviewRatingFilter>("all");
@@ -529,6 +529,7 @@ export default function ProfileRequestsView({
   const [appearanceDurationMins, setAppearanceDurationMins] = useState("");
   const [appearanceExpectation, setAppearanceExpectation] = useState("");
   const [appearanceReference, setAppearanceReference] = useState<File | null>(null);
+  const [personalizeTried, setPersonalizeTried] = useState(false);
   const [calendarCursor, setCalendarCursor] = useState(() => {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() };
@@ -756,6 +757,104 @@ export default function ProfileRequestsView({
   function chooseService(serviceId: string) {
     setSelectedId(serviceId);
   }
+
+  function tryContinueFromPersonalize() {
+    setPersonalizeTried(true);
+
+    if (isAppearanceCategory) {
+      if (!deliveryDate) {
+        focusPersonalizeControl(firstDateRef.current);
+        return false;
+      }
+      if (!deliveryTime) {
+        focusPersonalizeControl(deliveryTimeRef.current);
+        return false;
+      }
+      if (!appearanceOccasion.trim()) {
+        focusPersonalizeControl(appearanceOccasionRef.current);
+        return false;
+      }
+      if (!appearanceLocation?.label.trim()) {
+        focusPersonalizeControl(appearanceLocationRef.current);
+        return false;
+      }
+      if (appearanceDurationHours === "") {
+        focusPersonalizeControl(appearanceDurationHoursRef.current);
+        return false;
+      }
+      if (appearanceDurationMins === "") {
+        focusPersonalizeControl(appearanceDurationMinsRef.current);
+        return false;
+      }
+      if (!(Number(appearanceDurationHours) > 0 || Number(appearanceDurationMins) > 0)) {
+        focusPersonalizeControl(appearanceDurationHoursRef.current);
+        return false;
+      }
+      if (!appearanceExpectation.trim()) {
+        focusPersonalizeControl(appearanceExpectationRef.current);
+        return false;
+      }
+    } else {
+      if (!duration) {
+        focusPersonalizeControl(durationRef.current);
+        return false;
+      }
+      if (!deliveryDate) {
+        focusPersonalizeControl(firstDateRef.current);
+        return false;
+      }
+      if (!deliveryTime) {
+        focusPersonalizeControl(deliveryTimeRef.current);
+        return false;
+      }
+      if (recipientTarget === "other" && !recipientName.trim()) {
+        focusPersonalizeControl(recipientNameRef.current);
+        return false;
+      }
+      if (recipientTarget === "other" && !recipientUsername.trim()) {
+        focusPersonalizeControl(recipientUsernameRef.current);
+        return false;
+      }
+      if (!shoutoutMessage.trim()) {
+        focusPersonalizeControl(shoutoutMessageRef.current);
+        return false;
+      }
+    }
+
+    setPickerStep(4);
+    return true;
+  }
+
+  const durationInvalid = personalizeTried && !isAppearanceCategory && !duration;
+  const dateInvalid = personalizeTried && !deliveryDate;
+  const timeInvalid = personalizeTried && !deliveryTime;
+  const recipientNameInvalid =
+    personalizeTried && !isAppearanceCategory && recipientTarget === "other" && !recipientName.trim();
+  const recipientUsernameInvalid =
+    personalizeTried &&
+    !isAppearanceCategory &&
+    recipientTarget === "other" &&
+    !recipientUsername.trim();
+  const messageInvalid =
+    personalizeTried && !isAppearanceCategory && !shoutoutMessage.trim();
+  const occasionInvalid =
+    personalizeTried && isAppearanceCategory && !appearanceOccasion.trim();
+  const locationInvalid =
+    personalizeTried && isAppearanceCategory && !appearanceLocation?.label.trim();
+  const appearanceDurationEmpty =
+    personalizeTried &&
+    isAppearanceCategory &&
+    (appearanceDurationHours === "" || appearanceDurationMins === "");
+  const appearanceDurationZero =
+    personalizeTried &&
+    isAppearanceCategory &&
+    appearanceDurationHours !== "" &&
+    appearanceDurationMins !== "" &&
+    !(Number(appearanceDurationHours) > 0 || Number(appearanceDurationMins) > 0);
+  const durationHoursInvalid = appearanceDurationEmpty || appearanceDurationZero;
+  const durationMinsInvalid = appearanceDurationEmpty || appearanceDurationZero;
+  const expectationInvalid =
+    personalizeTried && isAppearanceCategory && !appearanceExpectation.trim();
 
   return (
     <>
@@ -1199,15 +1298,29 @@ export default function ProfileRequestsView({
                         })}
                       </div>
                       <p className="requests-intent-help">
-                        Not sure?{" "}
-                        <button
-                          type="button"
-                          className="requests-intent-help__action"
-                          onClick={() => chooseCategory(popularCategory.id)}
-                        >
-                          Start with {popularCategory.intent}
-                        </button>
-                        — {profile.name.split(" ")[0]}’s most booked.
+                        <span className="requests-intent-help__icon" aria-hidden="true">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                            <path
+                              d="M12 3.2 13.4 8.6 18.8 10 13.4 11.4 12 16.8 10.6 11.4 5.2 10 10.6 8.6 12 3.2Z"
+                              fill="currentColor"
+                            />
+                            <path
+                              d="m18.2 14.2.7 2.4 2.4.7-2.4.7-.7 2.4-.7-2.4-2.4-.7 2.4-.7.7-2.4Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                        <span className="requests-intent-help__copy">
+                          Not sure?{" "}
+                          <button
+                            type="button"
+                            className="requests-intent-help__action"
+                            onClick={() => chooseCategory(popularCategory.id)}
+                          >
+                            Start with {popularCategory.intent}
+                          </button>
+                          — {profile.name.split(" ")[0]}’s most booked.
+                        </span>
                       </p>
                     </>
                   ) : pickerStep === 2 ? (
@@ -1338,7 +1451,7 @@ export default function ProfileRequestsView({
                         aria-label="Personalize your request"
                         onSubmit={(event) => {
                           event.preventDefault();
-                          if (personalizedReady) setPickerStep(4);
+                          tryContinueFromPersonalize();
                         }}
                       >
                         {!isAppearanceCategory ? (
@@ -1449,12 +1562,13 @@ export default function ProfileRequestsView({
                                     </button>
                                   ))}
                                 </div>
-                                <label className="requests-pz__field">
+                                <label className={`requests-pz__field${durationInvalid ? " is-invalid" : ""}`}>
                                   <span className="requests-pz__label">Length</span>
                                   <select
                                     ref={durationRef}
-                                    className="requests-pz__input"
+                                    className={`requests-pz__input${durationInvalid ? " is-invalid" : ""}`}
                                     value={duration}
+                                    aria-invalid={durationInvalid || undefined}
                                     onChange={(event) => setDuration(event.target.value)}
                                   >
                                     <option value="">Select</option>
@@ -1491,7 +1605,10 @@ export default function ProfileRequestsView({
                               {deliveryTime ? ` · ${deliveryTime}` : ""}
                             </p>
                           ) : null}
-                          <div className="requests-calendar">
+                          <div
+                            className={`requests-calendar${dateInvalid ? " is-invalid" : ""}`}
+                            aria-invalid={dateInvalid || undefined}
+                          >
                             <div className="requests-calendar__toolbar">
                               <button
                                 type="button"
@@ -1573,14 +1690,15 @@ export default function ProfileRequestsView({
                               })()}
                             </div>
                           </div>
-                          <label className="requests-pz__field">
+                          <label className={`requests-pz__field${timeInvalid ? " is-invalid" : ""}`}>
                             <span className="requests-pz__label">
                               {isAppearanceCategory ? "Start time" : "Delivery time"}
                             </span>
                             <select
                               ref={deliveryTimeRef}
-                              className="requests-pz__input"
+                              className={`requests-pz__input${timeInvalid ? " is-invalid" : ""}`}
                               value={deliveryTime}
+                              aria-invalid={timeInvalid || undefined}
                               onChange={(event) => {
                                 setDeliveryTime(event.target.value);
                                 if (event.target.value) {
@@ -1607,12 +1725,13 @@ export default function ProfileRequestsView({
                         {isAppearanceCategory ? (
                           <section className="requests-pz__block">
                             <p className="requests-pz__eyebrow">Event</p>
-                            <label className="requests-pz__field">
+                            <label className={`requests-pz__field${occasionInvalid ? " is-invalid" : ""}`}>
                               <span className="requests-pz__label">Occasion</span>
                               <input
                                 ref={appearanceOccasionRef}
-                                className="requests-pz__input"
+                                className={`requests-pz__input${occasionInvalid ? " is-invalid" : ""}`}
                                 type="text"
+                                aria-invalid={occasionInvalid || undefined}
                                 value={appearanceOccasion}
                                 placeholder="Anniversary run, expo, podcast…"
                                 onChange={(event) => setAppearanceOccasion(event.target.value)}
@@ -1633,15 +1752,19 @@ export default function ProfileRequestsView({
                               }}
                               inputRef={appearanceLocationRef}
                               placeholder="Venue or address"
+                              invalid={locationInvalid}
                             />
-                            <div className="requests-pz__field">
+                            <div
+                              className={`requests-pz__field${durationHoursInvalid || durationMinsInvalid ? " is-invalid" : ""}`}
+                            >
                               <span className="requests-pz__label">Duration</span>
                               <div className="requests-pz__pair">
                                 <select
                                   ref={appearanceDurationHoursRef}
-                                  className="requests-pz__input"
+                                  className={`requests-pz__input${durationHoursInvalid ? " is-invalid" : ""}`}
                                   value={appearanceDurationHours}
                                   aria-label="Hours"
+                                  aria-invalid={durationHoursInvalid || undefined}
                                   onChange={(event) => {
                                     const nextHours = event.target.value;
                                     setAppearanceDurationHours(nextHours);
@@ -1659,9 +1782,10 @@ export default function ProfileRequestsView({
                                 </select>
                                 <select
                                   ref={appearanceDurationMinsRef}
-                                  className="requests-pz__input"
+                                  className={`requests-pz__input${durationMinsInvalid ? " is-invalid" : ""}`}
                                   value={appearanceDurationMins}
                                   aria-label="Minutes"
+                                  aria-invalid={durationMinsInvalid || undefined}
                                   onChange={(event) => setAppearanceDurationMins(event.target.value)}
                                 >
                                   <option value="">Mins</option>
@@ -1673,14 +1797,15 @@ export default function ProfileRequestsView({
                                 </select>
                               </div>
                             </div>
-                            <label className="requests-pz__field">
+                            <label className={`requests-pz__field${expectationInvalid ? " is-invalid" : ""}`}>
                               <span className="requests-pz__label">Expectation</span>
                               <textarea
                                 ref={appearanceExpectationRef}
-                                className="requests-pz__input requests-pz__input--area"
+                                className={`requests-pz__input requests-pz__input--area${expectationInvalid ? " is-invalid" : ""}`}
                                 value={appearanceExpectation}
                                 placeholder={`What should ${profile.name} prepare for?`}
                                 rows={4}
+                                aria-invalid={expectationInvalid || undefined}
                                 onChange={(event) => setAppearanceExpectation(event.target.value)}
                               />
                             </label>
@@ -1757,14 +1882,15 @@ export default function ProfileRequestsView({
                             </div>
                             {recipientTarget === "other" ? (
                               <div className="requests-pz__pair">
-                                <label className="requests-pz__field">
+                                <label className={`requests-pz__field${recipientNameInvalid ? " is-invalid" : ""}`}>
                                   <span className="requests-pz__label">Name</span>
                                   <input
                                     ref={recipientNameRef}
-                                    className="requests-pz__input"
+                                    className={`requests-pz__input${recipientNameInvalid ? " is-invalid" : ""}`}
                                     type="text"
                                     value={recipientName}
                                     placeholder="Name"
+                                    aria-invalid={recipientNameInvalid || undefined}
                                     onChange={(event) => setRecipientName(event.target.value)}
                                     onKeyDown={(event) => {
                                       if (event.key === "Enter") {
@@ -1775,14 +1901,15 @@ export default function ProfileRequestsView({
                                     autoComplete="name"
                                   />
                                 </label>
-                                <label className="requests-pz__field">
+                                <label className={`requests-pz__field${recipientUsernameInvalid ? " is-invalid" : ""}`}>
                                   <span className="requests-pz__label">Username</span>
                                   <input
                                     ref={recipientUsernameRef}
-                                    className="requests-pz__input"
+                                    className={`requests-pz__input${recipientUsernameInvalid ? " is-invalid" : ""}`}
                                     type="text"
                                     value={recipientUsername}
                                     placeholder="@username"
+                                    aria-invalid={recipientUsernameInvalid || undefined}
                                     onChange={(event) => setRecipientUsername(event.target.value)}
                                     onKeyDown={(event) => {
                                       if (event.key === "Enter") {
@@ -1795,14 +1922,15 @@ export default function ProfileRequestsView({
                                 </label>
                               </div>
                             ) : null}
-                            <label className="requests-pz__field">
+                            <label className={`requests-pz__field${messageInvalid ? " is-invalid" : ""}`}>
                               <span className="requests-pz__label">Your message</span>
                               <textarea
                                 ref={shoutoutMessageRef}
-                                className="requests-pz__input requests-pz__input--area"
+                                className={`requests-pz__input requests-pz__input--area${messageInvalid ? " is-invalid" : ""}`}
                                 value={shoutoutMessage}
                                 placeholder="What should be said, and for whom…"
                                 rows={5}
+                                aria-invalid={messageInvalid || undefined}
                                 onChange={(event) => setShoutoutMessage(event.target.value)}
                               />
                             </label>
@@ -1902,8 +2030,7 @@ export default function ProfileRequestsView({
                               <button
                                 type="button"
                                 className="btn btn--primary requests-summary__cta"
-                                disabled={!personalizedReady}
-                                onClick={() => setPickerStep(4)}
+                                onClick={() => tryContinueFromPersonalize()}
                               >
                                 Continue
                               </button>
@@ -1915,6 +2042,11 @@ export default function ProfileRequestsView({
                                 />
                               </span>
                             </div>
+                            {personalizeTried && !personalizedReady ? (
+                              <p className="requests-summary__cta-error" role="alert">
+                                Complete the highlighted fields to continue.
+                              </p>
+                            ) : null}
                           </div>
                         </section>
                       </aside>

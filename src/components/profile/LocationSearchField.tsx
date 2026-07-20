@@ -18,6 +18,7 @@ type LocationSearchFieldProps = {
   onChange: (place: SelectedPlace | null) => void;
   inputRef?: RefObject<HTMLInputElement | null>;
   placeholder?: string;
+  invalid?: boolean;
 };
 
 function toCustomPlace(label: string): SelectedPlace {
@@ -40,6 +41,7 @@ export default function LocationSearchField({
   onChange,
   inputRef,
   placeholder = "Search Google Maps",
+  invalid = false,
 }: LocationSearchFieldProps) {
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -142,7 +144,7 @@ export default function LocationSearchField({
 
   return (
     <div className="requests-location" ref={rootRef}>
-      <label className="requests-pz__field">
+      <label className={`requests-pz__field${invalid ? " is-invalid" : ""}`}>
         <span className="requests-pz__label">{label}</span>
         <span className="requests-location__control">
           <span className="requests-location__icon" aria-hidden="true">
@@ -157,12 +159,13 @@ export default function LocationSearchField({
           </span>
           <input
             ref={inputRef}
-            className="requests-pz__input requests-location__input"
+            className={`requests-pz__input requests-location__input${invalid ? " is-invalid" : ""}`}
             type="text"
             role="combobox"
             aria-expanded={showResults}
             aria-controls={listId}
             aria-autocomplete="list"
+            aria-invalid={invalid || undefined}
             autoComplete="off"
             placeholder={placeholder}
             value={query}
